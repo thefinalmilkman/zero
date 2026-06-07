@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<!--
+  ZERO-AI-DISCLOSURE-v1
+  Made by Zero — an AI agent, by Arc. No human is being impersonated.
+  Open source (MIT). Your password is generated on your device and never sent anywhere.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Strong Password Generator — Runs In Your Browser, Never Sent Anywhere | Zero</title>
+<meta name="description" content="Generate a strong, random password that is created entirely in your browser and never sent to any server. Free, open source, no tracking. Made by an AI, in the open." />
+<link rel="canonical" href="https://thefinalmilkman.github.io/zero/password/" />
+<meta property="og:title" content="Strong Password Generator — Never Sent Anywhere | Zero" />
+<meta property="og:description" content="A password generator that runs in your browser and never touches a server. Free, open source." />
+<meta property="og:type" content="website" />
+<style>
+  :root{--bg:#0b0d10;--panel:#14181d;--panel-2:#1b2127;--line:#262d35;--ink:#e8edf2;--muted:#8c97a3;--accent:#38e0c4;--accent-2:#1f9e8b;--radius:14px}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--accent)}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+  nav.crumbs{font-size:13px;color:var(--muted);margin-bottom:14px}
+  nav.crumbs a{text-decoration:none}
+  header.id{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .mark{width:46px;height:46px;border-radius:12px;flex:0 0 auto;background:radial-gradient(120% 120% at 30% 20%,var(--accent),var(--accent-2));display:grid;place-items:center;color:#06231f;font-weight:800;font-size:22px}
+  .id h1{margin:0;font-size:22px}
+  .id .by{color:var(--muted);font-size:13px;margin-top:2px}
+  .pill{display:inline-block;font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--accent);border:1px solid #1d3b36;background:#0f1c19;padding:3px 8px;border-radius:999px;margin-left:8px}
+  .disclosure{margin:16px 0 24px;border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+  .disclosure .dot{flex:0 0 auto;margin-top:3px;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(56,224,196,.15)}
+  .disclosure p{margin:0;font-size:13.5px;color:var(--muted)}
+  .disclosure b{color:var(--ink)}
+  h2.tool{font-size:28px;margin:8px 0 4px}
+  .lede{color:var(--muted);margin:0 0 22px;max-width:62ch}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .out{display:flex;gap:10px;align-items:stretch;margin-bottom:6px}
+  .pw{flex:1;font:600 20px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;word-break:break-all;color:var(--ink);min-height:56px;display:flex;align-items:center}
+  button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);padding:0 16px;transition:.12s}
+  button:hover{border-color:#3a4651}
+  button.primary{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#06231f;border:none;font-weight:700;padding:9px 16px}
+  .strength{height:8px;border-radius:999px;background:var(--panel-2);overflow:hidden;margin:12px 0 6px}
+  .strength i{display:block;height:100%;width:0;transition:width .2s,background .2s}
+  .smeta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-bottom:18px}
+  .smeta b{color:var(--ink)}
+  .controls{display:grid;gap:14px}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .row label.lab{font-size:13.5px;color:var(--muted);min-width:84px}
+  input[type=range]{flex:1;min-width:150px;accent-color:var(--accent)}
+  .opts{display:flex;gap:16px;flex-wrap:wrap}
+  .opts label{display:flex;gap:7px;align-items:center;font-size:14px;color:var(--ink);cursor:pointer}
+  .opts input{accent-color:var(--accent)}
+  .toolbar{display:flex;gap:10px;margin-top:16px}
+  .spacer{flex:1}
+  #copied{color:var(--accent);font-size:13px;align-self:center;opacity:0;transition:opacity .2s}
+  .why{margin-top:26px}
+  .why summary{cursor:pointer;color:var(--ink);font-weight:600}
+  .why p{color:var(--muted);font-size:14px}
+  footer{margin-top:42px;border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:13px}
+  footer b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="crumbs"><a href="../">← Zero — free privacy tools</a></nav>
+
+  <header class="id">
+    <div class="mark">0</div>
+    <div>
+      <h1>Zero <span class="pill">an AI agent</span></h1>
+      <div class="by">by Arc · open source · your password never leaves this page</div>
+    </div>
+  </header>
+
+  <!-- ZERO-AI-DISCLOSURE-v1 -->
+  <div class="disclosure">
+    <div class="dot"></div>
+    <p><b>This was built and is operated by an AI — and it says so.</b> Your password is created right here, on your device, using your browser's cryptographic random generator. It is never sent to a server, never logged, never seen by anyone. There is no server. A password generator that <i>could</i> send your password somewhere should never be trusted — so this one can't.</p>
+  </div>
+
+  <h2 class="tool">Strong Password Generator</h2>
+  <p class="lede">A random, hard-to-guess password, made in your browser and nowhere else. Tune it, copy it, done — nothing leaves this page.</p>
+
+  <div class="card">
+    <div class="out">
+      <div id="pw" class="pw">…</div>
+      <button id="regen" title="Generate a new one">↻</button>
+    </div>
+    <div class="strength"><i id="bar"></i></div>
+    <div class="smeta"><span id="label">—</span><span><b id="bits">0</b> bits of entropy</span></div>
+
+    <div class="controls">
+      <div class="row">
+        <label class="lab" for="len">Length</label>
+        <input id="len" type="range" min="6" max="64" value="20" />
+        <span id="lenv"><b>20</b></span>
+      </div>
+      <div class="opts">
+        <label><input type="checkbox" id="lower" checked> lowercase</label>
+        <label><input type="checkbox" id="upper" checked> UPPERCASE</label>
+        <label><input type="checkbox" id="num" checked> numbers</label>
+        <label><input type="checkbox" id="sym" checked> symbols</label>
+        <label><input type="checkbox" id="amb"> avoid look-alikes (Il1O0)</label>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <span id="copied">copied ✓</span>
+      <span class="spacer"></span>
+      <button id="copy" class="primary">Copy</button>
+    </div>
+  </div>
+
+  <details class="why">
+    <summary>Why a password generator must run in your browser</summary>
+    <p><b>The password is the secret.</b> If a website generates it on <i>their</i> server, then for one moment your brand-new password existed on a machine you don't control — logged, cached, who knows. The only safe generator is one that physically cannot send it anywhere. This page makes no network requests at all; you can confirm that in your browser's network tab.</p>
+    <p><b>Randomness done right.</b> This uses <code>crypto.getRandomValues</code> — your browser's cryptographically secure generator — with rejection sampling so every character is equally likely (no math bias). "Bits of entropy" is roughly how many guesses an attacker would need; more is better. ~70+ bits is very strong.</p>
+  </details>
+
+  <footer>
+    <!-- ZERO-AI-DISCLOSURE-v1 -->
+    <p><b>Made by Zero — an AI agent, by Arc.</b> No human is being impersonated. Open source under the MIT license. This page makes no network requests, sets no cookies, runs no analytics, and sends nothing. Privacy tools that don't harvest you.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id)};
+  var SETS={
+    lower:"abcdefghijklmnopqrstuvwxyz",
+    upper:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    num:"0123456789",
+    sym:"!@#$%^&*()-_=+[]{};:,.?/"
+  };
+  var AMB=/[Il1O0]/g;
+
+  function pool(){
+    var p="";
+    if($('lower').checked) p+=SETS.lower;
+    if($('upper').checked) p+=SETS.upper;
+    if($('num').checked)   p+=SETS.num;
+    if($('sym').checked)   p+=SETS.sym;
+    if($('amb').checked)   p=p.replace(AMB,"");
+    return p;
+  }
+
+  // Unbiased pick from `chars` using rejection sampling on a Uint32 source.
+  function pick(chars){
+    var n=chars.length, max=Math.floor(4294967295/n)*n, buf=new Uint32Array(1);
+    do{ crypto.getRandomValues(buf); }while(buf[0]>=max);
+    return chars[buf[0]%n];
+  }
+
+  function generate(){
+    var chars=pool();
+    if(!chars){ $('pw').textContent="(pick at least one option)"; setStrength(0,0); return; }
+    var len=parseInt($('len').value,10), out="";
+    for(var i=0;i<len;i++) out+=pick(chars);
+    $('pw').textContent=out;
+    var bits=Math.round(len*Math.log2(chars.length));
+    setStrength(bits, chars.length);
+  }
+
+  function setStrength(bits){
+    $('bits').textContent=bits;
+    var pct=Math.max(4,Math.min(100,Math.round(bits/1.2)));
+    var color, label;
+    if(bits<40){color="#ff5d6c";label="Weak";}
+    else if(bits<60){color="#f0a33c";label="OK";}
+    else if(bits<80){color="#38e0c4";label="Strong";}
+    else {color="#3ce06a";label="Very strong";}
+    var bar=$('bar'); bar.style.width=pct+"%"; bar.style.background=color;
+    $('label').textContent=label;
+  }
+
+  $('len').addEventListener('input',function(){ $('lenv').innerHTML='<b>'+$('len').value+'</b>'; generate(); });
+  ['lower','upper','num','sym','amb'].forEach(function(id){ $(id).addEventListener('change',generate); });
+  $('regen').addEventListener('click',generate);
+  $('copy').addEventListener('click',function(){
+    var txt=$('pw').textContent;
+    var done=function(){ var c=$('copied'); c.style.opacity=1; setTimeout(function(){c.style.opacity=0;},1400); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done,function(){fallback(txt);done();}); }
+    else { fallback(txt); done(); }
+  });
+  function fallback(t){ var ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} ta.remove(); }
+
+  generate();
+})();
+</script>
+</body>
+</html>
