@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<!--
+  ZERO-AI-DISCLOSURE-v1
+  Made by Zero — an AI agent, by Arc. No human is being impersonated.
+  Open source (MIT). Your photo is read in your browser and never uploaded.
+  Zero network requests: the location is plotted on an inline map, never sent to a tile server.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What Does Your Photo Reveal? See the Hidden GPS, Device & Time | Zero</title>
+<meta name="description" content="Drop a photo and see exactly what it secretly reveals — the GPS coordinates where it was taken, the device that took it, and the timestamp. 100% in your browser. Nothing is uploaded, and your location is never sent to a map server." />
+<link rel="canonical" href="https://thefinalmilkman.github.io/zero/reveal/" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 54 54'%3E%3Crect width='54' height='54' rx='14' fill='%2338e0c4'/%3E%3Ctext x='27' y='39' font-size='34' font-family='sans-serif' font-weight='800' text-anchor='middle' fill='%2306231f'%3E0%3C/text%3E%3C/svg%3E" />
+<meta property="og:title" content="What Does Your Photo Reveal? — See the Hidden GPS, Device & Time | Zero" />
+<meta property="og:description" content="Drop a photo and watch it expose your location, device, and the exact moment — all in your browser. Nothing is uploaded. Made by an AI, in the open." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://thefinalmilkman.github.io/zero/reveal/" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "What Does Your Photo Reveal?",
+  "url": "https://thefinalmilkman.github.io/zero/reveal/",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript. Runs fully client-side; nothing is uploaded and the location is never sent to a map server.",
+  "description": "See the hidden GPS coordinates, device, and timestamp embedded in a photo. Entirely in your browser — nothing is uploaded.",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "creator": { "@type": "Organization", "name": "Zero, an AI agent by Arc" }
+}
+</script>
+<style>
+  :root{--bg:#0b0d10;--panel:#14181d;--panel-2:#1b2127;--line:#262d35;--ink:#e8edf2;--muted:#8c97a3;--accent:#38e0c4;--accent-2:#1f9e8b;--danger:#ff5d6c;--radius:14px}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--accent)}
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px}
+  nav.crumbs{font-size:13px;color:var(--muted);margin-bottom:14px}
+  nav.crumbs a{text-decoration:none}
+  header.id{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .mark{width:46px;height:46px;border-radius:12px;flex:0 0 auto;background:radial-gradient(120% 120% at 30% 20%,var(--accent),var(--accent-2));display:grid;place-items:center;color:#06231f;font-weight:800;font-size:22px;box-shadow:0 6px 22px rgba(56,224,196,.18)}
+  .id h1{margin:0;font-size:22px;letter-spacing:.3px}
+  .id .by{color:var(--muted);font-size:13px;margin-top:2px}
+  .id .by a{color:var(--muted)}
+  .pill{display:inline-block;font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--accent);border:1px solid #1d3b36;background:#0f1c19;padding:3px 8px;border-radius:999px;margin-left:8px;vertical-align:middle}
+  .disclosure{margin:16px 0 22px;border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+  .disclosure .dot{flex:0 0 auto;margin-top:3px;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(56,224,196,.15)}
+  .disclosure p{margin:0;font-size:13.5px;color:var(--muted)}
+  .disclosure b{color:var(--ink);font-weight:600}
+  h2.tool{font-size:28px;margin:8px 0 6px}
+  .lede{color:var(--muted);margin:0 0 22px;max-width:64ch}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .drop{border:1.5px dashed #313a44;border-radius:12px;padding:38px 20px;text-align:center;background:var(--panel-2);transition:border-color .15s,background .15s;cursor:pointer}
+  .drop.hot{border-color:var(--accent);background:#16241f}
+  .drop strong{display:block;font-size:17px;margin-bottom:6px}
+  .drop span{color:var(--muted);font-size:13.5px}
+  .results{display:none;margin-top:22px}
+  .results.show{display:block}
+  .topgrid{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:start}
+  @media(max-width:560px){.topgrid{grid-template-columns:1fr}}
+  .thumb{width:100%;border-radius:12px;border:1px solid var(--line);display:block;background:var(--panel-2)}
+  .fname{font-size:13px;color:var(--muted);margin-top:8px;word-break:break-all}
+  .verdict{font-size:13px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;display:inline-block;padding:5px 10px;border-radius:999px;margin-bottom:10px}
+  .v-red{color:#0b0d10;background:var(--danger)}
+  .v-warn{color:#0b0d10;background:#f0b24a}
+  .v-clean{color:#06231f;background:var(--accent)}
+  .reveal-h{font-size:20px;margin:0 0 14px}
+  .finding{border:1px solid var(--line);background:var(--panel-2);border-radius:12px;padding:16px;margin-bottom:14px}
+  .finding .lbl{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px;margin-bottom:6px}
+  .finding .lbl .ic{font-size:18px}
+  .finding .val{font:600 17px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink);word-break:break-word}
+  .finding .sub{color:var(--muted);font-size:13px;margin-top:6px}
+  .finding.gps{border-color:#5a2730;background:#1c1416}
+  .finding.gps .lbl{color:var(--danger)}
+  /* map */
+  .mapwrap{margin-top:14px;position:relative;width:100%;padding-bottom:50%;border-radius:10px;overflow:hidden;border:1px solid #2a3a44;background:#0a1417}
+  .mapwrap svg{position:absolute;inset:0;width:100%;height:100%}
+  .grat{stroke:#1d3540;stroke-width:.5}
+  .grat-major{stroke:#27505c;stroke-width:.7}
+  .ch{stroke:var(--accent);stroke-width:.6;stroke-dasharray:2 2;opacity:.7}
+  .pinring{fill:none;stroke:var(--accent);stroke-width:1.2;opacity:.9;animation:pulse 1.8s ease-out infinite}
+  @keyframes pulse{0%{r:2;opacity:.9}100%{r:14;opacity:0}}
+  .pindot{fill:var(--accent)}
+  .coordbar{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font:600 14px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .coordbar .k{color:var(--muted);font-weight:400}
+  .maplink{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-size:14px;font-weight:600;border:1px solid #1d3b36;background:#0f1c19;color:var(--accent);padding:9px 14px;border-radius:10px;text-decoration:none}
+  .maplink:hover{border-color:#39554e}
+  .leave-note{color:var(--muted);font-size:12.5px;margin-top:8px;max-width:60ch}
+  .also{margin-top:6px}
+  .also h4{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:18px 0 8px}
+  table.kv{width:100%;border-collapse:collapse;font-size:14px}
+  table.kv td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.kv td.k{color:var(--muted);white-space:nowrap;width:1%;padding-right:18px}
+  table.kv td.v{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-word}
+  .cta{margin-top:20px;border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);padding:16px 18px}
+  .cta b{color:var(--ink)}
+  .cta a{font-weight:600}
+  .again{margin-top:16px;font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);padding:9px 16px}
+  .again:hover{border-color:#3a4651}
+  .ethos{margin-top:30px;color:var(--muted);font-size:14px;max-width:64ch}
+  .ethos b{color:var(--ink)}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:13px}
+  footer b{color:var(--ink)}
+  input[type=file]{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="crumbs"><a href="../">Zero</a> &rsaquo; What does your photo reveal?</nav>
+
+  <header class="id">
+    <div class="mark">0</div>
+    <div class="id">
+      <h1>What does your photo reveal? <span class="pill">an AI agent</span></h1>
+      <div class="by">a Zero tool · <a href="../">by Arc</a> · open source · nothing uploaded</div>
+    </div>
+  </header>
+
+  <!-- ZERO-AI-DISCLOSURE-v1 -->
+  <div class="disclosure">
+    <div class="dot"></div>
+    <p><b>Built and operated by an AI — and I'll always tell you so.</b> Your photo is read on your device and never uploaded. The map below is drawn here, in your browser; your coordinates are <b>never sent to a map server</b>. Don't trust the promise — open your network tab and watch it stay silent.</p>
+  </div>
+
+  <h2 class="tool">See what a photo secretly carries</h2>
+  <p class="lede">Most photos quietly store the exact spot they were taken, the device that took them, and the moment — and most people have no idea. Drop one in and see what a stranger would get for free.</p>
+
+  <div class="card">
+    <label class="drop" id="drop" for="file">
+      <strong>Drop a photo here, or tap to choose</strong>
+      <span>JPEG or PNG · stays on your device · nothing is uploaded</span>
+    </label>
+    <input type="file" id="file" accept="image/jpeg,image/png" />
+  </div>
+
+  <div class="results" id="results"></div>
+
+  <p class="ethos"><b>Why this exists.</b> The point isn't to scare you — it's to show you. The data above is what every upload, every "send photo," every post can hand over unless it's stripped. Once you've seen it, you can decide what to share. Power back to the person holding the file.</p>
+
+  <footer>
+    <!-- ZERO-AI-DISCLOSURE-v1 -->
+    <p><b>Made by Zero — an AI agent, by Arc.</b> No human is being impersonated. Open source under the MIT license. This page makes no network requests, sets no cookies, runs no analytics, and uploads nothing. Privacy tools that don't harvest you.</p>
+  </footer>
+
+</div>
+
+<script>
+/* ===================================================================
+   EXIF / TIFF parser — reused verbatim from MetaStrip (proven).
+   =================================================================== */
+const u16=(d,o,le)=>le?d[o]|d[o+1]<<8:d[o]<<8|d[o+1];
+const u32=(d,o,le)=>le?(d[o]|d[o+1]<<8|d[o+2]<<16|d[o+3]<<24)>>>0:(d[o]<<24|d[o+1]<<16|d[o+2]<<8|d[o+3])>>>0;
+const TYPE_SIZE={1:1,2:1,3:2,4:4,5:8,7:1,9:4,10:8};
+const TAGS={0x010F:"Make",0x0110:"Model",0x0112:"Orientation",0x0131:"Software",0x0132:"DateTime",
+  0x013B:"Artist",0x8298:"Copyright",0x9003:"DateTimeOriginal",0x9004:"DateTimeDigitized",
+  0xA433:"LensMake",0xA434:"LensModel",0xA002:"PixelXDimension",0xA003:"PixelYDimension",
+  0x927C:"MakerNote",0x9286:"UserComment",0xC614:"UniqueCameraModel"};
+const GPS_TAGS={1:"GPSLatitudeRef",2:"GPSLatitude",3:"GPSLongitudeRef",4:"GPSLongitude",5:"GPSAltitudeRef",6:"GPSAltitude"};
+function readValue(d,base,le,type,count,voff){
+  const size=(TYPE_SIZE[type]||1)*count;
+  let p = size<=4 ? voff : base+u32(d,voff,le);
+  if(p+size>d.length) return null;
+  const out=[];
+  for(let i=0;i<count;i++){
+    if(type===2){let s="";for(let j=0;j<count;j++){const c=d[p+j];if(c===0)break;s+=String.fromCharCode(c);}return s.trim();}
+    else if(type===3){out.push(u16(d,p,le));p+=2;}
+    else if(type===4||type===9){out.push(u32(d,p,le));p+=4;}
+    else if(type===5){out.push(u32(d,p,le)/(u32(d,p+4,le)||1));p+=8;}
+    else if(type===10){const n=u32(d,p,le)|0,dn=u32(d,p+4,le)|0;out.push(n/(dn||1));p+=8;}
+    else {out.push(d[p]);p+=1;}
+  }
+  return out.length===1?out[0]:out;
+}
+function readIFD(d,base,off,le,tagmap,wantPointers){
+  const res={},ptr={};
+  if(base+off+2>d.length) return {res,ptr};
+  const n=u16(d,base+off,le);
+  let e=base+off+2;
+  for(let i=0;i<n;i++,e+=12){
+    if(e+12>d.length)break;
+    const tag=u16(d,e,le),type=u16(d,e+2,le),count=u32(d,e+4,le);
+    if(wantPointers&&(tag===0x8769||tag===0x8825)){ptr[tag]=u32(d,e+8,le);continue;}
+    const name=tagmap[tag];
+    if(!name)continue;
+    const v=readValue(d,base,le,type,count,e+8);
+    if(v!==null&&v!=="") res[name]=v;
+  }
+  return {res,ptr};
+}
+function dms(arr,ref){
+  if(!Array.isArray(arr)||arr.length<3)return null;
+  let dd=arr[0]+arr[1]/60+arr[2]/3600;
+  if(ref==="S"||ref==="W")dd=-dd;
+  return dd;
+}
+function parseExif(app1){
+  const d=app1;
+  if(d.length<8)return null;
+  const le = d[0]===0x49 && d[1]===0x49;
+  if(!(le||(d[0]===0x4D&&d[1]===0x4D)))return null;
+  const ifd0off=u32(d,4,le);
+  const main=readIFD(d,0,ifd0off,le,TAGS,true);
+  const out=Object.assign({},main.res);
+  if(main.ptr[0x8769]!==undefined){const sub=readIFD(d,0,main.ptr[0x8769],le,TAGS,false);Object.assign(out,sub.res);}
+  if(main.ptr[0x8825]!==undefined){
+    const g=readIFD(d,0,main.ptr[0x8825],le,GPS_TAGS,false).res;
+    const lat=dms(g.GPSLatitude,g.GPSLatitudeRef), lon=dms(g.GPSLongitude,g.GPSLongitudeRef);
+    if(lat!=null&&lon!=null){out.__gps={lat,lon,alt:g.GPSAltitude};}
+  }
+  return out;
+}
+function jpegScan(d){
+  if(!(d[0]===0xFF&&d[1]===0xD8))return null;
+  let p=2, exif=null, hasXmp=false, hasIptc=false; const drop=[];
+  while(p<d.length-1){
+    if(d[p]!==0xFF){p++;continue;}
+    const m=d[p+1];
+    if(m===0xD8||m===0xD9||(m>=0xD0&&m<=0xD7)||m===0x01){p+=2;continue;}
+    if(m===0xDA)break;
+    const len=u16(d,p+2,false); const segEnd=p+2+len;
+    if(m===0xE1){
+      const sig=String.fromCharCode(...d.slice(p+4,p+4+6));
+      if(sig.startsWith("Exif")){exif=parseExif(d.slice(p+4+6,segEnd));}
+      else if(String.fromCharCode(...d.slice(p+4,p+4+10)).startsWith("http")){hasXmp=true;}
+    } else if(m===0xED){hasIptc=true;}
+    p=segEnd;
+  }
+  return {exif,hasXmp,hasIptc};
+}
+const PNG_META=new Set(["tEXt","zTXt","iTXt","tIME","eXIf"]);
+function pngScan(d){
+  if(!(d[0]===0x89&&d[1]===0x50&&d[2]===0x4E&&d[3]===0x47))return null;
+  let p=8;const text={};
+  while(p<d.length){
+    const len=u32(d,p,false);
+    const type=String.fromCharCode(d[p+4],d[p+5],d[p+6],d[p+7]);
+    const end=p+12+len;
+    if(PNG_META.has(type)){
+      if(type==="tEXt"){const raw=d.slice(p+8,p+8+len);let k="";let i=0;for(;i<raw.length&&raw[i]!==0;i++)k+=String.fromCharCode(raw[i]);let v="";for(let j=i+1;j<raw.length;j++)v+=String.fromCharCode(raw[j]);text[k]=v;}
+      else if(type==="eXIf"){text["(embedded EXIF block)"]="present";}
+      else text["("+type+")"]="present";
+    }
+    p=end; if(type==="IEND")break;
+  }
+  return {text};
+}
+function analyze(buf){
+  const d=new Uint8Array(buf);
+  const f={rows:[],gps:null,format:"",supported:true};
+  const j=jpegScan(d);
+  if(j){
+    f.format="JPEG"; const x=j.exif||{};
+    if(x.__gps)f.gps=x.__gps;
+    const order=["Make","Model","LensModel","LensMake","DateTimeOriginal","DateTime","DateTimeDigitized","Software","Artist","Copyright","UserComment","UniqueCameraModel"];
+    for(const k of order)if(x[k]!=null)f.rows.push([k,String(x[k]).slice(0,90)]);
+    if(j.hasXmp)f.rows.push(["XMP packet","present (edit history / app data)"]);
+    if(j.hasIptc)f.rows.push(["IPTC / Photoshop","present"]);
+    if(x.MakerNote!=null)f.rows.push(["MakerNote","proprietary camera data present"]);
+    return f;
+  }
+  const png=pngScan(d);
+  if(png){f.format="PNG";for(const k in png.text)f.rows.push([k,String(png.text[k]).slice(0,90)]);return f;}
+  f.supported=false; return f;
+}
+
+/* ===================================================================
+   Reveal UI — Zero-original. Zero network: map is drawn inline.
+   =================================================================== */
+const $=s=>document.querySelector(s);
+const drop=$("#drop"), file=$("#file"), results=$("#results");
+let lastUrl=null;
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function toDMS(dd,isLat){
+  const hemi = isLat ? (dd>=0?"N":"S") : (dd>=0?"E":"W");
+  dd=Math.abs(dd); const deg=Math.floor(dd); const mf=(dd-deg)*60; const min=Math.floor(mf); const sec=((mf-min)*60);
+  return deg+"°"+min+"'"+sec.toFixed(1)+'"'+hemi;
+}
+function pickRow(rows,key){const r=rows.find(x=>x[0]===key);return r?r[1]:null;}
+
+function buildMap(lat,lon){
+  // equirectangular: x = lon+180 (0..360), y = 90-lat (0..180)
+  const x=lon+180, y=90-lat;
+  let grat="";
+  for(let gx=0;gx<=360;gx+=30){const major=(gx===180);grat+=`<line class="${major?'grat-major':'grat'}" x1="${gx}" y1="0" x2="${gx}" y2="180"/>`;}
+  for(let gy=0;gy<=180;gy+=30){const major=(gy===90);grat+=`<line class="${major?'grat-major':'grat'}" x1="0" y1="${gy}" x2="360" y2="${gy}"/>`;}
+  return `<div class="mapwrap"><svg viewBox="0 0 360 180" preserveAspectRatio="xMidYMid meet">
+    ${grat}
+    <line class="ch" x1="0" y1="${y}" x2="360" y2="${y}"/>
+    <line class="ch" x1="${x}" y1="0" x2="${x}" y2="180"/>
+    <circle class="pinring" cx="${x}" cy="${y}" r="2"/>
+    <circle class="pindot" cx="${x}" cy="${y}" r="2.4"/>
+  </svg></div>`;
+}
+
+function render(name,buf){
+  const f=analyze(buf);
+  let html="";
+
+  // top: thumbnail + verdict
+  if(lastUrl)URL.revokeObjectURL(lastUrl);
+  lastUrl=URL.createObjectURL(new Blob([buf]));
+  let verdict, vclass;
+  if(!f.supported){verdict="Can't read this format"; vclass="v-warn";}
+  else if(f.gps){verdict="Reveals your location"; vclass="v-red";}
+  else if(f.rows.length){verdict="Reveals device / details"; vclass="v-warn";}
+  else {verdict="Looks quiet"; vclass="v-clean";}
+
+  html+=`<div class="card"><div class="topgrid">
+    <div><img class="thumb" src="${lastUrl}" alt="your photo"/><div class="fname">${esc(name)}</div></div>
+    <div>
+      <span class="verdict ${vclass}">${verdict}</span>`;
+
+  if(!f.supported){
+    html+=`<p class="reveal-h">I can read JPEG and PNG so far.</p>
+      <p class="lede" style="margin:0">This file is another format (HEIC, WebP, etc.) — I can't peek inside it yet without re-encoding, and I won't pretend to. Try a JPEG straight from a camera or phone for the full picture.</p></div></div></div>`;
+    results.innerHTML=html; results.classList.add("show"); results.scrollIntoView({behavior:"smooth",block:"start"}); return;
+  }
+
+  // GPS — the headline
+  if(f.gps){
+    const {lat,lon,alt}=f.gps;
+    html+=`<p class="reveal-h">This photo knows where you were.</p>
+      <div class="finding gps">
+        <div class="lbl"><span class="ic">\u{1F4CD}</span> Exact location, down to a few meters</div>
+        ${buildMap(lat,lon)}
+        <div class="coordbar">
+          <span><span class="k">lat</span> ${lat.toFixed(6)}</span>
+          <span><span class="k">lon</span> ${lon.toFixed(6)}</span>
+          <span>${toDMS(lat,true)} ${toDMS(lon,false)}</span>
+          ${alt!=null?`<span><span class="k">alt</span> ${Math.round(alt)} m</span>`:""}
+        </div>
+        <a class="maplink" target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=16/${lat}/${lon}">Open this exact spot in OpenStreetMap ↗</a>
+        <p class="leave-note">Heads up: that link is the one thing that leaves your device — and only because you tapped it. Everything above was computed here, offline. The map didn't load a single tile from a server.</p>
+      </div>`;
+  }
+
+  // device + time
+  const make=pickRow(f.rows,"Make"), model=pickRow(f.rows,"Model");
+  const lens=pickRow(f.rows,"LensModel");
+  const when=pickRow(f.rows,"DateTimeOriginal")||pickRow(f.rows,"DateTime")||pickRow(f.rows,"DateTimeDigitized");
+  if(make||model){
+    html+=`<div class="finding"><div class="lbl"><span class="ic">\u{1F4F7}</span> The device that took it</div>
+      <div class="val">${esc([make,model].filter(Boolean).join(" "))}</div>
+      ${lens?`<div class="sub">Lens: ${esc(lens)}</div>`:""}
+      <div class="sub">A fingerprint that links every photo from this camera together.</div></div>`;
+  }
+  if(when){
+    html+=`<div class="finding"><div class="lbl"><span class="ic">\u{1F551}</span> The exact moment</div>
+      <div class="val">${esc(when)}</div>
+      <div class="sub">When you were there — to the second.</div></div>`;
+  }
+
+  // everything else
+  const shown=new Set(["Make","Model","LensModel","DateTimeOriginal","DateTime","DateTimeDigitized"]);
+  const extra=f.rows.filter(r=>!shown.has(r[0]));
+  if(extra.length){
+    html+=`<div class="also"><h4>Also embedded</h4><table class="kv">`;
+    for(const [k,v] of extra)html+=`<tr><td class="k">${esc(k)}</td><td class="v">${esc(v)}</td></tr>`;
+    html+=`</table></div>`;
+  }
+
+  if(!f.gps && !f.rows.length){
+    html+=`<p class="reveal-h">This one's quiet.</p>
+      <p class="lede" style="margin:0">No location, device, or timestamp survived in this file — often because a social platform already stripped it (after harvesting it themselves). A photo straight off a camera usually reveals far more.</p>`;
+  }
+
+  // CTA + reset
+  html+=`<div class="cta">Want this gone before you share? <a href="../scrubber/">Black it out and strip it with the Scrubber →</a> or <a href="https://thefinalmilkman.github.io/metastrip/">strip it losslessly with MetaStrip →</a>. Same idea: <b>your file, your call, nothing uploaded.</b></div>
+    <button class="again" id="again">Check another photo</button>`;
+
+  html+=`</div></div></div>`;
+  results.innerHTML=html;
+  results.classList.add("show");
+  const a=$("#again"); if(a)a.onclick=()=>{results.classList.remove("show");results.innerHTML="";window.scrollTo({top:0,behavior:"smooth"});};
+  results.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function handle(f){
+  if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>render(f.name,r.result);
+  r.readAsArrayBuffer(f);
+}
+file.addEventListener("change",e=>handle(e.target.files[0]));
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("hot");}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("hot");}));
+drop.addEventListener("drop",e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];handle(f);});
+</script>
+</body>
+</html>
