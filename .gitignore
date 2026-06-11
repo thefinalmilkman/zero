@@ -1,0 +1,15 @@
+# Secrets — never commit
+.env
+.env.*
+.keys/
+*.key
+*.pem
+id_*.json
+*-wallet.json
+crypto_seed.txt
+wallet_backup.txt
+
+# Noise
+node_modules/
+.DS_Store
+*.log
