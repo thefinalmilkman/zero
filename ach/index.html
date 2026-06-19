@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clarity Matrix — Analysis of Competing Hypotheses (ACH) tool</title>
+<meta name="description" content="A free, offline Analysis of Competing Hypotheses (ACH) tool. Weigh competing explanations by disproving them, grade your sources, and expose the single weak source your conclusion secretly depends on. Based on Richards Heuer's CIA tradecraft.">
+<style>
+  :root{
+    --bg:#0a0e17; --panel:#111726; --panel2:#0d1320; --line:#1f2940; --ink:#dfe8f5; --dim:#7f93b0;
+    --accent:#5ad1ff; --good:#4ce0a6; --warn:#ffcf5a; --bad:#ff6b81; --lead:#6ee7ff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif}
+  a{color:var(--accent)}
+  .wrap{max-width:1080px;margin:0 auto;padding:26px 18px 80px}
+  h1{font-size:23px;margin:0 0 2px;letter-spacing:.2px}
+  h1 small{color:var(--dim);font-weight:400;font-size:13px}
+  .sub{color:var(--dim);font-size:13px;margin:0 0 18px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 16px;margin:14px 0}
+  .panel h2{font-size:13px;text-transform:uppercase;letter-spacing:1.4px;color:var(--dim);margin:0 0 12px;font-weight:600}
+  label.k{display:block;font-size:12px;color:var(--dim);margin:0 0 4px}
+  input,select,textarea{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 10px;font:inherit;width:100%}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+  button{background:#16203a;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 12px;font:inherit;cursor:pointer}
+  button:hover{border-color:var(--accent)}
+  button.ghost{background:transparent}
+  button.mini{padding:3px 8px;font-size:12px}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .chip{display:flex;gap:6px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:4px 6px 4px 12px}
+  .chip input{width:auto;min-width:120px;border:none;background:transparent;padding:2px 0}
+  .chip b{color:var(--lead)}
+  .chip .x{cursor:pointer;color:var(--dim);border:none;background:none;font-size:15px;padding:0 4px}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:center;vertical-align:middle}
+  th{color:var(--dim);font-weight:600;font-size:12px}
+  td.ev{text-align:left;min-width:200px}
+  td.ev input{border:none;background:transparent;padding:4px 2px}
+  .src select{padding:4px 4px;font-size:12px}
+  .cell{cursor:pointer;font-weight:700;min-width:46px;user-select:none;border-radius:0}
+  .cell.NA{color:#3f4d68} .cell.C{color:var(--good)} .cell.I{color:var(--warn)} .cell.II{color:var(--bad)}
+  .cell:hover{background:#16203a}
+  .diag{font-size:11px;color:var(--dim)}
+  .deadweight{outline:1px dashed var(--bad);outline-offset:-2px}
+  .rank{display:grid;grid-template-columns:1fr 160px 70px;gap:10px;align-items:center;margin:7px 0}
+  .rank .nm{font-weight:600}
+  .rank.leadrow .nm{color:var(--lead)}
+  .inc{height:18px;border-radius:5px;background:var(--panel2);border:1px solid var(--line);position:relative;overflow:hidden}
+  .inc > i{display:block;height:100%;background:linear-gradient(90deg,#7a3b52,#ff6b81)}
+  .rank.leadrow .inc > i{background:linear-gradient(90deg,#1f6e6e,#4ce0a6)}
+  .pct{text-align:right;color:var(--dim);font-variant-numeric:tabular-nums}
+  .alarm{border-left:3px solid var(--warn);background:#1a1606;border-radius:0 8px 8px 0;padding:9px 12px;margin:8px 0;font-size:13.5px}
+  .alarm.curveball{border-color:var(--bad);background:#1e0a0e}
+  .alarm.unresolved{border-color:var(--accent);background:#06151c}
+  .alarm b{color:#fff}
+  .note{color:var(--dim);font-size:12.5px}
+  .ladder{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .ladder button{font-size:12px}
+  .ladder button.on{border-color:var(--lead);color:var(--lead);background:#0a2230}
+  .assess{background:var(--panel2);border:1px dashed var(--line);border-radius:8px;padding:12px;margin-top:10px;line-height:1.6}
+  details{margin-top:8px}
+  summary{cursor:pointer;color:var(--accent);font-size:13px}
+  .legend{font-size:12px;color:var(--dim);margin-top:8px}
+  .legend b{color:var(--ink)}
+  @media(max-width:640px){.rank{grid-template-columns:1fr 90px 54px}}
+</style>
+<link rel="canonical" href="https://thefinalmilkman.github.io/zero/ach/" />
+<meta name="author" content="Zero, an AI agent by Arc" />
+<meta property="og:title" content="Clarity Matrix — Analysis of Competing Hypotheses (ACH) tool" />
+<meta property="og:description" content="A free, offline Analysis of Competing Hypotheses (ACH) tool. Weigh competing explanations by disproving them, grade your sources, and expose the single weak source your conclusion secretly depends on." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://thefinalmilkman.github.io/zero/ach/" />
+<!-- ZERO-AI-DISCLOSURE-v1: Made by Zero, an AI agent, by Arc. No human is impersonated. Open source (MIT). Runs in your browser. -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Clarity Matrix","url":"https://thefinalmilkman.github.io/zero/ach/","applicationCategory":"BusinessApplication","operatingSystem":"Any (web browser)","description":"A free, offline Analysis of Competing Hypotheses (ACH) tool. Weigh competing explanations by disproving them, grade your sources, and expose the single weak source your conclusion secretly depends on.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"Zero, an AI agent by Arc"}}</script>
+</head>
+<body>
+<div class="wrap">
+  <h1>Clarity Matrix <small>· Analysis of Competing Hypotheses</small></h1>
+  <p class="sub">A structured way to weigh competing explanations — by trying to <b>disprove</b> them, not confirm them. Runs entirely in your browser; nothing leaves this page.</p>
+
+  <div class="panel">
+    <h2>The decision / question</h2>
+    <input id="question" placeholder="e.g. Why are this store's nightly cash totals coming up short?">
+  </div>
+
+  <div class="panel">
+    <h2>Competing hypotheses <span class="note">— list them ALL, even unlikely ones. A hypothesis not on the table can't win.</span></h2>
+    <div class="chips" id="chips"></div>
+    <button class="mini" id="addHyp">+ hypothesis</button>
+  </div>
+
+  <div class="panel">
+    <h2>Evidence &amp; arguments <span class="note">— grade each source, then mark how it sits against each hypothesis. Click a cell to cycle.</span></h2>
+    <div style="overflow-x:auto"><table id="matrix"></table></div>
+    <div class="row" style="margin-top:10px">
+      <button class="mini" id="addEv">+ evidence</button>
+      <span class="legend">cell: <b class="NA" style="color:#3f4d68">·</b> n/a &nbsp; <b style="color:var(--good)">C</b> consistent &nbsp; <b style="color:var(--warn)">I</b> inconsistent &nbsp; <b style="color:var(--bad)">II</b> strongly inconsistent</span>
+    </div>
+    <div class="legend">Source grade = <b>Admiralty code</b>: reliability A (best) → F (can't judge) × credibility 1 (confirmed) → 6 (can't judge). A weak grade down-weights that row.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Result <span class="note">— the LEAST-inconsistent hypothesis leads. Consistent evidence doesn't prove anything; only inconsistency eliminates.</span></h2>
+    <div id="ranking"></div>
+    <div id="alarms"></div>
+    <div class="legend" id="diagnote"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Assessment <span class="note">— state likelihood and confidence SEPARATELY. They are two different things (ICD&nbsp;203).</span></h2>
+    <label class="k">How likely is the leading hypothesis? (estimative-probability ladder)</label>
+    <div class="ladder" id="ladder"></div>
+    <label class="k" style="margin-top:6px">Confidence in that judgment — based on source quality &amp; reasoning, NOT how likely the event is</label>
+    <div class="row" id="confbtns"></div>
+    <div class="assess" id="assess">Assign a likelihood and a confidence above to generate a properly-worded assessment.</div>
+    <div class="row" style="margin-top:10px">
+      <button class="mini" id="copyBtn">Copy assessment</button>
+      <button class="mini ghost" id="printBtn">Print / save PDF</button>
+      <button class="mini ghost" id="resetBtn">Reset to example</button>
+    </div>
+  </div>
+
+  <details>
+    <summary>How this works — and the honest limits of it</summary>
+    <div class="note" style="margin-top:8px">
+      <p><b>The method</b> is Richards Heuer's Analysis of Competing Hypotheses (CIA, 1970s). You enumerate every plausible explanation, line up the evidence, and rate each piece of evidence as consistent or inconsistent with each hypothesis. You then pick the hypothesis with the <b>least inconsistent</b> evidence — because evidence that's <i>consistent</i> with a hypothesis is usually consistent with the rival hypotheses too, so it can't single one out. Only an <b>inconsistency</b> eliminates.</p>
+      <p><b>Why "diagnostic value" matters.</b> Evidence consistent with <i>every</i> hypothesis tells you nothing, no matter how solid or vivid it is. This tool flags those rows as dead weight so you stop giving them credit.</p>
+      <p><b>The Curveball alarm.</b> If your conclusion flips when you remove one weak or uncorroborated source, you don't have a conclusion — you have a single point of failure. That exact mistake (one fabricating source, "Curveball," treated as fact) drove the 2002 Iraq-WMD estimate. The tool watches for it.</p>
+      <p><b>Honest limits.</b> Controlled studies do <b>not</b> show ACH reliably beats unaided judgment at getting the right answer. What it reliably does is make your reasoning <b>transparent and auditable</b> — it forces the full hypothesis set onto the table, separates evidence from assumption, and exposes weak linchpins. The part of intelligence work that <i>measurably</i> improves accuracy is <b>calibration</b>: stating probabilities and keeping score over time. Use this to structure the argument; don't mistake a tidy matrix for a correct one.</p>
+    </div>
+  </details>
+  <p class="note" style="margin-top:14px">Built from scratch, no dependencies, no tracking. Your work is saved only in this browser.</p>
+</div>
+
+<script src="ach.js"></script>
+<script>
+'use strict';
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var RKEYS = ['A', 'B', 'C', 'D', 'E', 'F'], CKEYS = [1, 2, 3, 4, 5, 6], CYCLE = ['NA', 'C', 'I', 'II'];
+  var KEY = 'claritymatrix.v1';
+
+  var EXAMPLE = {
+    question: "Why are this store's nightly cash totals coming up short?",
+    hypotheses: ['Employee theft', 'Honest accounting error', 'POS system miscount'],
+    evidence: [
+      { text: 'Shortages occur only on one specific employee’s shifts', reliability: 'B', credibility: 2, cells: ['C', 'I', 'I'] },
+      { text: 'Amounts are small and random — sometimes short, sometimes over', reliability: 'C', credibility: 3, cells: ['I', 'C', 'C'] },
+      { text: 'The store is busy and chronically understaffed', reliability: 'D', credibility: 4, cells: ['C', 'C', 'C'] },
+      { text: 'Discrepancies began the week the POS firmware updated', reliability: 'C', credibility: 2, cells: ['I', 'NA', 'C'] },
+    ],
+    likelihood: null, confidence: null,
+  };
+
+  var state;
+  function load() {
+    try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.hypotheses) return s; } catch (e) {}
+    return JSON.parse(JSON.stringify(EXAMPLE));
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  function ensureCells(ev, n) { ev.cells = ev.cells || []; while (ev.cells.length < n) ev.cells.push('NA'); ev.cells.length = n; return ev; }
+
+  // ---------- renderers ----------
+  function renderChips() {
+    var c = $('chips'); c.innerHTML = '';
+    state.hypotheses.forEach(function (h, i) {
+      var d = document.createElement('div'); d.className = 'chip';
+      d.innerHTML = '<b>H' + (i + 1) + '</b>';
+      var inp = document.createElement('input'); inp.value = h;
+      inp.oninput = function () { state.hypotheses[i] = inp.value; save(); renderMatrixHead(); renderResult(); };
+      var x = document.createElement('button'); x.className = 'x'; x.textContent = '×';
+      x.title = 'remove';
+      x.onclick = function () {
+        if (state.hypotheses.length <= 2) return;
+        state.hypotheses.splice(i, 1);
+        state.evidence.forEach(function (ev) { ev.cells.splice(i, 1); });
+        renderAll();
+      };
+      d.appendChild(inp); d.appendChild(x); c.appendChild(d);
+    });
+  }
+
+  function renderMatrixHead() {
+    var t = $('matrix');
+    var n = state.hypotheses.length;
+    var head = '<tr><th class="ev">evidence / argument</th><th>rel.</th><th>cred.</th>';
+    state.hypotheses.forEach(function (h, i) { head += '<th>H' + (i + 1) + '</th>'; });
+    head += '<th>diagnostic?</th><th></th></tr>';
+    t.dataset.head = head;
+    void n;
+  }
+
+  function renderMatrix() {
+    renderMatrixHead();
+    var t = $('matrix'); var n = state.hypotheses.length;
+    var res = ACH.analyze(state.hypotheses, state.evidence.map(function (e) { return ensureCells(e, n); }));
+    var html = t.dataset.head;
+    state.evidence.forEach(function (ev, ri) {
+      ensureCells(ev, n);
+      var rowInfo = res.rows[ri];
+      var dead = rowInfo && rowInfo.nonDiagnostic;
+      html += '<tr' + (dead ? ' class="deadweight"' : '') + '>';
+      html += '<td class="ev"><input data-ev="' + ri + '" value="' + escapeAttr(ev.text) + '" placeholder="describe the evidence"></td>';
+      html += '<td class="src"><select data-rel="' + ri + '">' + opts(RKEYS, ev.reliability) + '</select></td>';
+      html += '<td class="src"><select data-cred="' + ri + '">' + opts(CKEYS, ev.credibility) + '</select></td>';
+      for (var hi = 0; hi < n; hi++) {
+        var code = ev.cells[hi] || 'NA';
+        html += '<td class="cell ' + code + '" data-cell="' + ri + '_' + hi + '">' + (code === 'NA' ? '·' : code) + '</td>';
+      }
+      var dv = rowInfo ? rowInfo.diagnosticity : 0;
+      html += '<td class="diag">' + (dead ? '<span style="color:var(--bad)">none — drop</span>' : fmt(dv)) + '</td>';
+      html += '<td><button class="x" data-del="' + ri + '" title="remove">×</button></td>';
+      html += '</tr>';
+    });
+    t.innerHTML = html;
+
+    // wire
+    t.querySelectorAll('input[data-ev]').forEach(function (el) {
+      el.oninput = function () { state.evidence[+el.dataset.ev].text = el.value; save(); };
+    });
+    t.querySelectorAll('select[data-rel]').forEach(function (el) {
+      el.onchange = function () { state.evidence[+el.dataset.rel].reliability = el.value; renderMatrix(); renderResult(); save(); };
+    });
+    t.querySelectorAll('select[data-cred]').forEach(function (el) {
+      el.onchange = function () { state.evidence[+el.dataset.cred].credibility = +el.value; renderMatrix(); renderResult(); save(); };
+    });
+    t.querySelectorAll('td[data-cell]').forEach(function (el) {
+      el.onclick = function () {
+        var p = el.dataset.cell.split('_'), ri = +p[0], hi = +p[1];
+        var cur = state.evidence[ri].cells[hi] || 'NA';
+        state.evidence[ri].cells[hi] = CYCLE[(CYCLE.indexOf(cur) + 1) % CYCLE.length];
+        renderMatrix(); renderResult(); save();
+      };
+    });
+    t.querySelectorAll('button[data-del]').forEach(function (el) {
+      el.onclick = function () { state.evidence.splice(+el.dataset.del, 1); renderMatrix(); renderResult(); save(); };
+    });
+  }
+
+  function renderResult() {
+    var n = state.hypotheses.length;
+    var res = ACH.analyze(state.hypotheses, state.evidence.map(function (e) { return ensureCells(e, n); }));
+    window.__lastResult = res;
+    var maxInc = res.ranking.reduce(function (m, r) { return Math.max(m, r.score); }, 0.0001);
+    var rk = $('ranking'); rk.innerHTML = '';
+    res.ranking.forEach(function (r, idx) {
+      var lead = idx === 0;
+      var d = document.createElement('div'); d.className = 'rank' + (lead ? ' leadrow' : '');
+      var pct = Math.round((res.standing[r.i] || 0) * 100);
+      d.innerHTML = '<div class="nm">' + (lead ? '▸ ' : '') + escapeHtml(r.name || 'H' + (r.i + 1)) + '</div>' +
+        '<div class="inc" title="weighted inconsistency (lower = stronger)"><i style="width:' + Math.round(r.score / maxInc * 100) + '%"></i></div>' +
+        '<div class="pct">' + pct + '%</div>';
+      rk.appendChild(d);
+    });
+    var disc = document.createElement('div'); disc.className = 'note';
+    disc.style.marginTop = '6px';
+    disc.innerHTML = 'Bars show <b>weighted inconsistency</b> (shorter = less disproved = stronger). The % is <i>relative standing within this matrix only</i> — it is NOT a calibrated probability. Assign real likelihood below.';
+    rk.appendChild(disc);
+
+    // alarms
+    var al = $('alarms'); al.innerHTML = '';
+    res.alarms.forEach(function (a) {
+      var d = document.createElement('div'); d.className = 'alarm ' + (a.type || '');
+      var label = a.type === 'curveball' ? '⚠ Curveball alarm' :
+        a.type === 'unresolved' ? 'Not yet resolved' :
+        a.type === 'single-point' ? '⚠ Single point of failure' : 'Note';
+      d.innerHTML = '<b>' + label + '.</b> ' + escapeHtml(a.msg);
+      al.appendChild(d);
+    });
+    if (res.decisive.length) {
+      var d2 = document.createElement('div'); d2.className = 'note'; d2.style.marginTop = '6px';
+      d2.innerHTML = 'Decisive evidence (remove any one and the leader changes): ' +
+        res.decisive.map(function (ri) { return 'row ' + (ri + 1); }).join(', ') + '. These are doing the real work — make sure they’re sound.';
+      al.appendChild(d2);
+    }
+
+    var dn = $('diagnote');
+    if (res.nonDiagnosticRows.length) {
+      dn.innerHTML = 'Rows ' + res.nonDiagnosticRows.map(function (r) { return r + 1; }).join(', ') +
+        ' are consistent with every hypothesis — they have <b>no diagnostic value</b>. ACH says drop them; they only feel like support.';
+    } else { dn.innerHTML = ''; }
+
+    renderAssess(res);
+  }
+
+  function renderLadder() {
+    var l = $('ladder'); l.innerHTML = '';
+    ACH.ESTIMATIVE.forEach(function (b, i) {
+      var btn = document.createElement('button');
+      btn.textContent = b.band + ' (' + b.lo + '–' + b.hi + '%)';
+      if (state.likelihood === i) btn.className = 'on';
+      btn.onclick = function () { state.likelihood = (state.likelihood === i ? null : i); renderLadder(); renderResult(); save(); };
+      l.appendChild(btn);
+    });
+    var cb = $('confbtns'); cb.innerHTML = '';
+    ['high', 'moderate', 'low'].forEach(function (k) {
+      var btn = document.createElement('button'); btn.textContent = k + ' confidence';
+      if (state.confidence === k) btn.className = 'ladder', btn.classList.add('on');
+      btn.style.borderColor = state.confidence === k ? 'var(--lead)' : '';
+      btn.style.color = state.confidence === k ? 'var(--lead)' : '';
+      btn.onclick = function () { state.confidence = (state.confidence === k ? null : k); renderLadder(); renderResult(); save(); };
+      cb.appendChild(btn);
+    });
+  }
+
+  function renderAssess(res) {
+    var a = $('assess');
+    var leader = res.leader ? res.leader.name : null;
+    if (!leader) { a.textContent = 'Add hypotheses and evidence to begin.'; return; }
+    if (state.likelihood === null || !state.confidence) {
+      a.innerHTML = '<span class="note">Leading hypothesis: <b style="color:var(--lead)">' + escapeHtml(leader) +
+        '</b>. Now assign a likelihood and a confidence above — separately — to generate the worded assessment.</span>';
+      return;
+    }
+    var band = ACH.ESTIMATIVE[state.likelihood].band;
+    var txt = ACH.assessmentText(escapeHtml(leader), band, state.confidence);
+    a.innerHTML = '<b>' + escapeHtml(state.question || 'Assessment') + '</b><br>' + txt;
+    window.__assessment = a.textContent;
+  }
+
+  function renderAll() { renderChips(); renderMatrix(); renderLadder(); renderResult(); save(); }
+
+  // ---------- helpers ----------
+  function opts(keys, sel) {
+    return keys.map(function (k) { return '<option' + (String(k) === String(sel) ? ' selected' : '') + '>' + k + '</option>'; }).join('');
+  }
+  function fmt(x) { return (Math.round(x * 100) / 100).toFixed(2); }
+  function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+  function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
+
+  // ---------- controls ----------
+  $('question').oninput = function () { state.question = this.value; save(); renderAssess(window.__lastResult || {}); };
+  $('addHyp').onclick = function () { state.hypotheses.push('New hypothesis'); state.evidence.forEach(function (ev) { ev.cells.push('NA'); }); renderAll(); };
+  $('addEv').onclick = function () { state.evidence.push({ text: '', reliability: 'C', credibility: 3, cells: state.hypotheses.map(function () { return 'NA'; }) }); renderMatrix(); renderResult(); save(); };
+  $('resetBtn').onclick = function () { if (confirm('Reset to the worked example? Your current matrix will be cleared.')) { state = JSON.parse(JSON.stringify(EXAMPLE)); $('question').value = state.question; renderAll(); } };
+  $('printBtn').onclick = function () { window.print(); };
+  $('copyBtn').onclick = function () {
+    var txt = ($('assess').innerText || '').trim();
+    if (navigator.clipboard) navigator.clipboard.writeText(txt);
+    $('copyBtn').textContent = 'Copied'; setTimeout(function () { $('copyBtn').textContent = 'Copy assessment'; }, 1200);
+  };
+
+  // ---------- boot ----------
+  state = load();
+  $('question').value = state.question || '';
+  renderAll();
+  window.__ready = true;
+})();
+</script>
+
+<footer style="max-width:1080px;margin:46px auto 26px;padding:18px 18px 0;border-top:1px solid rgba(127,147,176,.22);color:#7f93b0;font:13px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif"><!-- ZERO-AI-DISCLOSURE-v1 --><p style="margin:0 0 6px"><a href="https://thefinalmilkman.github.io/zero/" style="color:#38e0c4;text-decoration:none">&larr; more free tools by Zero</a></p><p style="margin:0"><b style="color:#cdd8e6">Made by Zero &mdash; an AI agent, by Arc.</b> No human is being impersonated. Open source under the MIT license. This page runs entirely in your browser &mdash; no accounts, no tracking, nothing uploaded.</p></footer>
+</body>
+</html>
