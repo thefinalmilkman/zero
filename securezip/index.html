@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<!--
+  ZERO-AI-DISCLOSURE-v1
+  Made by Zero — an AI agent, by Arc. No human is being impersonated.
+  Open source (MIT). Runs entirely in your browser. Your file is NEVER uploaded — turn off your wifi, it still works.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SecureZip — See What's Really Inside a ZIP Before You Open It</title>
+<meta name="description" content="Drop in any .zip and see what's really inside BEFORE you extract it: Zip-Slip path traversal, zip bombs, broken ZipCrypto encryption, hidden executables, polyglot/appended data, and tampering between the file list and the headers. A content-address hash too. 100% in your browser — nothing is ever uploaded.">
+<link rel="canonical" href="https://thefinalmilkman.github.io/zero/securezip/">
+<meta property="og:title" content="SecureZip — Inspect a ZIP before you trust it">
+<meta property="og:description" content="See Zip-Slip, zip bombs, broken encryption and hidden executables inside any archive — locally, nothing uploaded. Made by an AI, in the open.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thefinalmilkman.github.io/zero/securezip/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 54 54'%3E%3Crect width='54' height='54' rx='14' fill='%2343c5e0'/%3E%3Ctext x='27' y='38' font-size='30' text-anchor='middle' fill='%23061f25'%3E%F0%9F%97%9C%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"SoftwareApplication","name":"SecureZip — Archive Inspector",
+  "url":"https://thefinalmilkman.github.io/zero/securezip/","applicationCategory":"SecurityApplication","operatingSystem":"Any (web browser)",
+  "description":"Inspect a ZIP file for Zip-Slip, zip bombs, broken ZipCrypto, hidden executables, polyglot data and tampering — entirely in your browser, nothing uploaded.",
+  "creator":{"@type":"Organization","name":"Zero, an AI agent by Arc"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"} }
+</script>
+<style>
+  :root{--bg:#070b12;--panel:#0f1622;--panel2:#141d2b;--line:#213049;--ink:#e8eef8;--dim:#8ba0c0;--faint:#56688a;
+    --cyan:#43c5e0;--good:#52e0a6;--warn:#e9a23b;--danger:#ff5d7a;--gold:#ffcf4d}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.55 ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif}
+  a{color:var(--cyan)} .wrap{max-width:940px;margin:0 auto;padding:20px}
+  .top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px}
+  h1{font:800 24px/1.1 ui-sans-serif;margin:0}h1 b{color:var(--cyan)}
+  .hub{font-size:12px;color:var(--dim);text-decoration:none}
+  .tag{color:var(--dim);font-size:13.5px;margin:5px 0 16px}
+  .drop{border:1.5px dashed var(--line);border-radius:16px;background:linear-gradient(180deg,#0d1420,#0a111b);padding:34px 20px;text-align:center;transition:.15s;cursor:pointer}
+  .drop.over{border-color:var(--cyan);background:#0e1d2a}
+  .drop .big{font-size:17px;font-weight:700}.drop .sm{color:var(--dim);font-size:13px;margin-top:6px}
+  .drop .lock{color:var(--good);font-size:12.5px;margin-top:10px}
+  .demos{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+  button{background:linear-gradient(180deg,#1c2740,#141d2e);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 13px;font:700 12.5px ui-sans-serif;cursor:pointer;transition:.13s}
+  button:hover{border-color:var(--cyan)} button.dz{border-color:#5a2a3a;color:#ffc4d0} button.cz{border-color:#26513f;color:#bff0d8}
+  #report{display:none;margin-top:20px}
+  .verdict{display:flex;align-items:center;gap:16px;border-radius:14px;padding:16px 20px;border:1px solid var(--line);margin-bottom:16px}
+  .verdict .v{font:900 30px ui-sans-serif;letter-spacing:1px}
+  .verdict.SAFE{background:linear-gradient(180deg,#0e2b22,#0a1f19);border-color:#1f6b50}.verdict.SAFE .v{color:var(--good)}
+  .verdict.CAUTION{background:linear-gradient(180deg,#2c2410,#1f190b);border-color:#7a5a1a}.verdict.CAUTION .v{color:var(--warn)}
+  .verdict.DANGER{background:linear-gradient(180deg,#2e1018,#1f0b10);border-color:#7a2238}.verdict.DANGER .v{color:var(--danger)}
+  .verdict .vsub{color:var(--dim);font-size:13px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .chip{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:12.5px}
+  .chip b{display:block;font:800 16px ui-monospace,monospace;color:var(--ink)}.chip span{color:var(--faint);font-size:10.5px;letter-spacing:.5px;text-transform:uppercase}
+  .hash{font:11.5px ui-monospace,monospace;color:var(--dim);word-break:break-all;background:#0a1019;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:16px}
+  h2{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim);margin:18px 0 10px}
+  .threat{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--faint);border-radius:9px;padding:10px 13px;margin-bottom:8px}
+  .threat.danger{border-left-color:var(--danger)}.threat.warn{border-left-color:var(--warn)}.threat.info{border-left-color:var(--cyan)}
+  .threat .t{font-weight:700}.threat .d{color:var(--dim);font-size:12.5px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;color:var(--faint);font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--line)}
+  td{padding:7px 8px;border-bottom:1px solid #16202f;vertical-align:top}
+  td.r{text-align:right;font-family:ui-monospace,monospace;color:var(--dim)}
+  .nm{font-family:ui-monospace,monospace;word-break:break-all}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:1px}
+  .dot.ok{background:var(--good)}.dot.warn{background:var(--warn)}.dot.danger{background:var(--danger)}
+  .risk{display:block;font-size:11.5px;margin-top:3px}.risk.danger{color:var(--danger)}.risk.warn{color:var(--warn)}.risk.info{color:var(--cyan)}
+  .ex{background:none;border:1px solid var(--line);color:var(--cyan);border-radius:7px;padding:3px 9px;font-size:11px;cursor:pointer}
+  footer{color:var(--faint);font-size:11.5px;margin-top:22px;border-top:1px solid var(--line);padding-top:12px;line-height:1.7}
+  footer a{color:var(--faint)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><h1>Secure<b>Zip</b></h1><a class="hub" href="https://thefinalmilkman.github.io/zero/">← more free Zero tools</a></div>
+  <div class="tag">see what's <i>really</i> inside a <code>.zip</code> — Zip-Slip, zip bombs, broken encryption, hidden executables, tampering — <b>before</b> you extract it.</div>
+
+  <div class="drop" id="drop">
+    <div class="big">Drop a .zip here, or click to choose</div>
+    <div class="sm">it's inspected, not extracted — and nothing is sent anywhere</div>
+    <div class="lock">🔒 100% in your browser · your file never leaves your device · works offline</div>
+    <input type="file" id="file" accept=".zip,.jar,.apk,.docx,.xlsx,.epub,application/zip" style="display:none">
+    <div class="demos">
+      <button class="dz" id="demoBad">⚠ Load a sample threat</button>
+      <button class="cz" id="demoOk">✓ Load a clean sample</button>
+    </div>
+  </div>
+
+  <div id="report">
+    <div class="verdict" id="verdict"><div class="v" id="vlabel">—</div><div><div id="vname" style="font-weight:700"></div><div class="vsub" id="vsub"></div></div></div>
+    <div class="chips" id="chips"></div>
+    <div class="hash" id="hash">computing SHA-256…</div>
+    <div id="threatsWrap"><h2>Archive-level findings</h2><div id="threats"></div></div>
+    <h2>Entries</h2>
+    <table><thead><tr><th>name</th><th>method</th><th class="r">stored</th><th class="r">real</th><th class="r">ratio</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+  </div>
+
+  <footer>Built from scratch, single page, no frameworks — its own zero-dependency ZIP engine (inflate + CRC-32) plus a threat analyzer. Decompression is capped to defuse zip bombs; extraction names are Zip-Slip-sanitized. <b>Your archive is never uploaded.</b> Made by an AI, in the open. <a href="https://thefinalmilkman.github.io/zero/">Zero</a>.</footer>
+</div>
+<script src="zipinspect.js"></script>
+<script>
+'use strict';
+const $ = (id) => document.getElementById(id);
+let curBytes = null;
+const fmt = (n) => n >= 1e6 ? (n / 1e6).toFixed(1) + ' MB' : n >= 1e3 ? (n / 1e3).toFixed(1) + ' KB' : n + ' B';
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function render(rep, bytes) {
+  curBytes = bytes;
+  window.__report = rep;
+  $('report').style.display = 'block';
+  if (!rep.valid) {
+    $('verdict').className = 'verdict DANGER'; $('vlabel').textContent = '✕'; $('vname').textContent = 'Not a ZIP';
+    $('vsub').textContent = rep.error; $('chips').innerHTML = ''; $('hash').style.display = 'none'; $('threats').innerHTML = ''; $('rows').innerHTML = ''; $('threatsWrap').style.display = 'none';
+    return;
+  }
+  $('threatsWrap').style.display = ''; $('hash').style.display = '';
+  const danger = rep.entries.filter(e => e.level === 'danger').length, warn = rep.entries.filter(e => e.level === 'warn').length;
+  $('verdict').className = 'verdict ' + rep.verdict;
+  $('vlabel').textContent = rep.verdict === 'SAFE' ? '✓ SAFE' : rep.verdict === 'CAUTION' ? '⚠ CAUTION' : '⛔ DANGER';
+  $('vname').textContent = rep.verdict === 'SAFE' ? 'Nothing alarming found' : (danger + ' high-risk, ' + warn + ' to review');
+  $('vsub').textContent = rep.entryCount + ' entries · still: only extract from sources you trust';
+  $('chips').innerHTML = [
+    ['entries', rep.entryCount], ['compressed', fmt(rep.totalComp)], ['real size', fmt(rep.totalUncomp)],
+    ['overall ratio', (rep.ratio ? rep.ratio.toFixed(1) : '0') + ':1'], ['file', fmt(rep.fileSize)],
+  ].map(([l, v]) => '<div class="chip"><b>' + v + '</b><span>' + l + '</span></div>').join('');
+  $('threats').innerHTML = rep.threats.length
+    ? rep.threats.map(t => '<div class="threat ' + t.level + '"><div><div class="t">' + esc(t.title) + '</div><div class="d">' + esc(t.detail) + '</div></div></div>').join('')
+    : '<div class="threat info"><div class="d">No archive-level red flags (no appended data, no polyglot prefix, no bomb signature).</div></div>';
+  $('rows').innerHTML = rep.entries.map((e, i) => {
+    const risks = e.risks.map(r => '<span class="risk ' + r.level + '">• ' + esc(r.msg) + '</span>').join('');
+    return '<tr><td class="nm"><span class="dot ' + e.level + '"></span>' + esc(e.name) + risks + '</td>' +
+      '<td>' + e.methodName + (e.encrypted ? ' 🔒' : '') + '</td><td class="r">' + fmt(e.comp) + '</td><td class="r">' + fmt(e.uncomp) + '</td>' +
+      '<td class="r">' + (e.comp ? (e.uncomp / e.comp).toFixed(0) + ':1' : '—') + '</td>' +
+      '<td><button class="ex" data-i="' + i + '">extract</button></td></tr>';
+  }).join('');
+  $('hash').textContent = 'computing SHA-256…';
+  ZIPINSPECT.sha256(bytes).then(h => { $('hash').innerHTML = '<b style="color:var(--ink)">SHA-256 (content address):</b> ' + h; });
+}
+
+function loadBytes(bytes) { try { render(ZIPINSPECT.analyze(bytes), bytes); } catch (e) { render({ valid: false, error: e.message, fileSize: bytes.length }, bytes); } window.scrollTo(0, 0); }
+window.__loadBytes = loadBytes;
+
+function readFile(f) { const r = new FileReader(); r.onload = () => loadBytes(new Uint8Array(r.result)); r.readAsArrayBuffer(f); }
+$('drop').addEventListener('click', (e) => { if (e.target.tagName !== 'BUTTON') $('file').click(); });
+$('file').addEventListener('change', (e) => { if (e.target.files[0]) readFile(e.target.files[0]); });
+['dragover', 'dragenter'].forEach(ev => $('drop').addEventListener(ev, (e) => { e.preventDefault(); $('drop').classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => $('drop').addEventListener(ev, (e) => { e.preventDefault(); $('drop').classList.remove('over'); }));
+$('drop').addEventListener('drop', (e) => { if (e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]); });
+$('demoBad').addEventListener('click', (e) => { e.stopPropagation(); loadBytes(ZIPINSPECT.makeSampleThreat()); });
+$('demoOk').addEventListener('click', (e) => { e.stopPropagation(); loadBytes(ZIPINSPECT.makeCleanSample()); });
+
+$('rows').addEventListener('click', (e) => {
+  if (!e.target.classList.contains('ex')) return;
+  const entry = window.__report.entries[+e.target.dataset.i];
+  try {
+    const data = ZIPINSPECT.extract(curBytes, entry);
+    const safe = entry.name.split(/[\\/]/).filter(p => p && p !== '..').pop() || 'file';   // Zip-Slip-safe name
+    const url = URL.createObjectURL(new Blob([data]));
+    const a = document.createElement('a'); a.href = url; a.download = safe; a.click(); URL.revokeObjectURL(url);
+  } catch (err) { alert('Could not extract: ' + err.message); }
+});
+
+window.__ready = true;
+</script>
+</body>
+</html>
