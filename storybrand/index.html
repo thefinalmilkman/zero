@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c0d12">
+<meta name="description" content="Free StoryBrand script generator. Fill in your business details and get a complete customer-as-hero brand narrative — headline, problem, plan, CTA, and transformation. Based on Donald Miller's SB7 framework.">
+<title>StoryBrand Generator — make your customer the hero</title>
+<style>
+:root {
+  --bg:#0b0c11; --panel:#14161d; --panel2:#1b1e27; --line:#272b36;
+  --ink:#e7e9f0; --dim:#8a8fa0; --faint:#5c6172;
+  --accent:#8a7bf0; --accent2:#b3a7ff;
+  --good:#48c97a; --good-bg:rgba(72,201,122,.1); --good-line:rgba(72,201,122,.3);
+  --warn:#e6a93f; --warn-bg:rgba(230,169,63,.1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body {
+  background:radial-gradient(1100px 700px at 50% -8%,#191a2b 0%,var(--bg) 60%) fixed;
+  color:var(--ink); font:15px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; min-height:100vh;
+}
+.wrap{max-width:800px;margin:0 auto;padding:28px 18px 100px}
+header{text-align:center;padding:18px 0 10px}
+.mark{font-weight:800;font-size:24px;letter-spacing:.4px}
+.mark span{color:var(--accent2)}
+.tag{color:var(--dim);font-size:13.5px;margin-top:5px}
+
+/* layout */
+.layout{display:grid;grid-template-columns:1fr;gap:22px;margin-top:28px}
+@media(min-width:700px){.layout{grid-template-columns:1fr 1fr}}
+
+/* form */
+.form-col{}
+.section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.sec-head{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sec-num{width:20px;height:20px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--dim);flex-shrink:0}
+.field{margin-bottom:12px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:12px;color:var(--dim);margin-bottom:5px;font-weight:500}
+.field input,.field textarea{
+  width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;
+  color:var(--ink);font:14px/1.5 inherit;padding:9px 12px;outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.field textarea{resize:vertical;min-height:54px}
+.field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(138,123,240,.14)}
+.field input::placeholder,.field textarea::placeholder{color:var(--faint)}
+.step-row{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;margin-bottom:8px}
+.step-row:last-child{margin-bottom:0}
+.step-badge{font-size:10px;font-weight:700;letter-spacing:.6px;color:var(--faint);padding:3px 8px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;white-space:nowrap}
+
+/* preview col */
+.preview-col{position:sticky;top:18px;height:fit-content}
+.preview-wrap{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.preview-label{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--faint);font-weight:700;padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.preview-body{padding:18px}
+.preview-section{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.preview-section:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.ps-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--faint);font-weight:600;margin-bottom:7px}
+.ps-content{font-size:13.5px;color:var(--ink);line-height:1.65}
+.ps-content .placeholder{color:var(--faint);font-style:italic}
+.ps-content .hl{color:var(--accent2);font-weight:600}
+.ps-content .sub{color:var(--dim)}
+.ps-steps{margin:8px 0 0;list-style:none;padding:0}
+.ps-steps li{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:13px;color:var(--dim)}
+.ps-steps li:last-child{margin-bottom:0}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--accent2);flex-shrink:0;margin-top:1px}
+.cta-btn{
+  display:inline-block;margin-top:8px;padding:9px 20px;background:rgba(138,123,240,.15);
+  border:1.5px solid rgba(138,123,240,.4);border-radius:10px;
+  color:var(--accent2);font-size:13px;font-weight:700;
+}
+.cta-alt{display:block;margin-top:6px;font-size:12px;color:var(--dim)}
+.ps-content .dead{color:#ef5d76}
+
+/* copy buttons */
+.copy-btn{
+  display:block;margin-top:8px;padding:5px 12px;font-size:11.5px;
+  background:var(--panel2);border:1px solid var(--line);border-radius:7px;
+  color:var(--dim);cursor:pointer;transition:all .15s;font-family:inherit;width:100%;text-align:left;
+}
+.copy-btn:hover{border-color:var(--accent);color:var(--ink)}
+.copy-btn.ok{border-color:var(--good);color:var(--good)}
+
+/* copy all */
+.copy-all{
+  width:100%;padding:11px;margin-top:14px;background:var(--panel2);
+  border:1.5px solid var(--line);border-radius:10px;
+  color:var(--ink);font:600 13.5px inherit;cursor:pointer;transition:all .15s;
+}
+.copy-all:hover{border-color:var(--accent2);color:var(--accent2)}
+.copy-all.ok{border-color:var(--good);color:var(--good)}
+
+footer{text-align:center;margin-top:48px;font-size:12px;color:var(--faint)}
+footer a{color:var(--faint);text-decoration:none}
+footer a:hover{color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">StoryBrand <span>Generator</span></div>
+    <div class="tag">Make your customer the hero. You are the guide.</div>
+  </header>
+
+  <div class="layout">
+    <!-- FORM COLUMN -->
+    <div class="form-col">
+
+      <div class="section">
+        <div class="sec-head"><span class="sec-num">1</span> The Hero</div>
+        <div class="field">
+          <label>Your company / brand name</label>
+          <input id="company" type="text" placeholder="e.g. MilkRun Auto" oninput="render()">
+        </div>
+        <div class="field">
+          <label>Your customer — who are they?</label>
+          <input id="hero" type="text" placeholder="e.g. small business owners" oninput="render()">
+        </div>
+        <div class="field">
+          <label>What do they want? (their goal)</label>
+          <input id="hero_want" type="text" placeholder="e.g. a website that brings in leads" oninput="render()">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head"><span class="sec-num">2</span> The Problem — three layers</div>
+        <div class="field">
+          <label>External — the tangible problem they face</label>
+          <input id="prob_ext" type="text" placeholder="e.g. their current website looks outdated" oninput="render()">
+        </div>
+        <div class="field">
+          <label>Internal — how it makes them feel</label>
+          <input id="prob_int" type="text" placeholder="e.g. embarrassed when they send someone to their site" oninput="render()">
+        </div>
+        <div class="field">
+          <label>Philosophical — why it's unjust / wrong</label>
+          <input id="prob_phil" type="text" placeholder="e.g. a good business deserves a professional presence" oninput="render()">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head"><span class="sec-num">3</span> You Are the Guide</div>
+        <div class="field">
+          <label>Empathy statement — show you understand their pain</label>
+          <textarea id="empathy" placeholder="e.g. We know how frustrating it is to lose a customer because your website didn't reflect the quality of your work." oninput="render()"></textarea>
+        </div>
+        <div class="field">
+          <label>Authority — why they should trust you</label>
+          <input id="authority" type="text" placeholder="e.g. We've built 40+ sites for local businesses" oninput="render()">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head"><span class="sec-num">4</span> The Plan — 3 simple steps</div>
+        <div class="step-row"><span class="step-badge">STEP 1</span><input id="step1" type="text" placeholder="e.g. Schedule a free call" oninput="render()"></div>
+        <div class="step-row"><span class="step-badge">STEP 2</span><input id="step2" type="text" placeholder="e.g. We build your site in 2 weeks" oninput="render()"></div>
+        <div class="step-row"><span class="step-badge">STEP 3</span><input id="step3" type="text" placeholder="e.g. Launch and start getting leads" oninput="render()"></div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head"><span class="sec-num">5</span> Call to Action</div>
+        <div class="field">
+          <label>Direct CTA — the main action (bold, specific)</label>
+          <input id="cta_direct" type="text" placeholder="e.g. Get your free site audit" oninput="render()">
+        </div>
+        <div class="field">
+          <label>Transitional CTA — low-commitment first step</label>
+          <input id="cta_soft" type="text" placeholder="e.g. See example sites" oninput="render()">
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head"><span class="sec-num">6</span> The Stakes — what happens if they don't act?</div>
+        <div class="field">
+          <textarea id="failure" placeholder="e.g. Every month without a professional site is another month of losing customers to competitors who look more credible." oninput="render()"></textarea>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="sec-head"><span class="sec-num">7</span> The Transformation — paint the success</div>
+        <div class="field">
+          <textarea id="success" placeholder="e.g. Imagine prospects finding you online, trusting what they see, and reaching out — without you having to pitch anyone." oninput="render()"></textarea>
+        </div>
+      </div>
+
+    </div><!-- /form-col -->
+
+    <!-- PREVIEW COLUMN -->
+    <div class="preview-col">
+      <div class="preview-wrap">
+        <div class="preview-label">
+          <span>Live brand script</span>
+        </div>
+        <div class="preview-body" id="preview-body">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+      <button class="copy-all" id="copy-all-btn" onclick="copyAll()">Copy full script</button>
+    </div>
+  </div>
+
+  <footer>
+    <a href="/zero/">← Zero tool library</a> &nbsp;·&nbsp; built by <a href="/zero/">Zero</a>
+  </footer>
+</div>
+
+<script>
+function g(id) { return document.getElementById(id).value.trim(); }
+function ph(text, fallback) { return text || `[${fallback}]`; }
+
+function render() {
+  const company   = g('company');
+  const hero      = g('hero');
+  const heroWant  = g('hero_want');
+  const probExt   = g('prob_ext');
+  const probInt   = g('prob_int');
+  const probPhil  = g('prob_phil');
+  const empathy   = g('empathy');
+  const authority = g('authority');
+  const step1     = g('step1');
+  const step2     = g('step2');
+  const step3     = g('step3');
+  const ctaDirect = g('cta_direct');
+  const ctaSoft   = g('cta_soft');
+  const failure   = g('failure');
+  const success   = g('success');
+
+  // headline: [hero] deserve [what they want]. [company] makes it happen.
+  let headline = '';
+  if (hero || heroWant) {
+    headline = `${ph(hero,'your customer')} deserve ${ph(heroWant,'what they want')}. ${ph(company,'We')} make it happen.`;
+  } else {
+    headline = ph(company,'Your brand') + ' helps you get what you deserve.';
+  }
+
+  // subheadline from internal problem
+  let sub = probInt
+    ? `Tired of feeling ${probInt}? You shouldn't have to.`
+    : '';
+  if (!sub && probExt) sub = `${probExt} — and that's holding you back.`;
+
+  // philosophical
+  let phil = probPhil ? `${probPhil}.` : '';
+
+  const body = document.getElementById('preview-body');
+
+  body.innerHTML = `
+    <div class="preview-section">
+      <div class="ps-tag">Headline</div>
+      <div class="ps-content hl">${esc(headline)}</div>
+      ${sub ? `<div class="ps-content sub" style="margin-top:6px">${esc(sub)}</div>` : ''}
+      ${phil ? `<div class="ps-content sub" style="margin-top:4px;font-size:12.5px;color:var(--faint)">${esc(phil)}</div>` : ''}
+      <button class="copy-btn" onclick="copySection(${JSON.stringify([headline, sub, phil].filter(Boolean).join('\n'))}, this)">Copy headline block</button>
+    </div>
+
+    <div class="preview-section">
+      <div class="ps-tag">The Problem</div>
+      <div class="ps-content">
+        ${probExt ? `<div><b>External:</b> ${esc(probExt)}</div>` : placeholder('external problem')}
+        ${probInt ? `<div style="margin-top:4px"><b>Internal:</b> ${esc(probInt)}</div>` : ''}
+        ${probPhil ? `<div style="margin-top:4px"><b>Why it matters:</b> ${esc(probPhil)}</div>` : ''}
+      </div>
+      <button class="copy-btn" onclick="copySection(${JSON.stringify(buildProblemText(probExt,probInt,probPhil))}, this)">Copy problem section</button>
+    </div>
+
+    <div class="preview-section">
+      <div class="ps-tag">You Are the Guide</div>
+      <div class="ps-content">
+        ${empathy ? `<div>${esc(empathy)}</div>` : placeholder('empathy statement')}
+        ${authority ? `<div style="margin-top:6px;color:var(--dim);font-size:13px">${esc(authority)}.</div>` : ''}
+      </div>
+      <button class="copy-btn" onclick="copySection(${JSON.stringify([empathy, authority ? authority + '.' : ''].filter(Boolean).join('\n\n'))}, this)">Copy guide section</button>
+    </div>
+
+    <div class="preview-section">
+      <div class="ps-tag">The Plan</div>
+      <ul class="ps-steps">
+        <li><div class="step-num">1</div><span>${esc(step1) || '<span class="placeholder">Step 1</span>'}</span></li>
+        <li><div class="step-num">2</div><span>${esc(step2) || '<span class="placeholder">Step 2</span>'}</span></li>
+        <li><div class="step-num">3</div><span>${esc(step3) || '<span class="placeholder">Step 3</span>'}</span></li>
+      </ul>
+      <button class="copy-btn" onclick="copySection(${JSON.stringify(buildPlanText(step1,step2,step3))}, this)">Copy plan</button>
+    </div>
+
+    <div class="preview-section">
+      <div class="ps-tag">Call to Action</div>
+      <div class="ps-content">
+        ${ctaDirect ? `<div class="cta-btn">${esc(ctaDirect)}</div>` : placeholder('direct CTA')}
+        ${ctaSoft ? `<div class="cta-alt">${esc(ctaSoft)} →</div>` : ''}
+      </div>
+      <button class="copy-btn" onclick="copySection(${JSON.stringify([ctaDirect, ctaSoft ? ctaSoft + ' →' : ''].filter(Boolean).join('\n'))}, this)">Copy CTA</button>
+    </div>
+
+    <div class="preview-section">
+      <div class="ps-tag">What's at Stake</div>
+      <div class="ps-content dead">${failure ? esc(failure) : placeholder('failure stakes')}</div>
+      <button class="copy-btn" onclick="copySection(${JSON.stringify(failure)}, this)">Copy stakes</button>
+    </div>
+
+    <div class="preview-section">
+      <div class="ps-tag">The Transformation</div>
+      <div class="ps-content">${success ? esc(success) : placeholder('success vision')}</div>
+      <button class="copy-btn" onclick="copySection(${JSON.stringify(success)}, this)">Copy transformation</button>
+    </div>
+  `;
+}
+
+function buildProblemText(ext, int, phil) {
+  const parts = [];
+  if (ext) parts.push(`External: ${ext}`);
+  if (int) parts.push(`Internal: ${int}`);
+  if (phil) parts.push(`Why it matters: ${phil}`);
+  return parts.join('\n') || '';
+}
+
+function buildPlanText(s1, s2, s3) {
+  const parts = [];
+  if (s1) parts.push(`Step 1: ${s1}`);
+  if (s2) parts.push(`Step 2: ${s2}`);
+  if (s3) parts.push(`Step 3: ${s3}`);
+  return parts.join('\n') || '';
+}
+
+function placeholder(text) {
+  return `<span class="placeholder">[${text}]</span>`;
+}
+
+function esc(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copySection(text, btn) {
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = btn.textContent.includes('Copied') ? btn.dataset.orig || 'Copy' : btn.textContent; btn.classList.remove('ok'); }, 1400);
+  });
+}
+
+function copyAll() {
+  const company   = g('company');
+  const hero      = g('hero');
+  const heroWant  = g('hero_want');
+  const probExt   = g('prob_ext');
+  const probInt   = g('prob_int');
+  const probPhil  = g('prob_phil');
+  const empathy   = g('empathy');
+  const authority = g('authority');
+  const step1     = g('step1');
+  const step2     = g('step2');
+  const step3     = g('step3');
+  const ctaDirect = g('cta_direct');
+  const ctaSoft   = g('cta_soft');
+  const failure   = g('failure');
+  const success   = g('success');
+
+  let headline = hero || heroWant
+    ? `${ph(hero,'your customer')} deserve ${ph(heroWant,'what they want')}. ${ph(company,'We')} make it happen.`
+    : ph(company,'Your brand') + ' helps you get what you deserve.';
+
+  const sections = [
+    `# BRAND SCRIPT — ${company || 'Draft'}`,
+    '',
+    `## HEADLINE\n${headline}`,
+    probInt ? `${probInt ? 'Tired of feeling ' + probInt + '? You shouldn\'t have to.' : ''}` : '',
+    '',
+    `## THE PROBLEM\n${buildProblemText(probExt,probInt,probPhil)}`,
+    '',
+    `## YOU ARE THE GUIDE\n${[empathy, authority ? authority + '.' : ''].filter(Boolean).join('\n\n')}`,
+    '',
+    `## THE PLAN\n${buildPlanText(step1,step2,step3)}`,
+    '',
+    `## CALL TO ACTION\nPrimary: ${ctaDirect || '[CTA]'}\nSecondary: ${ctaSoft || '[soft CTA]'}`,
+    '',
+    `## THE STAKES\n${failure || '[failure stakes]'}`,
+    '',
+    `## THE TRANSFORMATION\n${success || '[success vision]'}`,
+  ];
+
+  const text = sections.filter(s => s !== '').join('\n').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-all-btn');
+    btn.textContent = 'Copied to clipboard!'; btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copy full script'; btn.classList.remove('ok'); }, 1600);
+  });
+}
+
+render();
+</script>
+</body>
+</html>

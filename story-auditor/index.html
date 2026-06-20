@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c0d12">
+<meta name="description" content="Free story structure checker. Paste your beats and find out if your story moves — or just lists events. The but/therefore test, explained and applied.">
+<title>Story Auditor — does your story move?</title>
+<style>
+:root {
+  --bg:#0b0c11; --panel:#14161d; --panel2:#1b1e27; --line:#272b36;
+  --ink:#e7e9f0; --dim:#8a8fa0; --faint:#5c6172;
+  --accent:#8a7bf0; --accent2:#b3a7ff;
+  --good:#48c97a; --good-bg:rgba(72,201,122,.1); --good-line:rgba(72,201,122,.3);
+  --warn:#e6a93f; --warn-bg:rgba(230,169,63,.1); --warn-line:rgba(230,169,63,.3);
+  --dead:#ef5d76; --dead-bg:rgba(239,93,118,.1); --dead-line:rgba(239,93,118,.3);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body {
+  background:radial-gradient(1100px 700px at 50% -8%,#191a2b 0%,var(--bg) 60%) fixed;
+  color:var(--ink); font:15px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; min-height:100vh;
+}
+.wrap{max-width:680px;margin:0 auto;padding:28px 18px 100px}
+header{text-align:center;padding:18px 0 10px}
+.mark{font-weight:800;font-size:24px;letter-spacing:.4px}
+.mark span{color:var(--accent2)}
+.tag{color:var(--dim);font-size:13.5px;margin-top:5px}
+.rule-pill {
+  display:inline-block; margin:18px auto 0; padding:8px 18px; border-radius:20px;
+  background:var(--panel); border:1px solid var(--line);
+  font-size:12.5px; color:var(--dim); letter-spacing:.3px;
+}
+.rule-pill b{color:var(--ink)}
+.rule-pill .good{color:var(--good)}
+.rule-pill .dead{color:var(--dead)}
+
+/* beats */
+.chain{margin-top:28px;display:flex;flex-direction:column;gap:0}
+.beat-card{
+  background:var(--panel); border:1px solid var(--line); border-radius:14px;
+  padding:14px 16px; position:relative; transition:border-color .2s;
+}
+.beat-label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--faint);margin-bottom:8px;font-weight:600}
+.beat-card textarea{
+  width:100%; background:transparent; border:none; outline:none; resize:none;
+  color:var(--ink); font:15px/1.55 inherit; min-height:64px;
+}
+.beat-card textarea::placeholder{color:var(--faint)}
+
+/* connector */
+.connector{
+  display:flex; flex-direction:column; align-items:center;
+  padding:6px 0; position:relative; z-index:1;
+}
+.conn-line{width:2px; height:14px; background:var(--line); transition:background .2s}
+.conn-chips{display:flex;gap:8px;align-items:center}
+.chip{
+  padding:5px 13px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:700;
+  letter-spacing:.8px; border:1.5px solid var(--line); background:transparent;
+  color:var(--faint); transition:all .15s; user-select:none; text-transform:uppercase;
+}
+.chip:hover{border-color:var(--dim);color:var(--ink)}
+.chip.sel-dead{background:var(--dead-bg);border-color:var(--dead);color:var(--dead)}
+.chip.sel-good{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+.conn-line.dead{background:var(--dead)}
+.conn-line.good{background:var(--good)}
+.conn-hint{
+  font-size:11.5px; color:var(--dim); margin-top:5px; text-align:center;
+  min-height:16px; transition:color .2s;
+}
+.conn-hint.dead{color:var(--dead)}
+.conn-hint.good{color:var(--good)}
+
+/* score */
+.score-panel{
+  margin-top:28px; padding:20px 22px; background:var(--panel);
+  border:1px solid var(--line); border-radius:14px;
+}
+.score-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.score-num{font-size:32px;font-weight:800;color:var(--ink);line-height:1}
+.score-label{font-size:13px;color:var(--dim);margin-top:3px}
+.score-verdict{font-size:14px;font-weight:600;padding:7px 16px;border-radius:20px;border:1.5px solid var(--line)}
+.score-bar{margin-top:14px;height:6px;border-radius:3px;background:var(--panel2);overflow:hidden}
+.score-fill{height:100%;border-radius:3px;transition:width .4s ease, background .4s}
+
+/* output */
+.output-section{margin-top:28px}
+.out-label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--faint);font-weight:600;margin-bottom:12px}
+.chain-out{
+  background:var(--panel); border:1px solid var(--line); border-radius:14px;
+  padding:18px 20px; font-size:14px; line-height:1.75; color:var(--dim);
+  white-space:pre-wrap; word-break:break-word;
+}
+.chain-out .b-text{color:var(--ink); font-weight:500}
+.chain-out .c-good{color:var(--good); font-weight:700; font-size:11.5px; text-transform:uppercase; letter-spacing:.8px}
+.chain-out .c-dead{color:var(--dead); font-weight:700; font-size:11.5px; text-transform:uppercase; letter-spacing:.8px}
+.chain-out .c-none{color:var(--faint); font-weight:700; font-size:11.5px; text-transform:uppercase; letter-spacing:.8px}
+.btn-copy{
+  margin-top:12px; padding:8px 18px; background:var(--panel2); border:1px solid var(--line);
+  border-radius:8px; color:var(--dim); font:12.5px inherit; cursor:pointer; transition:all .15s;
+}
+.btn-copy:hover{border-color:var(--accent);color:var(--ink)}
+.btn-copy.ok{border-color:var(--good);color:var(--good)}
+
+/* explainer */
+.explainer{
+  margin-top:36px; padding:20px 22px; background:var(--panel);
+  border:1px solid var(--line); border-radius:14px;
+}
+.exp-title{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--faint);font-weight:600;margin-bottom:12px}
+.exp-row{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start}
+.exp-chip{
+  flex-shrink:0; padding:3px 10px; border-radius:12px; font-size:11px;
+  font-weight:700; letter-spacing:.6px; text-transform:uppercase;
+}
+.exp-chip.good{background:var(--good-bg);color:var(--good);border:1px solid var(--good-line)}
+.exp-chip.dead{background:var(--dead-bg);color:var(--dead);border:1px solid var(--dead-line)}
+.exp-text{font-size:13.5px;color:var(--dim);line-height:1.6}
+.exp-text b{color:var(--ink)}
+
+footer{text-align:center;margin-top:48px;font-size:12px;color:var(--faint)}
+footer a{color:var(--faint);text-decoration:none}
+footer a:hover{color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="mark">Story <span>Auditor</span></div>
+    <div class="tag">Does your story move — or just list events?</div>
+    <div class="rule-pill">
+      <span class="good">BUT / THEREFORE</span> = causality &nbsp;·&nbsp;
+      <span class="dead">AND THEN</span> = dead story
+    </div>
+  </header>
+
+  <div class="chain" id="chain"></div>
+
+  <div class="score-panel" id="score-panel">
+    <div class="score-row">
+      <div>
+        <div class="score-num" id="score-num">—</div>
+        <div class="score-label">connectors are causal</div>
+      </div>
+      <div class="score-verdict" id="score-verdict">select connectors below each beat</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="score-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="output-section">
+    <div class="out-label">Story chain</div>
+    <div class="chain-out" id="chain-out">Fill in your beats above and select a connector between each one. The chain will appear here.</div>
+    <button class="btn-copy" id="btn-copy" onclick="copyChain()">Copy chain</button>
+  </div>
+
+  <div class="explainer">
+    <div class="exp-title">How this works</div>
+    <div class="exp-row">
+      <span class="exp-chip good">THEREFORE</span>
+      <div class="exp-text"><b>Consequence.</b> Beat A causes Beat B. The story escalates. <em>"The hero trained for years, therefore she entered the tournament."</em></div>
+    </div>
+    <div class="exp-row">
+      <span class="exp-chip good">BUT</span>
+      <div class="exp-text"><b>Reversal.</b> Beat A is interrupted or complicated by Beat B. Tension spikes. <em>"She was winning, but the champion bribed the judge."</em></div>
+    </div>
+    <div class="exp-row">
+      <span class="exp-chip dead">AND THEN</span>
+      <div class="exp-text"><b>List of events.</b> No causality, no stake, no reason to keep reading. The audience's investment flatlines. <em>"She trained, and then she entered, and then she won."</em> Fix: add conflict (but) or consequence (therefore).</div>
+    </div>
+    <div class="exp-text" style="margin-top:8px;font-size:13px">
+      Source: Trey Parker &amp; Matt Stone (South Park), NYU storytelling lecture — and every working screenwriter since Aristotle.
+    </div>
+  </div>
+
+  <footer>
+    <a href="/zero/">← Zero tool library</a> &nbsp;·&nbsp; built by <a href="/zero/">Zero</a>
+  </footer>
+</div>
+
+<script>
+const BEATS = 5;
+const CONNECTORS = [
+  { key:'therefore', label:'Therefore', cls:'sel-good', lineCls:'good', hintCls:'good', hint:'Consequence — Beat A causes Beat B. Causality locked.' },
+  { key:'but',       label:'But',       cls:'sel-good', lineCls:'good', hintCls:'good', hint:'Reversal — conflict enters. Tension rises.' },
+  { key:'andthen',   label:'And Then',  cls:'sel-dead', lineCls:'dead', hintCls:'dead', hint:'No causality — just chronology. This connection is flat.' },
+];
+
+const state = {
+  beats: Array(BEATS).fill(''),
+  connectors: Array(BEATS - 1).fill(null),
+};
+
+function buildChain() {
+  const chain = document.getElementById('chain');
+  chain.innerHTML = '';
+
+  for (let i = 0; i < BEATS; i++) {
+    // beat card
+    const card = document.createElement('div');
+    card.className = 'beat-card';
+    card.innerHTML = `
+      <div class="beat-label">Beat ${i + 1}</div>
+      <textarea placeholder="${beatPlaceholder(i)}" rows="3" data-beat="${i}"></textarea>
+    `;
+    const ta = card.querySelector('textarea');
+    ta.value = state.beats[i];
+    ta.addEventListener('input', (e) => { state.beats[i] = e.target.value; renderOutput(); });
+    ta.addEventListener('keydown', (e) => { if (e.key === 'Tab') { e.preventDefault(); ta.setRangeText('  ', ta.selectionStart, ta.selectionEnd, 'end'); } });
+    chain.appendChild(card);
+
+    // connector between beats
+    if (i < BEATS - 1) {
+      const conn = document.createElement('div');
+      conn.className = 'connector';
+      conn.id = `conn-${i}`;
+      conn.innerHTML = `
+        <div class="conn-line" id="cline-${i}"></div>
+        <div class="conn-chips">
+          ${CONNECTORS.map(c => `<div class="chip" data-conn="${i}" data-key="${c.key}">${c.label}</div>`).join('')}
+        </div>
+        <div class="conn-hint" id="chint-${i}"></div>
+        <div class="conn-line" id="cline2-${i}"></div>
+      `;
+      conn.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => selectConnector(parseInt(chip.dataset.conn), chip.dataset.key));
+      });
+      chain.appendChild(conn);
+      // restore state
+      if (state.connectors[i]) selectConnector(i, state.connectors[i], true);
+    }
+  }
+  renderOutput();
+}
+
+function beatPlaceholder(i) {
+  const ph = [
+    'What is the opening situation? Who is the hero, what do they want?',
+    'What happens next? An event, a decision, a change.',
+    'The complication. What goes wrong — or right?',
+    'The consequence. What does the hero do because of what just happened?',
+    'The resolution. Where does the story end up?',
+  ];
+  return ph[i] || `Beat ${i + 1}`;
+}
+
+function selectConnector(idx, key, silent) {
+  if (!silent) state.connectors[idx] = key;
+  const conn = CONNECTORS.find(c => c.key === key);
+  const connEl = document.getElementById(`conn-${idx}`);
+  if (!connEl) return;
+
+  connEl.querySelectorAll('.chip').forEach(chip => {
+    chip.className = 'chip';
+    if (chip.dataset.key === key) chip.classList.add(conn.cls);
+  });
+
+  ['cline-' + idx, 'cline2-' + idx].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.className = 'conn-line ' + conn.lineCls; }
+  });
+
+  const hint = document.getElementById('chint-' + idx);
+  if (hint) { hint.textContent = conn.hint; hint.className = 'conn-hint ' + conn.hintCls; }
+
+  renderOutput();
+}
+
+function renderOutput() {
+  const chosen = state.connectors.filter(c => c !== null).length;
+  const causal = state.connectors.filter(c => c === 'therefore' || c === 'but').length;
+  const total = BEATS - 1;
+
+  // score
+  const numEl = document.getElementById('score-num');
+  const verdictEl = document.getElementById('score-verdict');
+  const fillEl = document.getElementById('score-fill');
+
+  if (chosen === 0) {
+    numEl.textContent = '—';
+    verdictEl.textContent = 'select connectors below each beat';
+    verdictEl.style.cssText = '';
+    fillEl.style.width = '0%';
+    fillEl.style.background = 'var(--faint)';
+  } else {
+    const pct = Math.round((causal / total) * 100);
+    numEl.textContent = `${causal}/${total}`;
+    fillEl.style.width = pct + '%';
+
+    if (causal === total) {
+      verdictEl.textContent = 'Fully causal — story has momentum';
+      verdictEl.style.cssText = 'background:var(--good-bg);border-color:var(--good);color:var(--good)';
+      fillEl.style.background = 'var(--good)';
+    } else if (causal >= Math.ceil(total / 2)) {
+      verdictEl.textContent = 'Mostly causal — tighten the flat joints';
+      verdictEl.style.cssText = 'background:var(--warn-bg);border-color:var(--warn);color:var(--warn)';
+      fillEl.style.background = 'var(--warn)';
+    } else if (causal > 0) {
+      verdictEl.textContent = 'Mostly flat — story risks losing the reader';
+      verdictEl.style.cssText = 'background:var(--dead-bg);border-color:var(--dead);color:var(--dead)';
+      fillEl.style.background = 'var(--dead)';
+    } else {
+      verdictEl.textContent = 'All flat — this is a list, not a story';
+      verdictEl.style.cssText = 'background:var(--dead-bg);border-color:var(--dead);color:var(--dead)';
+      fillEl.style.background = 'var(--dead)';
+    }
+  }
+
+  // chain output
+  const out = document.getElementById('chain-out');
+  const anyBeat = state.beats.some(b => b.trim());
+  const anyConn = state.connectors.some(c => c !== null);
+  if (!anyBeat && !anyConn) {
+    out.innerHTML = 'Fill in your beats above and select a connector between each one. The chain will appear here.';
+    return;
+  }
+
+  let html = '';
+  for (let i = 0; i < BEATS; i++) {
+    const beat = state.beats[i].trim() || `[Beat ${i + 1}]`;
+    html += `<span class="b-text">${escHtml(beat)}</span>`;
+    if (i < BEATS - 1) {
+      const key = state.connectors[i];
+      if (!key) {
+        html += `\n<span class="c-none">  ···  </span>\n`;
+      } else {
+        const isCausal = key === 'therefore' || key === 'but';
+        const label = key === 'andthen' ? 'AND THEN' : key.toUpperCase();
+        html += `\n<span class="${isCausal ? 'c-good' : 'c-dead'}">  ${label}  </span>\n`;
+      }
+    }
+  }
+  out.innerHTML = html;
+}
+
+function copyChain() {
+  let text = '';
+  for (let i = 0; i < BEATS; i++) {
+    const beat = state.beats[i].trim() || `[Beat ${i + 1}]`;
+    text += beat;
+    if (i < BEATS - 1) {
+      const key = state.connectors[i];
+      const label = !key ? '···' : key === 'andthen' ? 'AND THEN' : key.toUpperCase();
+      text += `\n\n  ${label}\n\n`;
+    }
+  }
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('btn-copy');
+    btn.textContent = 'Copied!'; btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copy chain'; btn.classList.remove('ok'); }, 1600);
+  });
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+buildChain();
+</script>
+</body>
+</html>
