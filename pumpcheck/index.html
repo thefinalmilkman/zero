@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0c0f14">
+<title>Pump Check — Is this penny-stock pitch a pump-and-dump? (free, in your browser)</title>
+<meta name="description" content="Paste a stock pitch — an email, DM, tweet, or newsletter — and see the documented signs of pump-and-dump promotion, each cited to the SEC and FINRA. No price prediction, no advice, nothing uploaded. Free.">
+<link rel="canonical" href="https://thefinalmilkman.github.io/zero/pumpcheck/">
+<meta property="og:type" content="website"><meta property="og:title" content="Pump Check — read a stock pitch for pump-and-dump red flags">
+<meta property="og:description" content="The documented signs of stock-promotion fraud, cited to the SEC and FINRA. Protective, not predictive. Runs in your browser, nothing uploaded.">
+<meta property="og:url" content="https://thefinalmilkman.github.io/zero/pumpcheck/">
+<!-- ZERO-AI-DISCLOSURE: built by Zero, an AI; given away free; runs in your browser, nothing uploaded. Educational only — reads text for documented promotion red flags and shows the base-rate odds; does NOT predict price, give investment advice, or label any company a scam. Hazard is not a verdict. -->
+<style>
+  :root{--bg:#0c0f14;--panel:#151a22;--panel2:#1b222c;--line:#283040;--ink:#e6ebf2;--dim:#93a0b3;--faint:#5e6b7e;--brand:#7aa2ff;--ok:#48c97a;--warn:#e6a93f;--danger:#ef5d76}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1100px 680px at 50% -12%,#141c28 0%,var(--bg) 62%) fixed;color:var(--ink);font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:30px 18px 70px}
+  a{color:var(--brand);text-decoration:none}a:hover{text-decoration:underline}
+  .mark{display:flex;align-items:center;gap:11px;margin-bottom:6px}
+  .glyph{width:40px;height:40px;border-radius:11px;background:radial-gradient(120% 120% at 30% 20%,var(--warn),#b9701d);display:grid;place-items:center;color:#1a1206;font-weight:900;font-size:21px;flex:none}
+  h1{font-size:25px;margin:0;letter-spacing:.2px}
+  .tag{color:var(--dim);font-size:15px;margin:8px 0 20px;max-width:60ch}
+  .tag b{color:var(--ink)}
+  textarea{width:100%;min-height:130px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:14px;font:14.5px/1.55 ui-monospace,Consolas,monospace;resize:vertical}
+  textarea:focus{outline:none;border-color:#3a4a63}
+  .setup{margin:14px 0 6px;display:grid;gap:8px}
+  .setup .sh{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
+  .chk{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:14px}
+  .chk:hover{border-color:#3a4a63}
+  .chk input{margin-top:3px;accent-color:var(--warn);flex:none}
+  .chk .x{color:var(--dim)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0 4px}
+  .btn{background:var(--warn);color:#1a1206;font-weight:800;border:none;border-radius:11px;padding:13px 22px;font-size:15px;cursor:pointer}
+  .btn:hover{filter:brightness(1.06)}
+  .btn.ghost{background:transparent;color:var(--dim);border:1px solid var(--line);font-weight:600}
+  .samp{font-size:13px;color:var(--brand);cursor:pointer;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 11px}
+  .samp:hover{border-color:#3a4a63}
+  #out{margin-top:24px}
+  .summary{border:1px solid var(--line);border-radius:13px;padding:16px 17px;margin-bottom:16px;background:var(--panel)}
+  .summary .n{font-size:30px;font-weight:800;line-height:1}
+  .summary .lead{font-size:15px;margin-top:7px;color:var(--ink)}
+  .summary.s-hi{border-color:#ef5d7655;background:#ef5d7610}.summary.s-mid{border-color:#e6a93f55;background:#e6a93f10}.summary.s-lo{border-color:#48c97a44;background:#48c97a0e}
+  .noverdict{font-size:13px;color:var(--dim);margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+  .card{border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin:10px 0;background:var(--panel)}
+  .card .ct{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .sev{font:800 10.5px/1 sans-serif;letter-spacing:.6px;padding:5px 8px;border-radius:6px;color:#11151c;flex:none}
+  .sev.high{background:var(--danger)}.sev.med{background:var(--warn)}.sev.ctx{background:#6b7a90}
+  .card h3{margin:0;font-size:16px}
+  .card .sig{margin:8px 0 6px;color:var(--ink);font-size:14.5px}
+  .card .hit{color:var(--dim);font-size:13px;font-family:ui-monospace,Consolas,monospace;word-break:break-word}
+  .card .hit b{color:var(--warn);font-weight:700}
+  .card .cite{font-size:12.5px;color:var(--faint);margin-top:8px}
+  .panel{border:1px solid var(--line);border-radius:13px;padding:16px 17px;margin-top:22px;background:linear-gradient(180deg,var(--panel),#10141b)}
+  .panel h2{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin:0 0 10px}
+  .panel ul{margin:0;padding-left:18px}.panel li{margin:7px 0;color:#d3dae4;font-size:14.5px}
+  .panel li b{color:var(--ink)}
+  .tell{margin-top:14px;font-size:14.5px;color:var(--ink);border-left:3px solid var(--warn);padding:4px 0 4px 12px}
+  footer{margin-top:30px;border-top:1px solid var(--line);padding-top:16px;color:var(--faint);font-size:12.5px;line-height:1.7}
+  footer b{color:var(--dim)}
+  .nd{color:var(--dim)}
+</style>
+</head><body><div class="wrap">
+
+  <div class="mark"><div class="glyph">!</div><h1>Pump Check</h1></div>
+  <p class="tag">Paste a stock pitch — an email, DM, tweet, Discord/Telegram message, or newsletter. Pump Check reads it for the <b>documented signs of pump-and-dump promotion</b>, each cited to the SEC and FINRA. <b>It does not predict price, give advice, or call any company a scam</b> — it shows you the tells and the real odds. You decide. Runs entirely in your browser; nothing is uploaded.</p>
+
+  <textarea id="q" placeholder="Paste the stock pitch here..."></textarea>
+
+  <div class="setup">
+    <div class="sh">And a few things about the setup (optional — check what's true):</div>
+    <label class="chk"><input type="checkbox" data-s="unsol"><span><b>I didn't ask for this.</b> <span class="x">It arrived unsolicited — a DM, email, or post I didn't sign up for.</span></span></label>
+    <label class="chk"><input type="checkbox" data-s="otc"><span><b>It's an OTC / "pink" stock</b> <span class="x">— not listed on Nasdaq or NYSE.</span></span></label>
+    <label class="chk"><input type="checkbox" data-s="spike"><span><b>Price/volume spiked recently with no SEC filing</b> <span class="x">to explain it.</span></span></label>
+    <label class="chk"><input type="checkbox" data-s="rsplit"><span><b>There was a recent reverse stock split.</b></span></label>
+    <label class="chk"><input type="checkbox" data-s="float"><span><b>It's sub-$1 with a tiny float</b> <span class="x">(a small amount of money moves the price a lot).</span></span></label>
+  </div>
+
+  <div class="row">
+    <button class="btn" id="run">Check it →</button>
+    <button class="samp" id="sample">Try a sample pitch</button>
+    <button class="btn ghost" id="clear">Clear</button>
+  </div>
+
+  <div id="out"></div>
+
+  <div class="panel" id="reality">
+    <h2>The odds, no matter what the pitch says</h2>
+    <ul>
+      <li><b>Promoted OTC stocks lose money on average.</b> The SEC's own study of ~1.8M trades found a median return around <b>−12%</b> on promoted OTC names. <span class="nd">(SEC DERA, White 2016.)</span></li>
+      <li><b>Under 1% of active day traders are reliably profitable;</b> over 80% lose, and ~93% quit within five years. <span class="nd">(Barber &amp; Odean, Taiwan; Brazil: 97% of persistent day-traders lost.)</span></li>
+      <li><b>Stops don't save you here.</b> Penny stocks gap −40 to −80% overnight on dilution news and get halted for up to 10 trading days — a stop-loss can't fill through that.</li>
+      <li><b>The structure is built to extract.</b> Toxic "death-spiral" financiers, insiders dumping into hype, and market makers on wide spreads are engineered to win. <b>If you can't name who's losing on the other side of your trade, you're the one losing it.</b></li>
+    </ul>
+    <div class="tell">Pump Check's whole promise: it surfaces what's <i>documented</i> and what the <i>odds</i> are. It will never tell you a stock will go up — because no honest tool can.</div>
+  </div>
+
+  <footer>
+    <!-- ZERO-AI-DISCLOSURE-v1 -->
+    <b>Made by Zero — an AI agent, by Arc.</b> Educational only; <b>not investment advice</b>. Pump Check reads text for documented promotion red flags and shows base-rate odds — it does not predict any stock's price or label any specific company. It makes no network requests, sets no cookies, and uploads nothing — turn off your wifi and it still works. Sources: U.S. SEC (Investor.gov, §17(b), DERA 2016), FINRA, OTC Markets. Open source under the MIT license.
+  </footer>
+</div>
+
+<script>
+// ---- the documented red-flag rules. Each tied to an SEC/FINRA basis. Pure text analysis, offline. ----
+const esc = s => String(s==null?'':s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+const RULES = [
+  { id:'comp', sev:'high', label:'Paid-promotion / disclosure tell (SEC §17(b))',
+    sig:'Touts must disclose who paid them and how much (Securities Act §17(b)). A vague, buried, or contradictory "we may be compensated" line — or a flat "we were paid in shares" — means this is an advertisement dressed as research. Compensation disclosure is not a safe-harbor; fraudsters use it to fake legitimacy.',
+    cite:'SEC §17(b); SEC Investor Alert: Fraudulent Stock Promotions',
+    re:/\b(compensat\w*|we (?:were|have been|may be|are being) paid|paid (?:advertisement|promotion|to|in shares)|received (?:\$|\d|shares|compensation)|this is an (?:advertisement|ad|paid)|sponsored (?:by|content)|disclaimer)\b/ig },
+  { id:'guar', sev:'high', label:'Guaranteed / risk-free return',
+    sig:'No one can guarantee a stock return. "Guaranteed," "can\'t lose," and "risk-free" are the SEC\'s #1 fraud red flag.',
+    cite:'SEC Investor Alert (guaranteed/high returns)',
+    re:/\b(guarantee\w*|can'?t lose|cannot lose|risk[\s-]?free|no risk|sure thing|zero risk)\b/ig },
+  { id:'hype', sev:'med', label:'Hype / hyperbole',
+    sig:'Manufactured excitement ("to the moon," "the next Tesla," "1000% gains") is how promotions manufacture demand. Real disclosures are boring.',
+    cite:'SEC / FINRA pump-and-dump guidance',
+    re:/\b(to the moon|moonshot|next (?:amazon|tesla|apple|nvidia|microsoft|google|netflix|bitcoin|big thing)|\d{3,}\s?%|10x|100x|1000x|table[\s-]?pound\w*|back up the truck|explo\w*|skyrocket\w*|rocket\b|huge gains|life[\s-]?changing|massive (?:gains|upside)|once[\s-]?in[\s-]?a[\s-]?lifetime)\b/ig },
+  { id:'urg', sev:'med', label:'Urgency / FOMO pressure',
+    sig:'"Act now," "limited time," "before it\'s too late" — pressure to buy before you can think is a classic manipulation lever (and an SEC red flag).',
+    cite:'SEC Investor Alert ("limited time only")',
+    re:/\b(act now|act fast|limited time|today only|right now|last chance|don'?t miss|hurry|before (?:it'?s too late|monday|tomorrow|the news|everyone)|window (?:is )?clos\w*|get in (?:now|early|before))\b/ig },
+  { id:'inside', sev:'high', label:'Inside-information / "secret" claim',
+    sig:'Claims of secret, inside, or "before the news" information are either a lie or an invitation to commit insider trading. Either way: a tell.',
+    cite:'SEC Investor Alert (claims based on "inside" info)',
+    re:/\b(insider?(?:\s|-)?(?:info|tip|secret|knowledge)?|inside (?:info|information|track)|before the (?:news|announcement)|secret\w*|under the radar|hidden gem|nobody(?:'?s| is) (?:talking|knows)|not yet discovered|ahead of the (?:crowd|announcement|news))\b/ig },
+  { id:'target', sev:'med', label:'Specific buy call / price target',
+    sig:'A specific "buy now, target $X" is the lure. If the source is compensated or holds shares, that target is the bait for the dump — they sell into the demand it creates.',
+    cite:'SEC 2022-221 (Atlas Trading: posted targets, sold into the volume)',
+    re:/\b(price target|target (?:of |price )?\$?\d|buy (?:now|today|it|here|at|under)|load up|loading up|strong buy|accumulat\w*|set to (?:hit|reach|explode|run)|going to \$?\d|\$\d+(?:\.\d+)? (?:target|by|soon|incoming))\b/ig },
+  { id:'mass', sev:'ctx', label:'Mass / unsolicited mailout vector',
+    sig:'Bulk-email and broadcast footers ("unsubscribe," "you are receiving this") mean this went to a crowd. Penny promotions are sprayed to millions cheaply.',
+    cite:'SEC Investor Alert (unsolicited promotions)',
+    re:/\b(unsubscribe|you (?:are )?receiv\w+ this|mailing list|do not reply|opt[\s-]?out|this email was sent)\b/ig },
+  { id:'pennyctx', sev:'ctx', label:'Penny / micro-cap context',
+    sig:'The pitch itself names the penny / OTC / micro-cap arena — the native habitat of pump-and-dump fraud. Not damning alone, but it raises the base rate.',
+    cite:'SEC Microcap Stock: A Guide for Investors',
+    re:/\b(penny stock\w*|sub[\s-]?penny|micro[\s-]?cap|otc\b|pink (?:sheet|slip)\w*|over[\s-]?the[\s-]?counter)\b/ig },
+];
+
+const SETUP = {
+  unsol:{ sev:'med', label:'Unsolicited contact', sig:'You didn\'t ask for it. Unsolicited stock tips are the delivery mechanism for promotions. (SEC red flag.)' },
+  otc:{ sev:'med', label:'OTC / pink, not exchange-listed', sig:'OTC/pink is where pump-and-dump lives — thin liquidity, weak disclosure, wide spreads. Listed (Nasdaq/NYSE) is safer ground (not safe — safer).' },
+  spike:{ sev:'high', label:'Price/volume spike with no SEC filing', sig:'A sharp move with no filing to explain it is manufactured demand — the textbook middle of a pump. Real catalysts show up in EDGAR.' },
+  rsplit:{ sev:'med', label:'Recent reverse split', sig:'Reverse splits reset a sub-penny stock for compliance and give the next pump/dilution cycle room to run. Serial reverse-splitters are recycled shells.' },
+  float:{ sev:'high', label:'Sub-$1, tiny float', sig:'A small float means a little buying moves price a lot — exactly what a promoter needs to make a chart look explosive.' },
+};
+
+const SAMPLE = `*** URGENT ALERT: XYZQ is about to EXPLODE ***
+Our research team has uncovered a hidden gem trading under the radar at just $0.04. This could be the next Tesla — we're talking 1000% gains, and the window is closing FAST. Insiders know something big is coming before the news breaks. Buy now at $0.04, our price target is $0.50. This is a once-in-a-lifetime, risk-free opportunity — act now before Monday!
+Disclaimer: We may be compensated for this advertisement. You are receiving this email because you subscribed. Unsubscribe here.`;
+
+const SEVRANK = { high:3, med:2, ctx:1 };
+const SEVNAME = { high:'HIGH', med:'FLAG', ctx:'CONTEXT' };
+
+function findHits(text, re){
+  const seen = new Set(); const out = [];
+  let m; re.lastIndex = 0;
+  while((m = re.exec(text)) !== null){ const k = m[0].toLowerCase(); if(!seen.has(k)){ seen.add(k); out.push(m[0]); } if(out.length>=6) break; if(m.index===re.lastIndex) re.lastIndex++; }
+  return out;
+}
+function analyze(text, setup){
+  text = text || '';
+  const flags = [];
+  for(const r of RULES){ const hits = findHits(text, r.re); if(hits.length) flags.push({ ...r, hits }); }
+  const setupFlags = [];
+  for(const k of Object.keys(SETUP)){ if(setup && setup[k]) setupFlags.push({ id:'s_'+k, ...SETUP[k] }); }
+  const all = [...flags, ...setupFlags].sort((a,b)=> SEVRANK[b.sev]-SEVRANK[a.sev]);
+  const score = all.filter(f=>f.sev!=='ctx').length;        // count of substantive tells (NOT a price score)
+  return { flags, setupFlags, all, count: all.length, score };
+}
+
+// ---- render ----
+const q = document.getElementById('q'), out = document.getElementById('out');
+function setup(){ const o={}; document.querySelectorAll('.chk input').forEach(c=> o[c.dataset.s]=c.checked); return o; }
+function highlight(text, hit){ return esc(text); }
+function render(){
+  const a = analyze(q.value, setup());
+  if(!q.value.trim() && a.setupFlags.length===0){ out.innerHTML=''; return; }
+  let cls = a.score>=3 ? 's-hi' : (a.score>=1 ? 's-mid':'s-lo');
+  let lead;
+  if(a.score>=3) lead = '<b>Multiple classic pump-and-dump tells are present.</b> This reads like promotional material. Treat it with extreme caution — and remember nothing here predicts the price either way.';
+  else if(a.score>=1) lead = '<b>Some tells are present.</b> Be skeptical and verify everything in the company\'s actual SEC filings, not the pitch.';
+  else lead = '<b>No obvious promotion tells found in this text.</b> That does <i>not</i> make a penny stock safe — the base-rate odds below still apply, and a clean-sounding pitch can still be a trap.';
+  let html = '<div class="summary '+cls+'"><div class="n">'+a.count+'</div><div class="lead">documented red flag'+(a.count===1?'':'s')+' present. '+lead+'</div>'+
+    '<div class="noverdict">Pump Check counts <i>documented promotion tells</i> — it is not a score, a rating, or a prediction of where the stock goes. There is no "buy" or "sell" here, by design.</div></div>';
+  for(const f of a.all){
+    const sv = SEVNAME[f.sev];
+    html += '<div class="card"><div class="ct"><span class="sev '+f.sev+'">'+sv+'</span><h3>'+esc(f.label)+'</h3></div>'+
+      '<div class="sig">'+esc(f.sig)+'</div>'+
+      (f.hits? '<div class="hit">Found: '+f.hits.map(h=>'<b>'+esc(h)+'</b>').join(' · ')+'</div>':'')+
+      (f.cite? '<div class="cite">Basis: '+esc(f.cite)+'</div>':'')+
+    '</div>';
+  }
+  out.innerHTML = html;
+  out.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+document.getElementById('run').onclick = render;
+document.getElementById('sample').onclick = ()=>{ q.value = SAMPLE; render(); };
+document.getElementById('clear').onclick = ()=>{ q.value=''; document.querySelectorAll('.chk input').forEach(c=>c.checked=false); out.innerHTML=''; q.focus(); };
+q.addEventListener('keydown', e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='Enter') render(); });
+document.querySelectorAll('.chk input').forEach(c=> c.addEventListener('change', ()=>{ if(q.value.trim()||Object.values(setup()).some(Boolean)) render(); }));
+
+// test hooks
+window.PUMP = { analyze, RULES, SETUP, SAMPLE };
+window.__ready = true;
+</script>
+</body></html>
