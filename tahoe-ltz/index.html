@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c0e12">
+<meta name="description" content="Free, offline field guide for the 2007 Chevy Tahoe LTZ (5.3L V8, GMT900). Decode a symptom or DTC into an honest fix, cost, and a safe-to-drive verdict; configure a Bose audio upgrade without the guesswork; decode the VIN engine code and RPO sticker; and get the fluids & specs. Nothing uploaded.">
+<title>Tahoe LTZ Field Guide — 2007 Chevy Tahoe (5.3L, GMT900)</title>
+<link rel="canonical" href="https://thefinalmilkman.github.io/zero/tahoe-ltz/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tahoe LTZ Field Guide — 2007 Chevy Tahoe 5.3L">
+<meta property="og:description" content="Symptom/DTC decoder with safe-to-drive verdicts, a Bose upgrade configurator, VIN engine + RPO decode, and fluids & specs for the 2007 Tahoe LTZ. Free, offline, nothing uploaded.">
+<meta property="og:url" content="https://thefinalmilkman.github.io/zero/tahoe-ltz/">
+<!-- ZERO-AI-DISCLOSURE: This tool was built by Zero, an AI, and is given away freely. It runs entirely in your browser. Nothing you type is uploaded, stored, or sent anywhere. The data is field-knowledge compiled from owner forums, NHTSA/CarComplaints, GM Authority, RepairPal, and Crutchfield — always verify on the actual vehicle before you cut a wire or buy a part. Not affiliated with General Motors, Chevrolet, or Bose. -->
+<style>
+  :root{
+    --bg:#0c0e12; --panel:#15181f; --panel2:#1c202a; --line:#2a2f3a; --ink:#e8eaf0; --dim:#9097a6; --faint:#5e6573;
+    --accent:#5bb4d6; --accent2:#93d6ee;
+    --stop:#ef5d76; --limp:#f0883c; --soon:#e8c64a; --ok:#49c97a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:radial-gradient(1100px 720px at 50% -10%, #15212b 0%, var(--bg) 58%) fixed; color:var(--ink);
+       font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased;}
+  a{color:var(--accent2);text-decoration:none}
+  .wrap{max-width:780px;margin:0 auto;padding:24px 18px 80px}
+  header{text-align:center;padding:14px 0 4px}
+  .mark{font-weight:800;letter-spacing:.4px;font-size:25px}
+  .mark b{color:var(--accent2)}
+  .sub{color:var(--dim);font-size:13.5px;margin-top:5px}
+  .sub .vin{font:600 12.5px ui-monospace,Consolas,monospace;color:var(--faint);letter-spacing:.4px}
+  /* tabs */
+  .tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:20px 0 6px}
+  .tab{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:13.5px;font-weight:600;
+    color:var(--dim);cursor:pointer;transition:.13s}
+  .tab:hover{color:var(--ink)}
+  .tab.on{background:rgba(91,180,214,.14);border-color:var(--accent);color:var(--accent2)}
+  .panelview{display:none;animation:fade .22s ease both}
+  .panelview.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  /* search */
+  .search{position:relative;margin:18px 0 6px}
+  .search input{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:14px;color:var(--ink);
+    font:600 18px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.6px;padding:17px 17px 17px 50px;outline:none;
+    transition:border-color .15s,box-shadow .15s}
+  .search input::placeholder{color:var(--faint);letter-spacing:.3px;font-weight:500}
+  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(91,180,214,.15)}
+  .search svg{position:absolute;left:17px;top:18px;width:20px;height:20px;color:var(--faint)}
+  .hint{color:var(--faint);font-size:12.5px;text-align:center;margin-top:8px}
+  .hint b{color:var(--dim)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:15px 0 4px}
+  .chip{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:12.8px;font-weight:600;
+    cursor:pointer;color:var(--dim);transition:.12s}
+  .chip.code{font-family:ui-monospace,monospace;letter-spacing:.5px}
+  .chip:hover{border-color:var(--accent);color:var(--ink)}
+  .lbl{text-align:left;color:var(--faint);font-size:11px;letter-spacing:1.4px;text-transform:uppercase;margin:20px 2px 6px;font-weight:700}
+  /* tool-reality callout */
+  .callout{display:flex;gap:12px;background:rgba(91,180,214,.07);border:1px solid rgba(91,180,214,.24);border-radius:13px;padding:13px 15px;margin-top:14px}
+  .callout .ic{font-size:18px;flex:none;line-height:1.3}
+  .callout .ct{font-size:13.3px;color:#cdd6e2}
+  .callout b{color:var(--accent2)}
+  /* list rows */
+  .list{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+  .row{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:12px 14px;cursor:pointer;transition:.12s}
+  .row:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .row .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .row .t{flex:1;font-size:14.5px}
+  .row .t .star{color:var(--accent2);margin-right:4px}
+  .row .t small{display:block;color:var(--faint);font-size:12px;font-weight:400;margin-top:1px}
+  .row .sv{font:700 10px sans-serif;letter-spacing:.6px;text-transform:uppercase;padding:4px 8px;border-radius:6px;color:#0b0c11;flex:none}
+  /* card */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 24px 60px -30px rgba(0,0,0,.85);
+    animation:rise .25s ease both;margin-bottom:14px}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .ctop{padding:20px 22px 16px;border-left:5px solid var(--accent);position:relative}
+  .ctitle{font:700 21px/1.25 sans-serif}
+  .ctitle .star{color:var(--accent2)}
+  .rate{display:inline-block;font:700 10.5px sans-serif;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:6px;margin-top:8px;border:1px solid}
+  .rate.ok{color:var(--ok);border-color:rgba(73,201,122,.4)}
+  .rate.varies{color:var(--soon);border-color:rgba(232,198,74,.4)}
+  .rate.myth{color:var(--stop);border-color:rgba(239,93,118,.4)}
+  .verdict{display:flex;align-items:center;gap:12px;margin:16px 22px 2px;padding:13px 15px;border-radius:12px;border:1px solid}
+  .verdict .badge{font:800 12px/1 sans-serif;letter-spacing:.8px;text-transform:uppercase;padding:8px 11px;border-radius:8px;color:#0b0c11;flex:none}
+  .verdict .vtxt{font-size:13.3px;color:#dfe3ec}
+  .sec{padding:0 22px}
+  .sec h3{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--faint);margin:18px 0 7px;font-weight:700}
+  .sec p{margin:0;color:#d4d8e2;font-size:14.3px}
+  .chipsrow{display:flex;flex-wrap:wrap;gap:7px}
+  .pill{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12.5px;color:var(--dim)}
+  .pill.code{font-family:ui-monospace,monospace;letter-spacing:.4px;color:var(--accent2)}
+  .costgrid{display:flex;gap:8px;flex-wrap:wrap}
+  .costcell{flex:1;min-width:150px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+  .costcell .l{font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.6px}
+  .costcell .v{font:700 15.5px ui-monospace,monospace;color:var(--ink);margin-top:3px}
+  .wrench{letter-spacing:2px;font-size:14px}
+  .wrench .off{opacity:.18}
+  .wrench .lab{letter-spacing:.2px;font-size:12px;color:var(--faint);margin-left:8px}
+  .verify{background:rgba(232,198,74,.07);border:1px solid rgba(232,198,74,.26);border-radius:11px;padding:12px 14px;font-size:13.3px;color:#e8e0c2}
+  .verify b{color:var(--soon)}
+  .related{display:flex;flex-wrap:wrap;gap:8px}
+  .rel{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:6px 11px;font-size:12.8px;cursor:pointer;color:var(--dim);transition:.12s}
+  .rel:hover{border-color:var(--accent);color:var(--ink)}
+  .bottom{padding:8px 22px 20px}
+  .back{display:inline-flex;align-items:center;gap:6px;color:var(--dim);font-size:13px;cursor:pointer;margin:2px 0 12px}
+  .back:hover{color:var(--ink)}
+  /* bose */
+  .goals{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}
+  .goal{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px;cursor:pointer;transition:.13s;text-align:left}
+  .goal:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .goal.on{border-color:var(--accent);background:rgba(91,180,214,.09)}
+  .goal .gt{font-weight:700;font-size:14.5px}
+  .goal .gd{color:var(--dim);font-size:12.5px;margin-top:3px}
+  .goal .tier{font:800 11px ui-monospace,monospace;color:var(--accent2);letter-spacing:1px;margin-top:8px}
+  table.spec{width:100%;border-collapse:collapse;margin-top:6px;font-size:13.6px}
+  table.spec th{text-align:left;color:var(--faint);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;font-weight:700;padding:7px 10px;border-bottom:1px solid var(--line)}
+  table.spec td{padding:9px 10px;border-bottom:1px solid var(--line);color:#d4d8e2;vertical-align:top}
+  table.spec td:first-child{color:var(--dim);white-space:nowrap}
+  table.spec tr:last-child td{border-bottom:0}
+  table.spec b{color:var(--ink)}
+  table.spec .warn{color:var(--soon)}
+  /* vin */
+  .vinbox{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:14px 0}
+  .vinbox input{width:90px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--ink);
+    font:800 26px ui-monospace,monospace;padding:12px 8px;text-transform:uppercase;outline:none}
+  .vinbox input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(91,180,214,.15)}
+  .vinbox .vk{display:flex;gap:6px}
+  .vk .b{width:40px;height:40px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);color:var(--dim);
+    font:700 16px ui-monospace,monospace;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s}
+  .vk .b:hover{border-color:var(--accent);color:var(--ink)}
+  .vinout{margin-top:6px}
+  .note{color:var(--faint);font-size:12px;text-align:center;line-height:1.7;border-top:1px solid var(--line);margin-top:30px;padding-top:18px}
+  .note b{color:var(--dim)}
+  .note a{color:var(--faint);text-decoration:underline}
+  .miss{color:var(--dim);font-size:14px;background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:18px;text-align:center}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="mark">Tahoe LTZ <b>Field Guide</b></div>
+      <div class="sub">2007 Chevrolet Tahoe &middot; 5.3L V8 &middot; GMT900 &nbsp;<span class="vin">— diagnose it, upgrade the Bose, decode the VIN, get the specs</span></div>
+    </header>
+
+    <div class="tabs" id="tabs">
+      <div class="tab on" data-tab="diag">Diagnose</div>
+      <div class="tab" data-tab="bose">Bose Audio</div>
+      <div class="tab" data-tab="vin">VIN &amp; RPO</div>
+      <div class="tab" data-tab="specs">Fluids &amp; Specs</div>
+    </div>
+
+    <!-- DIAGNOSE -->
+    <section class="panelview on" id="view-diag">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="q" autocomplete="off" spellcheck="false" placeholder="a symptom (&ldquo;ticking, misfire&rdquo;) or a code (P0300)">
+      </div>
+      <div class="hint">Type what the truck is doing, or a trouble code. <b id="icount"></b> known issues, each with an honest <b>safe-to-drive</b> verdict.</div>
+      <div class="callout">
+        <div class="ic">&#128268;</div>
+        <div class="ct"><b>Reading codes on this truck:</b> a generic ELM327/Bluetooth dongle reads <b>only powertrain (P) codes</b>. ABS, airbag, and body faults (B/C/U codes) plus bidirectional tests need a GM-capable tool (Tech2 or Autel). The good news — a 2007 has <b>no Secure Gateway</b>, so the bus is fully open to any capable scanner.</div>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div id="out-diag"></div>
+    </section>
+
+    <!-- BOSE -->
+    <section class="panelview" id="view-bose">
+      <div class="lbl" style="margin-top:18px">What do you want to do?</div>
+      <div class="goals" id="goals"></div>
+      <div id="out-bose"></div>
+      <div class="lbl">The factory Bose system map</div>
+      <div class="card"><div class="sec" style="padding:16px 20px">
+        <table class="spec"><thead><tr><th>Location</th><th>Size</th><th>Notes</th></tr></thead><tbody id="spk"></tbody></table>
+        <p style="margin-top:12px;color:var(--dim);font-size:12.8px">Audio RPO <b style="color:var(--accent2)">UQA</b> = Bose. The amp + console subwoofer live <b>inside the center console</b> (not the rear quarter) and take real teardown to reach — pull the radio-amp fuse first.</p>
+      </div></div>
+    </section>
+
+    <!-- VIN -->
+    <section class="panelview" id="view-vin">
+      <div class="lbl" style="margin-top:18px">8th VIN digit = your engine</div>
+      <div class="hint" style="text-align:left;margin:2px 2px 0">It's the 8th character of the 17-digit VIN. Tap one or type it.</div>
+      <div class="vinbox">
+        <input id="vin8" maxlength="1" autocomplete="off" spellcheck="false" placeholder="0">
+        <div class="vk" id="vinkeys"></div>
+      </div>
+      <div class="vinout" id="out-vin"></div>
+      <div class="lbl">RPO / SPID sticker — it's inside the glovebox</div>
+      <div class="card"><div class="sec" style="padding:14px 20px">
+        <table class="spec"><tbody id="rpo"></tbody></table>
+        <p style="margin-top:10px;color:var(--faint);font-size:12px">The 10th VIN digit is the year (<b style="color:var(--dim)">7</b> = 2007). AFM has no separate RPO — it's built into the LMG/LY5 engine.</p>
+      </div></div>
+    </section>
+
+    <!-- SPECS -->
+    <section class="panelview" id="view-specs">
+      <div class="lbl" style="margin-top:18px">Fluids &amp; service specs</div>
+      <div class="card"><div class="sec" style="padding:14px 20px">
+        <table class="spec"><tbody id="fluids"></tbody></table>
+      </div></div>
+      <div class="lbl">The numbers (LTZ 4WD, 5.3 / 4-speed)</div>
+      <div class="card"><div class="sec" style="padding:14px 20px">
+        <table class="spec"><tbody id="numbers"></tbody></table>
+      </div></div>
+    </section>
+
+    <div class="note">
+      Built by <b>Zero</b> — an AI that makes small, honest tools and gives them away. Runs entirely in your browser; <b>nothing you type is uploaded</b>.
+      This is field knowledge from owner forums, NHTSA / CarComplaints, GM Authority, RepairPal, and Crutchfield — <b>verify on the actual truck before cutting a wire or buying a part</b>.
+      Not affiliated with GM, Chevrolet, or Bose. &nbsp;MIT.
+    </div>
+  </div>
+
+<script>
+"use strict";
+const esc=s=>String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+
+// ---- severity tiers -------------------------------------------------------
+const SEV={
+  stop:{lab:'Stop — tow it', c:'var(--stop)', v:'Do not keep driving. Get it to a shop on a flatbed or the shortest possible trip.'},
+  limp:{lab:'Limp to shop', c:'var(--limp)', v:'Drivable gently to a shop, but not safe to merge, haul, or tow — fix it before that.'},
+  soon:{lab:'Drive, fix soon', c:'var(--soon)', v:'Safe to drive for now, but it is a real safety/legal item — put it on the short list.'},
+  ok:{lab:'Drivable', c:'var(--ok)', v:'Drivable; mostly comfort or cosmetic. Fix on your own schedule.'}
+};
+const SEVRANK={stop:4,limp:3,soon:2,ok:1};
+
+// ---- the issue database (field-guide) -------------------------------------
+const ISSUES=[
+{id:'afm-lifter',t:'AFM lifter failure',star:1,rate:'ok',sev:'stop',
+ sym:['ticking','tick','tapping','lifter tick','misfire','rough idle','dead cylinder','knock','reduced power','stabilitrak'],
+ dtc:['P0300','P0301','P0307'],
+ cause:`A collapsible AFM (cylinder-deactivation) lifter sticks in its bore or loses its locking pin and won't reactivate, so it stops opening its valve — a dead cylinder and a misfire. If it comes apart it bends the pushrod and can score the camshaft. The AFM lifters live on the deactivation cylinders (1, 4, 6, 7), which is why the misfire is usually cyl 1 or 7. Worse on low or dirty oil.`,
+ diag:`Confirm the misfiring cylinder on the scan tool's misfire counter, then pull the valve cover and watch the rockers with the engine running — a rocker that sits still on a running engine is a collapsed lifter under it. A leak-down test rules out a bent valve.`,
+ fix:`Proper repair is all 16 lifters + guides with a cam inspection. The durable fix is an AFM-delete (non-AFM cam + standard lifters + valley-cover delete + a tune to disable AFM). A plug-in disabler (Range) or a V8-lock tune PREVENTS future collapse on a healthy engine but does NOT fix one that has already failed.`,
+ parts:'DIY lifter+cam kit ~$2,000', labor:'Shop $2,700 (indie) – $4,500 (dealer); AFM-delete ~$2,500–3,000 all-in', wrench:5,
+ verify:`Failure rate is debated — credible shop estimates put it around 2% or less, usually after 70–80k miles, and tied hard to oil level/quality. It's "real in shops, blown up online." Don't panic; do consider prevention.`,
+ rel:['oil-consumption','stabilitrak']},
+
+{id:'oil-consumption',t:'Excessive oil consumption',star:0,rate:'varies',sev:'soon',
+ sym:['burning oil','oil consumption','low oil','oil light','fouled plugs','blue smoke'],
+ dtc:['P0300'],
+ cause:`Three contributors on the 5.3: the AFM oil-spray jet over-sprays at sustained high RPM and carbons up the oil-control ring grooves (rings stick, oil burns); the original valve-cover PCV path pulls liquid oil into the intake; and worn/stuck rings from the first. GM calls ~1 qt / 2,000 mi "acceptable" — treat that as cover for a documented defect, not a real spec.`,
+ fix:`An updated-PCV valve cover (cheap) plus an AFM-delete stops the over-spray and often solves it — IF the rings aren't already coked. If the rings are gone, it's a ring/piston job that overlaps the cam job.`,
+ parts:'Updated valve cover ~$30–80', labor:'Cover swap easy; ring job is engine-internal', wrench:2,
+ verify:`Check the oil every fill-up on this truck — a run-dry kills the engine and accelerates the lifter failure.`,
+ rel:['afm-lifter']},
+
+{id:'cracked-dash',t:'Cracked dashboard',star:1,rate:'ok',sev:'ok',
+ sym:['cracked dash','dash crack','split dashboard','dashboard'],
+ dtc:[],
+ cause:`Defective dash-pad material shrinks and cracks from heat/UV regardless of climate — it splits along the passenger airbag seam and the cowl above the cluster. It affects nearly all 2007–2014 GMT900 trucks/SUVs; 69+ complaints are logged for the '07 alone. No trouble code.`,
+ fix:`A molded ABS dash cap glues over it (hides it, DIY-able) or a full dash-pad replacement (dash-out, several hours). The cap is the practical answer.`,
+ parts:'Dash cap $100–250; full pad ~$300–600', labor:'Cap = DIY; full pad = several hours', wrench:2,
+ verify:`The crack runs through the airbag deployment seam, so loose pieces can become projectiles on deployment. GM calls it "cosmetic," lost the 2018 class action, and issued no recall — and told dealers NOT to replace cracked dashes. Flag the airbag concern to a customer in writing; don't promise any settlement reimbursement.`,
+ rel:['cluster']},
+
+{id:'cluster',t:'Instrument cluster / gauge failure',star:1,rate:'ok',sev:'soon',
+ sym:['gauges','speedometer','speedo dead','tach','needles stuck','gauges drop','fuel gauge','dim display','odometer'],
+ dtc:[],
+ cause:`Two hardware failures inside the cluster: the X27.168 stepper motors behind the needles wear and lose steps, and cold/cracked solder joints on the board fail from heat and vibration. Gauges stick, read wrong, flutter, drop to zero, or die — often several at once. A generic scanner shows no code.`,
+ fix:`Rebuild it — don't swap a used one (same aging motors, plus it needs VIN/odometer reprogramming). Desolder the old steppers, solder in new X27.168 motors, and reflow the connector joints.`,
+ parts:'DIY kit (7 motors + bulbs) ~$15–30; pro rebuild $100–200', labor:'Cluster R&R is easy (trim + 4 screws); soldering skill is the gate', wrench:3,
+ verify:`A dead speedometer is a no-pass legal/safety item even though the truck drives. This is a great mobile bench job for anyone who can solder.`,
+ rel:['cracked-dash','fuel-sender']},
+
+{id:'stabilitrak',t:'StabiliTrak / Reduced Engine Power',star:0,rate:'ok',sev:'limp',
+ sym:['reduced power','reduced engine power','limp mode','service stabilitrak','traction control','throttle'],
+ dtc:['P2138'],
+ cause:`Usually an accelerator-pedal-position / throttle correlation fault. Priority order: a carboned throttle body (clean it FIRST — often a free fix), then the throttle body / actuator motor, then the accelerator-pedal (APP) sensor, then wiring/corrosion. Note: a Reduced Power message is also a downstream symptom of the AFM misfire — rule that out.`,
+ fix:`Clean the throttle body first. If that doesn't clear it, test/replace the throttle body, then the pedal sensor.`,
+ parts:'Throttle body $100–250; pedal sensor $40–120', labor:'TB clean = easy/cheap', wrench:2,
+ verify:`Limp mode is drivable to a shop but unsafe to merge or tow — don't haul anything in it.`,
+ rel:['afm-lifter']},
+
+{id:'trans-4l60e',t:'4L60E / 4L65E transmission slip',star:0,rate:'ok',sev:'limp',
+ sym:['slipping','slips','transmission slip','flare','shudder','burnt smell','wont shift','3-4 slip'],
+ dtc:['P0894','P0741','P0742'],
+ cause:`The 4-speed's classic high-mileage weak point (120k+): the 3-4 clutch pack, the 2-4 band, or the torque-converter clutch wears. It slips 3rd-to-4th, flares between shifts, shudders, and smells burnt.`,
+ fix:`Drop the pan to read it: clean fluid with light debris means a fluid+filter service may save it; heavy friction material and burnt fluid means a rebuild.`,
+ parts:'Fluid+filter $150–250 if caught early', labor:'Rebuild $2,000–4,000', wrench:4,
+ verify:`Drive gently to the shop — sustained slip overheats the fluid and destroys what's left.`,
+ rel:[]},
+
+{id:'fuel-sender',t:'Fuel gauge reads wrong (level sender)',star:0,rate:'ok',sev:'ok',
+ sym:['fuel gauge','gas gauge wrong','gauge erratic','fuel level','wrong fuel reading'],
+ dtc:['P0463'],
+ cause:`The in-tank fuel-level sender card — a resistive strip — wears out and sends a bad signal. Nine times out of ten the gauge itself is fine and it's the sender. Don't confuse this with the cluster failure (no-code gauge faults are the cluster; P0463 is the sender).`,
+ fix:`Replace the sending unit (part of the in-tank pump module). Confirm with live fuel-level data before dropping the tank.`,
+ parts:'Sender/module $200–500', labor:'Tank drop is the labor', wrench:3,
+ verify:`Drivable annoyance — fix at convenience.`,
+ rel:['fuel-pump','cluster']},
+
+{id:'fuel-pump',t:'Fuel pump — no-start / stall',star:0,rate:'ok',sev:'stop',
+ sym:['no start','wont start','cranks no start','stalls','dies','fuel pump'],
+ dtc:[],
+ cause:`The in-tank fuel pump fails and can't build pressure — crank-no-start, or random stalling as it dies.`,
+ fix:`Confirm with a fuel-pressure test (listen for the prime, then put a gauge on the rail) before condemning the pump. Replace the pump module.`,
+ parts:'Pump module $200–500', labor:'Shop $800–1,500 (tank drop)', wrench:3,
+ verify:`A no-start is not drivable. Don't replace a pump on a guess — pressure-test first.`,
+ rel:['fuel-sender']},
+
+{id:'wheel-hub',t:'Front wheel hub / bearing + ABS sensor',star:0,rate:'ok',sev:'soon',
+ sym:['humming','growl','wheel noise','abs light','traction light','stabilitrak','bad bearing'],
+ dtc:['C0035','C0040','C0045'],
+ cause:`The wheel-speed sensor and tone ring are integrated into the hub bearing. A worn bearing or a rusted tone ring trips an ABS C-code and lights ABS / StabiliTrak / Traction — so the hub is usually the fix even when the code says "sensor."`,
+ fix:`Replace the hub bearing assembly (sensor included). You need a GM-capable tool to read the C-code — a generic ELM327 won't show it.`,
+ parts:'Hub assembly $80–150 aftermarket', labor:'~1 hr (rust seizes the axle nut in SE Texas — bring a torch)', wrench:3,
+ verify:`Needs a GM/Autel scanner to confirm which corner. Drivable, but stability control is degraded.`,
+ rel:['stabilitrak']},
+
+{id:'evap',t:'EVAP leak (check-engine, smog fail)',star:0,rate:'ok',sev:'ok',
+ sym:['evap','gas cap','check engine','smell of gas','smog fail','emissions'],
+ dtc:['P0442','P0446','P0449','P0455','P0496'],
+ cause:`A sealed-tank vapor leak. On this truck the priority is: gas cap first, then the EVAP vent solenoid (mounted near the spare/rear diff, it clogs with dirt or corrodes from water), then the purge solenoid, then cracked lines.`,
+ fix:`Check/replace the gas cap, then smoke-test the system — don't buy parts before the smoke test. The vent solenoid is the usual culprit and it's cheap and easy.`,
+ parts:'Gas cap $15–30; vent solenoid $30–70', labor:'Easy; a smoke machine is the right tool', wrench:2,
+ verify:`Drivable; only matters for emissions/smog.`,
+ rel:[]},
+
+{id:'blend-door',t:'HVAC blend-door actuator (clicking dash)',star:0,rate:'varies',sev:'ok',
+ sym:['clicking dash','tapping behind dash','temp stuck','no heat','no cold air','blend door','actuator'],
+ dtc:[],
+ cause:`Stripped plastic gears in a blend-door actuator — a repetitive clicking/tapping behind the dash and temperature stuck on hot or cold.`,
+ fix:`Replace the faulting actuator. The driver-side and lower-passenger ones are about an hour; the upper-passenger one is a multi-hour job.`,
+ parts:'Actuator $20–60', labor:'1 hr (driver) to several (upper passenger)', wrench:3,
+ verify:`Comfort only. Not strongly documented for this exact generation (cluster issues dominate) — treat as plausible; the clicking usually tells you which one.`,
+ rel:[]},
+
+{id:'ac',t:'A/C weak or not cold',star:0,rate:'varies',sev:'ok',
+ sym:['ac not cold','no cold air','weak ac','low refrigerant','ac leak'],
+ dtc:[],
+ cause:`Front-mounted condenser develops pinhole leaks from road debris, and the compressor ages out — both bleed off refrigerant.`,
+ fix:`Gauge it and find the leak with UV dye/a detector before recharging. Replace the condenser or compressor as found.`,
+ parts:'Condenser $80–200; compressor $200–400', labor:'Moderate', wrench:3,
+ verify:`Comfort only.`,
+ rel:[]},
+
+{id:'steering-clunk',t:'Intermediate steering shaft clunk',star:0,rate:'ok',sev:'ok',
+ sym:['clunk','knock in steering','steering clunk','bump noise','pop in wheel'],
+ dtc:[],
+ cause:`Dry/worn splines in the upper intermediate steering shaft — a clunk or knock felt in the wheel over bumps or when you reverse the steering direction. There's a TSB on it, updated from "re-grease" to "replace the shaft."`,
+ fix:`Greasing is a temporary fix; replacing the shaft is permanent and easy.`,
+ parts:'Shaft $60–150', labor:'Easy', wrench:2,
+ verify:`Drivable, not a safety failure — just annoying.`,
+ rel:[]},
+
+{id:'ps-hose',t:'Power steering pressure hose leak',star:0,rate:'ok',sev:'ok',
+ sym:['power steering leak','ps leak','whine','steering whine','low ps fluid'],
+ dtc:[],
+ cause:`The high-pressure power-steering hose fitting weeps — a leak, a whine, and a dropping reservoir.`,
+ fix:`Replace the pressure hose. Owners call it a 20-minute fix.`,
+ parts:'Hose $30–80', labor:'Easy', wrench:2,
+ verify:`Monitor the fluid — running the pump dry kills it.`,
+ rel:[]},
+
+{id:'door-handles',t:'Door handles cracking / snapping',star:0,rate:'varies',sev:'ok',
+ sym:['door handle','handle broke','interior handle','exterior handle','wont open'],
+ dtc:[],
+ cause:`Brittle plastic interior handles and exterior handle linkages crack and snap with age — a known GMT900 annoyance (no confirmed TSB).`,
+ fix:`Replace the handle; it's a door-panel-off DIY job.`,
+ parts:'Handle $15–60', labor:'DIY door panel', wrench:2,
+ verify:`Nuisance only.`,
+ rel:[]},
+
+{id:'autoride',t:'Z55 Autoride air suspension (LTZ)',star:0,rate:'ok',sev:'soon',
+ sym:['rear sag','saggy rear','air suspension','compressor','autoride','service suspension','bouncy ride'],
+ dtc:[],
+ cause:`The LTZ's Autoride (RPO Z55) uses an air compressor, air-leveling rear shocks, and position sensors for real-time damping and load leveling. The air shocks leak and the compressor burns out — you get a sagging rear, a constantly-cycling or noisy compressor, and a harsh ride. (Z55 is adaptive air+damping — NOT the magneto-rheological MagneRide of the Escalade/Denali; don't promise MagneRide on a plain Tahoe LTZ.)`,
+ fix:`Diagnose the leak (shocks vs. lines) and the compressor. Many owners convert to conventional shocks + coils to escape the cost; otherwise replace the air shocks/compressor.`,
+ parts:'Air shocks/compressor are pricey OE items', labor:'Moderate', wrench:3,
+ verify:`Confirm Z55 on the glovebox RPO sticker first. Drivable, but ride/leveling is degraded.`,
+ rel:[]}
+];
+
+// ---- BOSE configurator ----------------------------------------------------
+const SPEAKERS=[
+  ['Front doors (woofer/mid)','6.5"','main front output; pocket fits a 6-1/2 aftermarket'],
+  ['Front tweeters','1"','in the pillar / sail panel'],
+  ['Center dash','3.5"','a Bose-only center channel under the dash grille'],
+  ['Rear doors','6.5"',''],
+  ['Rear pillar tweeters','3.5"',''],
+  ['Console subwoofer','5.25–6.5"','dual-voice-coil, in the center console with the amp']
+];
+const BOSE={
+  A:{name:'Add a sub + amp', tier:'TIER A', short:'Most common job, cleanest result.',
+    body:`<p><b>Tap the factory SUBWOOFER output in the console</b> (it's a 4-wire dual-voice-coil) into a line-output converter (LOC / hi-lo), then RCA into your aftermarket amp + sub.</p>`,
+    why:`Why the sub channel and not the door wires: tapping a speaker wire changes the load the Bose amp sees and confuses its clip-detection circuit. The sub channel is the safe tap.`,
+    parts:['Line output converter (LOC / hi-lo)','Aftermarket amp + sub','A relay off the ignition lead for remote turn-on (don\'t load the BCM)'],
+    wires:`Documented amp-side sub wires: VC1 = Dk Blue/White (+), Lt Green/Black (−); VC2 = Dk Green (+), Lt Blue/Black (−). Verify with a meter on the actual truck before cutting — colors drift by build.`,
+    cost:'Mobile install ~$150–350 labor (shop flat-rate $200–500), plus your gear.'},
+  B:{name:'Replace the speakers', tier:'TIER B', short:'Keep the Bose amp, refresh the sound.',
+    body:`<p>Use <b>2–3 ohm impedance-matched / direct-fit OEM-replacement speakers only</b> — never generic 4-ohm.</p>`,
+    why:`The Bose drivers are 2-ohm (some 1-ohm). Drop in a normal 4-ohm speaker and the amp sees too much load: it gets quieter AND can confuse its clip-detection. Direct-fit low-impedance units (e.g. PowerBass OE-GM) keep the amp happy.`,
+    parts:['Front 6.5" + rear 6.5" (2–3 ohm direct-fit)','Center 3.5"','Tweeters 1" / 3.5"'],
+    wires:'',
+    cost:'~$50/speaker labor (more for door teardown) + parts. Honest framing: this is a refresh, not a transformation — the Bose amp is the ceiling.'},
+  C:{name:'Add CarPlay / full upgrade', tier:'TIER C', short:'New head unit — the real upgrade.',
+    body:`<p>Replace the head unit with an aftermarket double-DIN and wire it through a <b>PAC RadioPRO RP5-GM11</b> (or iDatalink Maestro) integration harness, then run your own amp(s) + 4-ohm speakers and ignore the Bose amp entirely.</p>`,
+    why:`The RP5-GM11 retains the warning chimes, OnStar, steering-wheel controls, and rear-seat entertainment. Swapping the head unit WITHOUT an interface kills the warning chimes — the #1 thing a customer notices, and the reason to do it right.`,
+    parts:['Aftermarket double-DIN head unit','PAC RP5-GM11 (or iDatalink Maestro)','Double-DIN dash kit','Your own amp(s) + 4-ohm speakers'],
+    wires:'',
+    cost:'Head-unit/CarPlay retrofit ~$150–400+ labor; a full Bose-delete build runs $300–1,500+ all-in depending on gear.'}
+};
+
+// ---- VIN / RPO / specs data ----------------------------------------------
+const VIN8={
+  '0':{rpo:'LMG',d:'5.3L V8, iron block, AFM',flex:'Flex-fuel (E85) — the common one',ok:true},
+  'J':{rpo:'LY5',d:'5.3L V8, iron block, AFM',flex:'NOT flex-fuel — otherwise identical to the LMG',ok:true},
+  'C':{rpo:'L20 / LY2',d:'4.8L V8, iron block (no AFM)',flex:'2WD base engine — this is the 4.8, not a 5.3',ok:true}
+};
+const RPO=[
+  ['Z55','<b>Autoride</b> suspension — the LTZ tell (adaptive air + damping)'],
+  ['UQA / UQS','<b>Bose</b> premium audio (UQA on the Chevy; UQS is the Cadillac amp)'],
+  ['G80','Locking / limited-slip rear differential'],
+  ['M30 / M32','Transmission — <b>4L60E</b> (M30) or <b>4L65E</b> (M32)'],
+  ['GU6 / GT4','Rear axle ratio — 3.42 (GU6) or 3.73 (GT4)'],
+  ['LMG / LY5','Engine — the 5.3 V8 (4.8 = L20)']
+];
+const FLUIDS=[
+  ['Engine oil','<b>6.0 qt</b> with filter &middot; <b>5W-30</b> (dexos1 Gen2/3) &middot; <span class="warn">not 8 qt</span>'],
+  ['Oil interval','OLM-driven; ~3–5k conventional / 7,500 synthetic (AFM truck &rarr; shorter is safer)'],
+  ['Spark plugs','AC Delco iridium &middot; gap <b>0.040"</b> &middot; ~100k miles &middot; <span class="warn">not 0.060"</span>'],
+  ['Transmission','<b>Dexron VI</b> &middot; ~5 qt drain &amp; fill (~11.5 qt dry with converter)'],
+  ['Transfer case','<b>Auto-Trak II</b> (blue) &middot; ~1.6–2 qt &middot; <span class="warn">never generic ATF</span>'],
+  ['Differentials','~2+ qt each &middot; 75W-90 synthetic &middot; LSD additive if G80'],
+  ['Coolant','<b>DexCool</b> (orange) &middot; ~4+ gallons with rear heat']
+];
+const NUMBERS=[
+  ['Engine','5.3L V8, 320 hp @ 5200 / 340 lb-ft @ 4200 (gas)'],
+  ['Transmission','4-speed automatic (4L60E / 4L65E)'],
+  ['EPA mpg (4WD)','14 city / 19 hwy (16 combined); ~10/14 on E85'],
+  ['Curb weight','~5,390–5,600 lb'],
+  ['Max towing','~7,200 lb (varies by axle / 2WD vs 4WD)'],
+  ['Fuel tank','26 gal'],
+  ['Wheels','20" (LTZ) — P265/65R18 or P275/55R20']
+];
+const CHIPS=['ticking, misfire','P0300','reduced power','speedometer dead','cracked dash','slipping','no start','abs light','burning oil','gas gauge wrong'];
+
+// ---- render ---------------------------------------------------------------
+const $=id=>document.getElementById(id);
+const byId=id=>ISSUES.find(x=>x.id===id);
+const wrench=n=>{let s='';for(let i=0;i<5;i++)s+='<span class="'+(i<n?'on':'off')+'">&#128295;</span>';return '<span class="wrench">'+s+'<span class="lab">'+['','very easy','easy','moderate','hard','engine-internal'][n]+'</span></span>';};
+const rateLab={ok:'Well documented',varies:'Varies — verify',myth:'Myth'};
+
+function issueRow(x){
+  const s=SEV[x.sev];
+  return '<div class="row" data-issue="'+x.id+'"><span class="dot" style="background:'+s.c+'"></span>'+
+    '<span class="t">'+(x.star?'<span class="star">&#9733;</span>':'')+esc(x.t)+
+    (x.dtc.length?'<small>'+x.dtc.join(' &middot; ')+'</small>':'')+'</span>'+
+    '<span class="sv" style="background:'+s.c+'">'+s.lab.split(' ')[0]+'</span></div>';
+}
+function issueCard(x){
+  const s=SEV[x.sev];
+  let h='<div class="card"><div class="ctop" style="border-left-color:'+s.c+'">'+
+    '<div class="ctitle">'+(x.star?'<span class="star">&#9733; </span>':'')+esc(x.t)+'</div>'+
+    '<span class="rate '+x.rate+'">'+rateLab[x.rate]+'</span></div>'+
+    '<div class="verdict" style="border-color:'+s.c+'40;background:'+s.c+'12">'+
+      '<span class="badge" style="background:'+s.c+'">'+s.lab+'</span><span class="vtxt">'+s.v+'</span></div>'+
+    '<div class="sec">';
+  if(x.sym&&x.sym.length){ h+='<h3>Symptoms</h3><div class="chipsrow">'+x.sym.slice(0,7).map(k=>'<span class="pill">'+esc(k)+'</span>').join('')+'</div>'; }
+  if(x.dtc&&x.dtc.length){ h+='<h3>Trouble codes</h3><div class="chipsrow">'+x.dtc.map(c=>'<span class="pill code">'+c+'</span>').join('')+'</div>'; }
+  h+='<h3>What\'s really happening</h3><p>'+esc(x.cause)+'</p>';
+  if(x.diag){ h+='<h3>How to find it</h3><p>'+esc(x.diag)+'</p>'; }
+  h+='<h3>The fix</h3><p>'+esc(x.fix)+'</p>'+
+     '<h3>Cost &amp; difficulty</h3><div class="costgrid">'+
+       '<div class="costcell"><div class="l">Parts</div><div class="v">'+esc(x.parts)+'</div></div>'+
+       '<div class="costcell"><div class="l">Labor</div><div class="v" style="font-size:13px;font-family:inherit;font-weight:600">'+esc(x.labor)+'</div></div>'+
+     '</div><div style="margin-top:9px">'+wrench(x.wrench)+'</div>';
+  if(x.verify){ h+='<h3>Worth knowing</h3><div class="verify"><b>&#9888; </b>'+esc(x.verify)+'</div>'; }
+  if(x.rel&&x.rel.length){ h+='<h3>Related</h3><div class="related">'+x.rel.map(r=>{const o=byId(r);return o?'<span class="rel" data-issue="'+r+'">'+esc(o.t)+'</span>':'';}).join('')+'</div>'; }
+  h+='</div><div class="bottom"></div></div>';
+  return '<div class="back" id="back">&larr; all issues</div>'+h;
+}
+function listView(){
+  const sorted=ISSUES.slice().sort((a,b)=>(SEVRANK[b.sev]-SEVRANK[a.sev])||(b.star-a.star));
+  return '<div class="lbl">All known issues — worst first</div><div class="list">'+sorted.map(issueRow).join('')+'</div>';
+}
+function search(term){
+  const t=term.toLowerCase().trim();
+  if(!t) return listView();
+  const up=term.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  const scored=ISSUES.map(x=>{
+    let s=0; const hay=(x.id+' '+x.t+' '+x.sym.join(' ')+' '+x.dtc.join(' ')+' '+x.cause).toLowerCase();
+    if(x.dtc.some(c=>c===up)) s+=10;
+    x.sym.forEach(k=>{ if(t.includes(k)||k.includes(t)) s+=4; });
+    t.split(/[\s,]+/).forEach(w=>{ if(w.length>2&&hay.includes(w)) s+=1; });
+    return [x,s];
+  }).filter(z=>z[1]>0).sort((a,b)=>b[1]-a[1]);
+  if(!scored.length) return '<div class="miss">No match for &ldquo;'+esc(term)+'&rdquo;. Try a symptom like <b>ticking</b>, <b>reduced power</b>, or <b>cracked dash</b> — or a code like <b>P0300</b>.</div>';
+  return '<div class="lbl">Best matches</div><div class="list">'+scored.map(z=>issueRow(z[0])).join('')+'</div>';
+}
+function showIssue(id){ const x=byId(id); if(!x){ render(); return; } $('out-diag').innerHTML=issueCard(x); bindDiag(); window.scrollTo({top:0,behavior:'smooth'}); }
+function render(){ $('out-diag').innerHTML=search($('q').value); bindDiag(); }
+function bindDiag(){
+  $('out-diag').querySelectorAll('[data-issue]').forEach(el=>el.onclick=()=>{ const id=el.getAttribute('data-issue'); location.hash='diag/'+id; });
+  const b=$('back'); if(b) b.onclick=()=>{ location.hash='diag'; };
+}
+
+// BOSE
+function renderBose(goal){
+  const g=BOSE[goal]; if(!g){ $('out-bose').innerHTML=''; return; }
+  let h='<div class="card"><div class="ctop"><div class="ctitle">'+esc(g.name)+'</div>'+
+    '<span class="rate ok" style="color:var(--accent2);border-color:rgba(91,180,214,.4)">'+g.tier+'</span></div><div class="sec">'+
+    g.body+'<h3>Why it works this way</h3><p>'+esc(g.why)+'</p>'+
+    '<h3>What you need</h3><div class="chipsrow">'+g.parts.map(p=>'<span class="pill">'+esc(p)+'</span>').join('')+'</div>';
+  if(g.wires){ h+='<h3>Wiring</h3><div class="verify"><b>&#9888; </b>'+esc(g.wires)+'</div>'; }
+  h+='<h3>What a mobile install runs</h3><p>'+esc(g.cost)+'</p></div><div class="bottom"></div></div>';
+  $('out-bose').innerHTML=h;
+  $('goals').querySelectorAll('.goal').forEach(el=>el.classList.toggle('on',el.getAttribute('data-goal')===goal));
+}
+
+// VIN
+function renderVin(d){
+  const k=(d||'').toUpperCase();
+  const e=VIN8[k];
+  if(!e){ $('out-vin').innerHTML=k?'<div class="miss">&ldquo;'+esc(k)+'&rdquo; isn\'t an engine code for this truck. The 8th digit is <b>0</b> (LMG 5.3 flex), <b>J</b> (LY5 5.3), or <b>C</b> (4.8 V8).</div>':''; return; }
+  $('out-vin').innerHTML='<div class="card"><div class="ctop"><div class="ctitle"><span style="font-family:ui-monospace,monospace;color:var(--accent2)">'+k+'</span> &rarr; '+esc(e.rpo)+'</div></div>'+
+    '<div class="sec" style="padding-bottom:18px"><h3>Engine</h3><p>'+esc(e.d)+'</p><h3>Fuel</h3><p>'+esc(e.flex)+'</p>'+
+    (k==='J'||k==='0'?'<div class="verify" style="margin-top:14px"><b>&#9888; </b>The famous flex-fuel engine is <b>0 = LMG</b>, not J. <b>J = LY5</b> (non-flex). Get this right before ordering injectors, a fuel rail, or a long block.</div>':'')+'</div></div>';
+}
+
+// tabs + routing
+function setTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.getAttribute('data-tab')===name));
+  document.querySelectorAll('.panelview').forEach(v=>v.classList.toggle('on',v.id==='view-'+name));
+}
+function route(){
+  const h=decodeURIComponent(location.hash.slice(1));
+  const parts=h.split('/');
+  const tab=['diag','bose','vin','specs'].includes(parts[0])?parts[0]:'diag';
+  setTab(tab);
+  if(tab==='diag'){ if(parts[1]) showIssue(parts[1]); else render(); }
+}
+
+// boot
+function boot(){
+  $('icount').textContent=ISSUES.length;
+  $('chips').innerHTML=CHIPS.map(c=>'<span class="chip'+(/^[PBCU]\d/.test(c)?' code':'')+'" data-q="'+esc(c)+'">'+esc(c)+'</span>').join('');
+  $('chips').querySelectorAll('[data-q]').forEach(el=>el.onclick=()=>{ $('q').value=el.getAttribute('data-q'); location.hash='diag'; render(); $('q').scrollIntoView({behavior:'smooth',block:'center'}); });
+  $('q').addEventListener('input',()=>{ if(location.hash.indexOf('diag/')>=0) history.replaceState(null,'','#diag'); render(); });
+
+  $('goals').innerHTML=Object.keys(BOSE).map(k=>{const g=BOSE[k];return '<div class="goal" data-goal="'+k+'"><div class="gt">'+esc(g.name)+'</div><div class="gd">'+esc(g.short)+'</div><div class="tier">'+g.tier+'</div></div>';}).join('');
+  $('goals').querySelectorAll('.goal').forEach(el=>el.onclick=()=>renderBose(el.getAttribute('data-goal')));
+  $('spk').innerHTML=SPEAKERS.map(r=>'<tr><td>'+esc(r[0])+'</td><td><b>'+esc(r[1])+'</b></td><td style="color:var(--dim);font-size:12.5px">'+esc(r[2])+'</td></tr>').join('');
+
+  $('vinkeys').innerHTML=['0','J','C'].map(k=>'<div class="b" data-v="'+k+'">'+k+'</div>').join('');
+  $('vinkeys').querySelectorAll('[data-v]').forEach(el=>el.onclick=()=>{ $('vin8').value=el.getAttribute('data-v'); renderVin(el.getAttribute('data-v')); });
+  $('vin8').addEventListener('input',()=>renderVin($('vin8').value));
+
+  $('rpo').innerHTML=RPO.map(r=>'<tr><td style="font-family:ui-monospace,monospace;color:var(--accent2)">'+esc(r[0])+'</td><td>'+r[1]+'</td></tr>').join('');
+  $('fluids').innerHTML=FLUIDS.map(r=>'<tr><td>'+esc(r[0])+'</td><td>'+r[1]+'</td></tr>').join('');
+  $('numbers').innerHTML=NUMBERS.map(r=>'<tr><td>'+esc(r[0])+'</td><td>'+r[1]+'</td></tr>').join('');
+
+  document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{ location.hash=t.getAttribute('data-tab'); });
+  renderBose('A');
+  window.addEventListener('hashchange',route);
+  route();
+
+  // test hooks
+  window.TAHOE={ issues:ISSUES, find:term=>{const t=term.toLowerCase().trim(),up=term.toUpperCase().replace(/[^A-Z0-9]/g,'');return ISSUES.filter(x=>x.dtc.includes(up)||x.sym.some(k=>t.includes(k)||k.includes(t))||(x.id+' '+x.t).toLowerCase().includes(t));},
+    issue:id=>byId(id), bose:BOSE, vin:d=>VIN8[(d||'').toUpperCase()]||null, count:ISSUES.length };
+  window.__ready=true;
+}
+boot();
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {"@type":"SoftwareApplication","name":"Tahoe LTZ Field Guide","applicationCategory":"AutomotiveApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free, offline field guide for the 2007 Chevrolet Tahoe LTZ (5.3L V8, GMT900): a symptom/DTC decoder with safe-to-drive verdicts, a Bose audio upgrade configurator, a VIN engine and RPO decoder, and fluids & specs. Runs entirely in the browser; nothing is uploaded.","creator":{"@type":"Organization","name":"Zero"},"url":"https://thefinalmilkman.github.io/zero/tahoe-ltz/"},
+    {"@type":"FAQPage","mainEntity":[
+      {"@type":"Question","name":"What is the most common problem with a 2007 Chevy Tahoe 5.3?","acceptedAnswer":{"@type":"Answer","text":"AFM (Active Fuel Management) lifter failure. A collapsible lifter on a deactivation cylinder sticks and stops opening its valve, causing a dead cylinder and a misfire (P0300 plus P0301 or P0307) with a growing tick. The durable fix is an AFM-delete; a plug-in disabler prevents future failure on a healthy engine but does not fix a collapsed lifter."}},
+      {"@type":"Question","name":"Why won't my gauges or speedometer work on my 2007 Tahoe?","acceptedAnswer":{"@type":"Answer","text":"The instrument cluster fails internally: the X27.168 stepper motors behind the needles wear out and the board's solder joints crack. There is usually no trouble code. The fix is to rebuild the cluster by replacing the stepper motors and reflowing the solder, not to swap in a used cluster."}},
+      {"@type":"Question","name":"Can I read all the codes on a 2007 Tahoe with a cheap OBD2 scanner?","acceptedAnswer":{"@type":"Answer","text":"Only the powertrain (P) codes. ABS, airbag, and body modules (B, C, and U codes) and bidirectional tests need a GM-capable tool such as a Tech2 or an Autel. The upside: a 2007 has no Secure Gateway, so the data bus is fully open to any capable scanner."}},
+      {"@type":"Question","name":"How do I upgrade the Bose stereo in a 2007 Tahoe LTZ?","acceptedAnswer":{"@type":"Answer","text":"The Bose system uses 2-ohm speakers and a speaker-level amp with clip-detection, so you can't just drop in 4-ohm speakers. To add a sub, tap the factory subwoofer output (not the door wires) into a line output converter. To replace speakers, use 2-3 ohm direct-fit units. For a full upgrade or CarPlay, use a PAC RP5-GM11 interface so the warning chimes, OnStar, and steering-wheel controls keep working."}}
+    ]}
+  ]
+}
+</script>
+</body>
+</html>
