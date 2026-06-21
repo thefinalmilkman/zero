@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e1311">
+<title>Sift — read your skincare label honestly (prototype)</title>
+<meta name="description" content="Paste a skincare ingredient list and get every ingredient explained, cited, and honestly framed — no fake safety score. A prototype.">
+<style>
+  :root{
+    --bg:#0e1311; --panel:#16201b; --panel2:#1c2823; --line:#2a3a32; --ink:#e9efe9; --dim:#93a59a; --faint:#62736a;
+    --accent:#7fd4a8; --accent2:#aee8c8;
+    --gentle:#7fd4a8; --restricted:#5bb6d6; --irritant:#e6b052; --allergen:#ef8f5d; --pregnancy:#c79cf0;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:radial-gradient(1000px 640px at 50% -10%, #16241d 0%, var(--bg) 60%) fixed; color:var(--ink);
+       font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 90px}
+  header{text-align:center;padding:12px 0 2px}
+  .mark{font-weight:800;font-size:27px;letter-spacing:.5px}
+  .mark b{color:var(--accent2)}
+  .tag{color:var(--dim);font-size:13.5px;margin-top:5px}
+  .proto{display:inline-block;margin-top:9px;font:700 10px sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent2);
+    border:1px solid rgba(127,212,168,.4);border-radius:999px;padding:3px 10px}
+  /* honest banner */
+  .creed{display:flex;gap:11px;background:rgba(127,212,168,.07);border:1px solid rgba(127,212,168,.22);border-radius:13px;padding:13px 15px;margin:18px 0 6px}
+  .creed .ic{font-size:17px;line-height:1.4}
+  .creed .c{font-size:13.2px;color:#cfe0d6}
+  .creed b{color:var(--accent2)}
+  /* profile */
+  .lbl{color:var(--faint);font-size:11px;letter-spacing:1.4px;text-transform:uppercase;margin:18px 2px 7px;font-weight:700}
+  .profile{display:flex;flex-wrap:wrap;gap:8px}
+  .pchip{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--dim);cursor:pointer;transition:.13s;user-select:none}
+  .pchip:hover{color:var(--ink)}
+  .pchip.on{border-color:var(--accent);background:rgba(127,212,168,.13);color:var(--accent2)}
+  /* paste */
+  textarea{width:100%;min-height:96px;background:var(--panel);border:1px solid var(--line);border-radius:14px;color:var(--ink);
+    font:14.5px/1.5 ui-monospace,Consolas,monospace;padding:14px 15px;outline:none;resize:vertical;margin-top:6px}
+  textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(127,212,168,.13)}
+  textarea::placeholder{color:var(--faint)}
+  .row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  .btn{background:var(--accent);color:#0b130f;border:none;border-radius:11px;padding:11px 18px;font:700 14px sans-serif;cursor:pointer;transition:.13s}
+  .btn:hover{filter:brightness(1.08)}
+  .samples{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto}
+  .samp{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:12.3px;color:var(--dim);cursor:pointer;transition:.12s}
+  .samp:hover{border-color:var(--accent);color:var(--ink)}
+  /* summary */
+  .summary{margin:20px 0 4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 17px}
+  .summary .s1{font-size:14.5px;color:var(--ink)}
+  .summary .s1 b{color:var(--accent2)}
+  .summary .fns{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .fnpill{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:4px 9px;font-size:11.5px;color:var(--dim)}
+  .summary .you{margin-top:11px;font-size:13.3px;color:#e8dff5;background:rgba(199,156,240,.09);border:1px solid rgba(199,156,240,.28);border-radius:10px;padding:10px 13px}
+  .summary .you b{color:var(--pregnancy)}
+  .noscore{margin-top:10px;font-size:12px;color:var(--faint)}
+  /* cards */
+  .list{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden;animation:rise .22s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .card.hit{border-left:4px solid var(--pregnancy)}
+  .chead{display:flex;align-items:baseline;gap:10px;padding:13px 16px 8px;flex-wrap:wrap}
+  .rank{font:700 12px ui-monospace,monospace;color:var(--faint);min-width:22px}
+  .nm{font-weight:700;font-size:15.5px}
+  .nm .aka{font-weight:400;color:var(--dim);font-size:12.5px;margin-left:6px}
+  .pill{font:700 10.5px sans-serif;letter-spacing:.3px;padding:4px 9px;border-radius:7px;color:#0b130f;white-space:nowrap}
+  .fn{color:var(--dim);font-size:11.5px;margin-left:auto;text-transform:uppercase;letter-spacing:.6px}
+  .cbody{padding:0 16px 14px}
+  .what{font-size:14px;color:#d7e2db}
+  .note{font-size:13.4px;color:#cdd9d1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:9px}
+  .note.warn{border-color:rgba(239,143,93,.3)} .note.good{border-color:rgba(127,212,168,.3)}
+  .youline{font-size:12.8px;color:#e8dff5;margin-top:8px;display:flex;gap:7px;align-items:flex-start}
+  .youline .d{color:var(--pregnancy);font-weight:700}
+  .src{font-size:11.5px;color:var(--faint);margin-top:9px}
+  .src b{color:var(--dim);font-weight:600}
+  .unmatched{margin-top:16px}
+  .unmatched .uh{color:var(--faint);font-size:12px;margin-bottom:7px}
+  .uchips{display:flex;flex-wrap:wrap;gap:6px}
+  .uchip{background:transparent;border:1px dashed var(--line);border-radius:8px;padding:5px 10px;font-size:12px;color:var(--faint)}
+  .note2{color:var(--faint);font-size:12px;text-align:center;line-height:1.7;border-top:1px solid var(--line);margin-top:30px;padding-top:18px}
+  .note2 b{color:var(--dim)}
+  .card.cosing{background:#131c17}
+  .card.cosing .nm{font-weight:600}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="mark">Sif<b>t</b></div>
+      <div class="tag">paste a skincare label — every ingredient explained, cited, and honestly framed</div>
+      <div class="proto">Prototype · 24,000 real EU ingredients + curated depth</div>
+    </header>
+
+    <div class="creed">
+      <div class="ic">⚖️</div>
+      <div class="c"><b>No safety score, by design.</b> A watchlist flags a <i>name</i>; real safety is about the <i>dose</i>. We explain each ingredient, cite the toxicologists' own sources (CIR, EU CosIng, the EU allergen list), flag what's genuinely worth knowing — and let you decide. Honest both ways: we don't whitewash, and we don't fear-monger.</div>
+    </div>
+
+    <div class="lbl">Tell it about you (optional) — it tailors what's flagged, nothing else</div>
+    <div class="profile" id="profile">
+      <div class="pchip" data-p="preg">🤰 Pregnant / nursing</div>
+      <div class="pchip" data-p="frag">🌸 Fragrance-sensitive</div>
+      <div class="pchip" data-p="sens">🪻 Sensitive / rosacea-prone</div>
+    </div>
+
+    <div class="lbl">Paste the ingredient list (the “Ingredients / INCI” line)</div>
+    <textarea id="q" spellcheck="false" placeholder="Aqua, Glycerin, Niacinamide, Phenoxyethanol, Parfum, Limonene ..."></textarea>
+    <div class="row">
+      <button class="btn" id="read">Read the label</button>
+      <div class="samples">
+        <span class="samp" data-s="moist">try: a moisturizer</span>
+        <span class="samp" data-s="serum">try: a vitamin-C serum</span>
+        <span class="samp" data-s="spf">try: a sunscreen</span>
+        <span class="samp" data-s="retinol">try: a retinol cream</span>
+      </div>
+    </div>
+
+    <div id="out"></div>
+
+    <div class="note2">
+      <b>Sift</b> is a prototype — now reading against the real EU CosIng inventory (~24,000 ingredients) + the Annex III restriction limits, with a hand-curated depth layer of plain-English writeups for the most-used ones, each sourced to the
+      bodies the chemists actually trust — <b>CIR</b> (Cosmetic Ingredient Review), the EU's <b>CosIng</b> database, the EU
+      <b>Annex III</b> allergen list, and <b>PubChem</b>. The full build loads the complete CosIng export. Nothing you paste is uploaded.
+      Not medical advice.
+    </div>
+  </div>
+
+<script src="sift-cosing.js"></script>
+<script>
+"use strict";
+const esc = s => String(s).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+
+// tag = an honest descriptive category, NOT a grade.
+const TAGS = {
+  gentle:    ['Broadly well-tolerated', 'var(--gentle)'],
+  restricted:['Use-restricted — safe within limits', 'var(--restricted)'],
+  irritant:  ['Can irritate reactive skin', 'var(--irritant)'],
+  allergen:  ['Known allergen', 'var(--allergen)'],
+  pregnancy: ['Pregnancy: commonly avoided', 'var(--pregnancy)']
+};
+
+// ~34 real ingredients. note = the honest, exposure-framed line. f = profile relevance.
+const DB = [
+{inci:'Aqua', aka:['Water','Eau'], fn:'Solvent', tag:'gentle', src:'—',
+ what:'The base most products are built on — it carries everything else.',
+ note:'Inert. It is almost always the first ingredient, which only tells you it is the largest part of the formula.'},
+{inci:'Glycerin', aka:['Glycerol'], fn:'Humectant', tag:'gentle', src:'CIR',
+ what:'Pulls water into the skin to hydrate — one of the most-studied moisturizers there is.',
+ note:'Broadly well-tolerated at any level.'},
+{inci:'Niacinamide', aka:['Vitamin B3','Nicotinamide'], fn:'Active — barrier / tone', tag:'gentle', src:'CIR', f:{sens:'Very high levels can flush very reactive skin; most tolerate it well.'},
+ what:'Vitamin B3 — strengthens the skin barrier, evens tone, and calms redness.',
+ note:'Well-tolerated; one of the gentler actives.'},
+{inci:'Phenoxyethanol', aka:[], fn:'Preservative', tag:'restricted', src:'CIR; EU CosIng (≤1%)', f:{sens:'A rare irritant for the most reactive skin.'},
+ what:'A workhorse preservative that keeps the product from growing bacteria and mold.',
+ note:'Routinely red-flagged by hazard-based apps — but CIR and the EU both judge it safe at the levels actually used, and the EU caps it at 1%. This is the textbook case: hazard is not risk, and the dose is the point.', good:true},
+{inci:'Ethylhexylglycerin', aka:[], fn:'Preservative booster', tag:'gentle', src:'CIR', f:{sens:'An occasional irritant in very reactive skin.'},
+ what:'Helps preservatives work and softens skin; usually paired with phenoxyethanol.',
+ note:'Generally well-tolerated.'},
+{inci:'Parfum', aka:['Fragrance','Aroma','Flavor'], fn:'Fragrance', tag:'allergen', src:'EU Annex III', f:{frag:'This is the line to watch — fragrance is the #1 cause of cosmetic reactions.', sens:'A common trigger for sensitive and rosacea-prone skin.'},
+ what:'An undisclosed blend of scent chemicals.',
+ note:'The single most common cause of cosmetic allergy and irritation. It is not “toxic” — but if your skin reacts to products, this is usually why.', warn:true},
+{inci:'Limonene', aka:[], fn:'Fragrance', tag:'allergen', src:'EU Annex III', f:{frag:'One of the 26 EU-labelled fragrance allergens.', sens:'Can oxidize over time and sensitize.'},
+ what:'A citrus-scented fragrance component, also used as a solvent.',
+ note:'On the EU’s required-to-label allergen list. Harmless to most, a real trigger for the fragrance-sensitive.', warn:true},
+{inci:'Linalool', aka:[], fn:'Fragrance', tag:'allergen', src:'EU Annex III', f:{frag:'One of the 26 EU-labelled fragrance allergens.', sens:'A frequent cause of reactions in sensitive skin.'},
+ what:'A floral fragrance component found in lavender and many essential oils.',
+ note:'EU-labelled allergen; oxidizes with air exposure, which raises its allergy potential.', warn:true},
+{inci:'Citronellol', aka:[], fn:'Fragrance', tag:'allergen', src:'EU Annex III', f:{frag:'One of the 26 EU-labelled fragrance allergens.', sens:'Can trigger reactive skin.'},
+ what:'A rose-like fragrance component.',
+ note:'EU-labelled fragrance allergen.', warn:true},
+{inci:'Geraniol', aka:[], fn:'Fragrance', tag:'allergen', src:'EU Annex III', f:{frag:'One of the 26 EU-labelled fragrance allergens.', sens:'Can trigger reactive skin.'},
+ what:'A sweet, rose-like fragrance component.',
+ note:'EU-labelled fragrance allergen.', warn:true},
+{inci:'Tocopherol', aka:['Vitamin E'], fn:'Antioxidant', tag:'gentle', src:'CIR',
+ what:'Vitamin E — an antioxidant that protects the oils in the formula and on your skin.',
+ note:'Well-tolerated; very rarely sensitizing.'},
+{inci:'Tocopheryl Acetate', aka:['Vitamin E acetate'], fn:'Antioxidant', tag:'gentle', src:'CIR',
+ what:'A stable, shelf-friendly form of vitamin E.',
+ note:'Well-tolerated topically.'},
+{inci:'Sodium Hyaluronate', aka:['Hyaluronic Acid'], fn:'Humectant', tag:'gentle', src:'CIR',
+ what:'The salt form of hyaluronic acid — a humectant that holds water in the skin.',
+ note:'Inert and well-tolerated.'},
+{inci:'Panthenol', aka:['Pro-Vitamin B5'], fn:'Humectant / soothing', tag:'gentle', src:'CIR',
+ what:'Pro-vitamin B5 — hydrates and helps calm the skin.',
+ note:'Well-tolerated and soothing.'},
+{inci:'Allantoin', aka:[], fn:'Soothing', tag:'gentle', src:'CIR',
+ what:'A skin-calming agent that helps with irritation.',
+ note:'Well-tolerated.'},
+{inci:'Retinol', aka:['Vitamin A'], fn:'Active — anti-aging', tag:'pregnancy', src:'CIR; PubChem', f:{preg:'Topical retinoids are routinely advised against in pregnancy as a precaution — worth checking with your doctor.', sens:'Irritating to start; ease in slowly.'},
+ what:'A vitamin-A derivative that speeds cell turnover for fine lines and acne.',
+ note:'Effective, but irritating until your skin adjusts. The pregnancy caution is precautionary, not proven harm at topical doses.', warn:true},
+{inci:'Salicylic Acid', aka:['BHA'], fn:'Exfoliant', tag:'pregnancy', src:'CIR', f:{preg:'Low rinse-off levels are generally considered fine; high leave-on concentrations warrant a doctor’s nod in pregnancy.', sens:'Can sting or dry reactive skin.'},
+ what:'An oil-soluble acid that exfoliates inside the pore — for acne and texture.',
+ note:'Fine at the low levels in most products. The pregnancy note applies to high concentrations, not a dab in a cleanser.', warn:true},
+{inci:'Ascorbic Acid', aka:['Vitamin C','L-Ascorbic Acid'], fn:'Active — antioxidant', tag:'irritant', src:'CIR; PubChem', f:{sens:'The low pH it needs to work can sting sensitive skin.'},
+ what:'Pure vitamin C — brightens and defends against free-radical damage.',
+ note:'Effective; the acidity it requires is the main tolerability issue, not toxicity.', warn:true},
+{inci:'Dimethicone', aka:['Silicone'], fn:'Emollient (silicone)', tag:'gentle', src:'CIR',
+ what:'A silicone that smooths the skin and gives products a silky slip.',
+ note:'Inert, not absorbed, non-comedogenic in studies. The “silicones suffocate skin” claim is not supported.'},
+{inci:'Caprylic/Capric Triglyceride', aka:[], fn:'Emollient', tag:'gentle', src:'CIR',
+ what:'A light, coconut-derived emollient that softens skin.',
+ note:'Well-tolerated.'},
+{inci:'Squalane', aka:[], fn:'Emollient', tag:'gentle', src:'CIR',
+ what:'A lightweight, stable oil (from olives or sugarcane) that mimics skin’s own lipids.',
+ note:'Well-tolerated and non-comedogenic.'},
+{inci:'Butyrospermum Parkii Butter', aka:['Shea Butter'], fn:'Emollient', tag:'gentle', src:'CIR',
+ what:'Shea butter — a rich plant butter that softens and protects.',
+ note:'Well-tolerated; only very rarely an issue, even for nut-sensitive skin.'},
+{inci:'Sodium Laureth Sulfate', aka:['SLES'], fn:'Surfactant — cleanser', tag:'irritant', src:'CIR', f:{sens:'Can strip and dry reactive skin at high levels.'},
+ what:'A foaming cleanser used in face and body washes.',
+ note:'Can be drying at high levels; fine in a well-built rinse-off. Note: it is NOT SLS, and neither one is “carcinogenic” — that is a persistent myth.', warn:true},
+{inci:'Cocamidopropyl Betaine', aka:['CAPB'], fn:'Surfactant — mild', tag:'irritant', src:'CIR; EU Annex III', f:{sens:'A known, if uncommon, contact allergen.'},
+ what:'A gentle, coconut-derived co-cleanser that softens harsher surfactants.',
+ note:'Mild overall, but recognized as an occasional contact allergen.'},
+{inci:'Methylisothiazolinone', aka:['MI','MIT'], fn:'Preservative', tag:'allergen', src:'EU CosIng (restricted)', f:{sens:'A high-rate contact allergen — worth avoiding if your skin reacts.', frag:''},
+ what:'A preservative.',
+ note:'A genuinely high-rate contact allergen — the EU banned it from leave-on products for exactly that reason. Flagged honestly: this one earns the concern.', warn:true},
+{inci:'Benzyl Alcohol', aka:[], fn:'Preservative / solvent', tag:'restricted', src:'EU Annex III', f:{frag:'Counts among the labelled fragrance allergens at higher levels.', sens:'Rarely irritating.'},
+ what:'A mild preservative and solvent (also one of the EU-labelled fragrance allergens).',
+ note:'Usually well-tolerated; flagged only because it doubles as a fragrance allergen.'},
+{inci:'Chlorphenesin', aka:[], fn:'Preservative', tag:'gentle', src:'CIR; EU CosIng (≤0.3%)',
+ what:'A preservative, often paired with phenoxyethanol.',
+ note:'Well-tolerated at its restricted use level.'},
+{inci:'Butylene Glycol', aka:[], fn:'Humectant / solvent', tag:'gentle', src:'CIR', f:{sens:'Occasionally irritating to very sensitive skin.'},
+ what:'A humectant and solvent that also helps other ingredients absorb.',
+ note:'Well-tolerated by most.'},
+{inci:'Citric Acid', aka:[], fn:'pH adjuster', tag:'gentle', src:'CIR',
+ what:'Tunes the product’s acidity to a skin-friendly level; occasionally a mild exfoliant.',
+ note:'Inert at the tiny amounts used to set pH.'},
+{inci:'Xanthan Gum', aka:[], fn:'Thickener', tag:'gentle', src:'CIR',
+ what:'A natural thickener that gives products their texture.',
+ note:'Inert.'},
+{inci:'Carbomer', aka:[], fn:'Thickener', tag:'gentle', src:'CIR',
+ what:'A synthetic gel-former that thickens and stabilizes.',
+ note:'Inert at use levels.'},
+{inci:'Zinc Oxide', aka:[], fn:'UV filter / protectant', tag:'gentle', src:'CIR; FDA monograph', f:{preg:'A go-to mineral filter when avoiding chemical sunscreens in pregnancy.'},
+ what:'A mineral that physically blocks UV; also mildly soothing.',
+ note:'Well-tolerated and pregnancy-friendly. On the skin it stays on the skin.', good:true},
+{inci:'Titanium Dioxide', aka:['CI 77891'], fn:'UV filter / colorant', tag:'gentle', src:'CIR; EU CosIng',
+ what:'A mineral UV filter and white pigment.',
+ note:'Safe on skin. The inhalation concern is about loose powder you could breathe in — not a lotion. Context decides risk.'},
+{inci:'Butyl Methoxydibenzoylmethane', aka:['Avobenzone'], fn:'UV filter', tag:'irritant', src:'FDA; EU CosIng', f:{sens:'An occasional sensitizer, even though it is fragrance-free.'},
+ what:'A chemical sunscreen filter that absorbs UVA rays.',
+ note:'Effective; needs stabilizing partners and can occasionally irritate.'},
+{inci:'Homosalate', aka:[], fn:'UV filter', tag:'restricted', src:'EU CosIng (under review)',
+ what:'A chemical UVB sunscreen filter.',
+ note:'The EU has tightened its allowed concentration as a precaution — a clean example of regulators doing real, exposure-based risk assessment rather than banning a name.'}
+];
+
+// ---- index ----
+const norm = s => s.toLowerCase().replace(/\([^)]*\)/g,' ').replace(/[^a-z0-9/ ]/g,' ').replace(/\s+/g,' ').trim();
+const MAP = {};
+DB.forEach(d => { MAP[norm(d.inci)] = d; (d.aka||[]).forEach(a => MAP[norm(a)] = d); });
+function match(token){
+  const n = norm(token); if(!n) return null;
+  if(MAP[n]) return MAP[n];
+  for(const part of n.split('/')){ const p = part.trim(); if(MAP[p]) return MAP[p]; }
+  return null;
+}
+function parse(text){
+  return text.replace(/\b(may contain|ingredients|inci)\b[:\s]*/ig,'')
+    .split(/[,;\n•·]+/).map(t => t.replace(/^[\s\d.*+()\/-]+|[\s*]+$/g,'').trim()).filter(Boolean);
+}
+// ---- CosIng backbone: the real EU inventory (~24k ingredients) under the curated depth layer ----
+const CB = (window.__SIFT_DATA || { COSING:{}, FN:[], ANNEX3:{}, ALLERGENS:{} });
+const STATUS = { II:['Prohibited in the EU','var(--allergen)'], III:['Restricted — allowed within limits','var(--restricted)'], V:['Approved preservative','var(--gentle)'], VI:['Approved UV filter','var(--gentle)'], IV:['Approved colorant','var(--gentle)'] };
+function statusOf(restr){ if(!restr) return null; const a = restr.split('/')[0].replace(/[^IVX]/g,''); return STATUS[a] || ['Use-restricted','var(--restricted)']; }
+function cosingHit(token){
+  const n = norm(token); if(!n) return null;
+  let h = CB.COSING[n], key = n;
+  if(!h){ for(const part of n.split('/')){ const p = part.trim(); if(CB.COSING[p]){ h = CB.COSING[p]; key = p; break; } } }
+  if(!h) return null;
+  return { key, name:h[0], fn:CB.FN[h[1]]||'', restr:h[2], max:CB.ANNEX3[key], allergen:CB.ALLERGENS[key] };
+}
+function resolve(token){ const c = match(token); if(c) return { kind:'curated', d:c }; const cb = cosingHit(token); if(cb) return { kind:'cosing', cb }; return null; }
+const PROFILE = { preg:false, frag:false, sens:false };
+const PNAME = { preg:'pregnancy / nursing', frag:'fragrance sensitivity', sens:'sensitive skin' };
+
+function analyze(text){
+  const tokens = parse(text);
+  const items = tokens.map((t,i) => ({ raw:t, rank:i+1, r:resolve(t) }));
+  return { tokens, items, total:tokens.length,
+    curated: items.filter(x=>x.r && x.r.kind==='curated').length,
+    listed:  items.filter(x=>x.r && x.r.kind==='cosing').length };
+}
+
+// ---- render ----
+const out = document.getElementById('q'), outEl = document.getElementById('out');
+function youNotes(d){
+  const ns = [];
+  for(const k of ['preg','frag','sens']){ if(PROFILE[k] && d.f && d.f[k]) ns.push([k, d.f[k]]); }
+  return ns;
+}
+function card(d, rank){
+  const t = TAGS[d.tag], yn = youNotes(d);
+  const noteCls = d.good ? 'good' : (d.warn ? 'warn' : '');
+  return '<div class="card'+(yn.length?' hit':'')+'">'+
+    '<div class="chead"><span class="rank">'+rank+'</span>'+
+      '<span class="nm">'+esc(d.inci)+(d.aka&&d.aka.length?'<span class="aka">'+esc(d.aka[0])+'</span>':'')+'</span>'+
+      '<span class="pill" style="background:'+t[1]+'">'+t[0]+'</span>'+
+      '<span class="fn">'+esc(d.fn)+'</span></div>'+
+    '<div class="cbody"><div class="what">'+esc(d.what)+'</div>'+
+      '<div class="note '+noteCls+'">'+esc(d.note)+'</div>'+
+      yn.map(([k,txt]) => '<div class="youline"><span class="d">For your '+PNAME[k]+':</span><span>'+esc(txt)+'</span></div>').join('')+
+      '<div class="src"><b>Source:</b> '+esc(d.src)+'</div></div></div>';
+}
+const tc = s => s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+function cosingCard(item){
+  const cb = item.r.cb, st = statusOf(cb.restr), allerg = cb.allergen;
+  const fnShort = cb.fn ? cb.fn.split(',').slice(0,3).map(s => tc(s.trim())).join(' · ') : 'Listed ingredient';
+  const tagTxt = allerg ? 'Known allergen' : (st ? st[0] : 'EU-listed');
+  const tagCol = allerg ? 'var(--allergen)' : (st ? st[1] : 'var(--faint)');
+  let note = '';
+  if(st) note = st[0] + ' — EU Cosmetics Regulation Annex ' + cb.restr.split('/')[0] + (cb.max ? ', max ' + esc(cb.max.replace(/\s+/g,' ').slice(0,70)) : '') + '.';
+  if(allerg) note += (note ? ' ' : '') + 'A labelled EU fragrance allergen — worth watching if your skin reacts.';
+  const yn = allerg && PROFILE.frag ? [['frag','One of the EU-labelled fragrance allergens.']] : (allerg && PROFILE.sens ? [['sens','A fragrance allergen — a possible trigger for reactive skin.']] : []);
+  return '<div class="card cosing'+(yn.length?' hit':'')+'">'+
+    '<div class="chead"><span class="rank">'+item.rank+'</span>'+
+      '<span class="nm">'+esc(cb.name)+'</span>'+
+      '<span class="pill" style="background:'+tagCol+'">'+esc(tagTxt)+'</span>'+
+      '<span class="fn">'+esc(fnShort)+'</span></div>'+
+    '<div class="cbody"><div class="what">An EU-listed cosmetic ingredient — function: '+esc(fnShort.toLowerCase())+'.</div>'+
+      (note ? '<div class="note">'+note+'</div>' : '')+
+      yn.map(([k,txt]) => '<div class="youline"><span class="d">For your '+PNAME[k]+':</span><span>'+esc(txt)+'</span></div>').join('')+
+      '<div class="src"><b>Source:</b> EU CosIng'+(cb.restr ? ' + Regulation Annex '+cb.restr.split('/')[0] : '')+'</div>'+
+      '<div class="src" style="color:var(--faint)">Recognised from the EU database. A plain-English writeup is in the curated depth set for the most-used ingredients.</div>'+
+    '</div></div>';
+}
+function render(text){
+  const a = analyze(text);
+  if(!a.total){ outEl.innerHTML=''; return; }
+  const hits = a.items.filter(x=>x.r);
+  const fns = [...new Set(hits.map(x => x.r.kind==='curated' ? x.r.d.fn.split(' — ')[0] : tc((x.r.cb.fn.split(',')[0]||'').trim())).filter(Boolean))].slice(0,12);
+  const youHits = a.items.filter(x => x.r && ((x.r.kind==='curated' && youNotes(x.r.d).length) || (x.r.kind==='cosing' && x.r.cb.allergen && (PROFILE.frag||PROFILE.sens))));
+  const active = Object.keys(PROFILE).filter(k=>PROFILE[k]);
+  let you = '';
+  if(active.length){
+    you = youHits.length
+      ? '<div class="you"><b>'+youHits.length+'</b> ingredient'+(youHits.length>1?'s':'')+' worth your attention given your profile — highlighted below.</div>'
+      : '<div class="you">Nothing here specifically flags for your profile. (Still your call — Sift informs, it doesn’t decide.)</div>';
+  }
+  const miss = a.items.filter(x=>!x.r);
+  const summary = '<div class="summary"><div class="s1"><b>'+a.curated+'</b> explained in depth · <b>'+a.listed+'</b> more recognised from the EU database'+
+    (miss.length?' · <span style="color:var(--faint)">'+miss.length+' unrecognised</span>':'')+
+    ' <span style="color:var(--faint)">(of '+a.total+')</span></div>'+
+    (fns.length?'<div class="fns">'+fns.map(f=>'<span class="fnpill">'+esc(f)+'</span>').join('')+'</div>':'')+
+    you+
+    '<div class="noscore">No overall score — that’s the point. Read what matters to <i>you</i>, ignore the rest.</div></div>';
+  const cards = a.items.filter(x=>x.r).map(x => x.r.kind==='curated' ? card(x.r.d, x.rank) : cosingCard(x)).join('');
+  const unmatched = miss.length ? '<div class="unmatched"><div class="uh">Not recognised — likely a typo, a trade name, or a blend not in the EU glossary:</div>'+
+    '<div class="uchips">'+miss.map(x=>'<span class="uchip">'+esc(x.raw)+'</span>').join('')+'</div></div>' : '';
+  outEl.innerHTML = summary + '<div class="list">'+cards+'</div>' + unmatched;
+}
+
+// ---- wire ----
+const SAMPLES = {
+  moist:'Aqua, Glycerin, Caprylic/Capric Triglyceride, Dimethicone, Niacinamide, Butylene Glycol, Cetearyl Alcohol, Butyrospermum Parkii Butter, Tocopherol, Sodium Hyaluronate, Xanthan Gum, Carbomer, Phenoxyethanol, Ethylhexylglycerin, Parfum, Limonene, Linalool',
+  serum:'Aqua, Ascorbic Acid, Propylene Glycol, Glycerin, Niacinamide, Panthenol, Sodium Hyaluronate, Citric Acid, Tocopherol, Phenoxyethanol, Ethylhexylglycerin',
+  spf:'Aqua, Homosalate, Butyl Methoxydibenzoylmethane, Zinc Oxide, Glycerin, Caprylic/Capric Triglyceride, Dimethicone, Tocopheryl Acetate, Citric Acid, Phenoxyethanol, Parfum, Geraniol, Citronellol',
+  retinol:'Aqua, Glycerin, Caprylic/Capric Triglyceride, Retinol, Dimethicone, Niacinamide, Squalane, Tocopherol, Panthenol, Carbomer, Phenoxyethanol, Ethylhexylglycerin, Methylisothiazolinone'
+};
+document.getElementById('read').onclick = () => render(out.value);
+out.addEventListener('keydown', e => { if((e.metaKey||e.ctrlKey) && e.key==='Enter') render(out.value); });
+document.querySelectorAll('.samp').forEach(el => el.onclick = () => { out.value = SAMPLES[el.dataset.s]; render(out.value); });
+document.querySelectorAll('.pchip').forEach(el => el.onclick = () => {
+  const k = el.dataset.p; PROFILE[k] = !PROFILE[k]; el.classList.toggle('on', PROFILE[k]);
+  if(out.value.trim()) render(out.value);
+});
+
+// deep-link prefill: /sift/?q=Phenoxyethanol — lets a static ingredient page open the tool with that ingredient already read
+const _qp = new URLSearchParams(location.search).get('q');
+if(_qp){ out.value = _qp; render(_qp); }
+
+// test hooks
+window.SIFT = { db:DB, parse, match, resolve, analyze, profile:PROFILE, setProfile:(k,v)=>{PROFILE[k]=v;}, count:DB.length, cosingCount:Object.keys(CB.COSING).length };
+window.__ready = true;
+</script>
+</body>
+</html>
