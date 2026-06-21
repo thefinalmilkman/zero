@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0c11">
+<title>P0125 — Insufficient Coolant Temp for Closed-Loop Fuel Control | Codewise</title>
+<meta name="description" content="P0125: After engine startup, the ECU expects to reach closed-loop fuel control (using O2 sensor feedback) within a certain time. This code fires when it t…">
+<link rel="canonical" href="https://thefinalmilkman.github.io/zero/codewise/codes/p0125/">
+<meta property="og:type" content="article"><meta property="og:title" content="P0125 — Insufficient Coolant Temp for Closed-Loop Fuel Control">
+<meta property="og:description" content="P0125: After engine startup, the ECU expects to reach closed-loop fuel control (using O2 sensor feedback) within a certain time. This code fires when it t…"><meta property="og:url" content="https://thefinalmilkman.github.io/zero/codewise/codes/p0125/">
+<!-- ZERO-AI-DISCLOSURE: built by Zero, an AI; given away free; runs in your browser, nothing uploaded; a code is a direction, not a verdict. -->
+<style>*{box-sizing:border-box}body{margin:0;background:#0b0c11;color:#e7e9f0;font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:740px;margin:0 auto;padding:22px 18px 70px}a{color:#b3a7ff;text-decoration:none}a:hover{text-decoration:underline}
+.bc{font-size:13px;color:#8a8fa0;margin-bottom:18px}.bc a{color:#8a8fa0}
+h1{font-size:27px;line-height:1.25;margin:.2em 0 .4em}.code{font-family:ui-monospace,Consolas,monospace;color:#b3a7ff}
+.verdict{display:flex;gap:12px;align-items:center;border:1px solid;border-radius:13px;padding:13px 15px;margin:16px 0 6px}
+.badge{font:800 12px/1 sans-serif;letter-spacing:1px;padding:8px 11px;border-radius:8px;color:#0b0c11;flex:none}
+.v{font-size:14.5px;color:#dfe3ec}
+h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:#6b7180;margin:26px 0 8px}
+h3{font-size:15.5px;margin:16px 0 4px;color:#e7e9f0}p{margin:0 0 10px;color:#d4d7e2}
+ol,ul{margin:0;padding-left:22px;color:#d4d7e2}li{margin:5px 0}
+.cost{display:flex;gap:8px;flex-wrap:wrap}.cell{flex:1;min-width:140px;background:#14161d;border:1px solid #272b36;border-radius:10px;padding:11px 13px}
+.cell .l{font-size:10.5px;color:#6b7180;text-transform:uppercase;letter-spacing:.6px}.cell .n{font:700 15px ui-monospace,monospace;margin-top:3px}
+.rel a,.brand{display:inline-block;background:#14161d;border:1px solid #272b36;border-radius:8px;padding:6px 11px;margin:3px 5px 3px 0;font:700 13px ui-monospace,monospace;color:#b3a7ff}
+.cta{margin:30px 0 0;text-align:center}.cta a{display:inline-block;background:#8a7bf0;color:#0b0c11;font-weight:700;padding:13px 22px;border-radius:11px;font-size:15px}
+.src{font-size:12px;color:#5c6172;margin-top:6px}
+footer{border-top:1px solid #272b36;margin-top:34px;padding-top:16px;font-size:12.5px;color:#5c6172;line-height:1.7}
+.note{background:#14161d;border:1px solid #272b36;border-radius:11px;padding:12px 14px;color:#d4d7e2;font-size:14.5px}</style>
+</head><body><div class="wrap">
+<nav class="bc"><a href="../../">Codewise</a> › <a href="../">All codes</a> › P0125</nav>
+<main><h1><span class="code">P0125</span> — Insufficient Coolant Temp for Closed-Loop Fuel Control</h1><div class="verdict" style="border-color:#48c97a55;background:#48c97a12"><span class="badge" style="background:#48c97a">SAFE</span><span class="v"><b style="color:#48c97a">Is it safe to drive?</b> Safe to drive — the engine is not reaching full operating temperature efficiently, which hurts fuel economy and emissions but won't strand you.</span></div><h2>What P0125 means</h2><p>After engine startup, the ECU expects to reach closed-loop fuel control (using O2 sensor feedback) within a certain time. This code fires when it takes too long, meaning the engine is running cold-enrichment longer than it should.</p><h2>Most likely causes (in order)</h2><ol><li>Thermostat stuck open or missing — most common cause ($10–40 part, easy job)</li><li>Low coolant level or air pocket near ECT sensor</li><li>Faulty ECT sensor giving a false cold reading (cross-check P0116–P0118)</li><li>Extremely cold ambient temperatures combined with short trips</li><li>Faulty cooling fan staying on at startup (rare)</li></ol><h2>Symptoms you might notice</h2><ul><li>Poor fuel economy — especially noticeable on short trips</li><li>Heater takes longer than usual to warm up</li><li>Engine rarely reaches the middle of the temperature gauge</li><li>Check engine light on</li></ul><h2>What to check first</h2><p>Check the thermostat first — it is by far the most common cause. The easiest test is watching live ECT data: start cold, idle for 5–7 minutes and see if it climbs past 180°F. If the gauge is barely moving after 10 minutes of idling, the thermostat is stuck open. A $20 thermostat is always the right first move before buying an ECT sensor.</p><h2>Repair cost &amp; difficulty</h2><div class="cost"><div class="cell"><div class="l">Parts</div><div class="n">$10–50 thermostat / $15–40 ECT sensor</div></div><div class="cell"><div class="l">Labor</div><div class="n" style="font-size:13px">0.3–1.0 hr</div></div><div class="cell"><div class="l">Difficulty</div><div class="n" style="font-size:13px">DIY-friendly</div></div></div><h2>Related codes</h2><div class="rel"><a href="../p0116/">P0116</a><a href="../p0117/">P0117</a><a href="../p0118/">P0118</a></div><div class="cta"><a href="../../#P0125">Decode any code in the live tool →</a></div></main>
+<footer>A code is a <b>direction, not a verdict</b> — read the freeze frame, test before you replace, fix the cause not the light. Costs are typical ranges that vary by vehicle, region &amp; shop. Part of <a href="../../">Codewise</a> by <b>Zero</b> — free, offline, nothing uploaded.</footer>
+</div>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does P0125 mean?","acceptedAnswer":{"@type":"Answer","text":"After engine startup, the ECU expects to reach closed-loop fuel control (using O2 sensor feedback) within a certain time. This code fires when it takes too long, meaning the engine is running cold-enrichment longer than it should."}},{"@type":"Question","name":"Is it safe to drive with P0125?","acceptedAnswer":{"@type":"Answer","text":"Safe to drive — the engine is not reaching full operating temperature efficiently, which hurts fuel economy and emissions but won't strand you."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Codewise","item":"https://thefinalmilkman.github.io/zero/codewise/"},{"@type":"ListItem","position":2,"name":"All codes","item":"https://thefinalmilkman.github.io/zero/codewise/codes/"},{"@type":"ListItem","position":3,"name":"P0125","item":"https://thefinalmilkman.github.io/zero/codewise/codes/p0125/"}]}</script>
+</body></html>

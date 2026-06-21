@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0c11">
+<title>P0175 — System Too Rich — Bank 2 | Codewise</title>
+<meta name="description" content="P0175: Long-term fuel trim on Bank 2 has gone negative beyond the threshold (typically more negative than -10%), meaning the ECU is pulling fuel but the e…">
+<link rel="canonical" href="https://thefinalmilkman.github.io/zero/codewise/codes/p0175/">
+<meta property="og:type" content="article"><meta property="og:title" content="P0175 — System Too Rich — Bank 2">
+<meta property="og:description" content="P0175: Long-term fuel trim on Bank 2 has gone negative beyond the threshold (typically more negative than -10%), meaning the ECU is pulling fuel but the e…"><meta property="og:url" content="https://thefinalmilkman.github.io/zero/codewise/codes/p0175/">
+<!-- ZERO-AI-DISCLOSURE: built by Zero, an AI; given away free; runs in your browser, nothing uploaded; a code is a direction, not a verdict. -->
+<style>*{box-sizing:border-box}body{margin:0;background:#0b0c11;color:#e7e9f0;font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:740px;margin:0 auto;padding:22px 18px 70px}a{color:#b3a7ff;text-decoration:none}a:hover{text-decoration:underline}
+.bc{font-size:13px;color:#8a8fa0;margin-bottom:18px}.bc a{color:#8a8fa0}
+h1{font-size:27px;line-height:1.25;margin:.2em 0 .4em}.code{font-family:ui-monospace,Consolas,monospace;color:#b3a7ff}
+.verdict{display:flex;gap:12px;align-items:center;border:1px solid;border-radius:13px;padding:13px 15px;margin:16px 0 6px}
+.badge{font:800 12px/1 sans-serif;letter-spacing:1px;padding:8px 11px;border-radius:8px;color:#0b0c11;flex:none}
+.v{font-size:14.5px;color:#dfe3ec}
+h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:#6b7180;margin:26px 0 8px}
+h3{font-size:15.5px;margin:16px 0 4px;color:#e7e9f0}p{margin:0 0 10px;color:#d4d7e2}
+ol,ul{margin:0;padding-left:22px;color:#d4d7e2}li{margin:5px 0}
+.cost{display:flex;gap:8px;flex-wrap:wrap}.cell{flex:1;min-width:140px;background:#14161d;border:1px solid #272b36;border-radius:10px;padding:11px 13px}
+.cell .l{font-size:10.5px;color:#6b7180;text-transform:uppercase;letter-spacing:.6px}.cell .n{font:700 15px ui-monospace,monospace;margin-top:3px}
+.rel a,.brand{display:inline-block;background:#14161d;border:1px solid #272b36;border-radius:8px;padding:6px 11px;margin:3px 5px 3px 0;font:700 13px ui-monospace,monospace;color:#b3a7ff}
+.cta{margin:30px 0 0;text-align:center}.cta a{display:inline-block;background:#8a7bf0;color:#0b0c11;font-weight:700;padding:13px 22px;border-radius:11px;font-size:15px}
+.src{font-size:12px;color:#5c6172;margin-top:6px}
+footer{border-top:1px solid #272b36;margin-top:34px;padding-top:16px;font-size:12.5px;color:#5c6172;line-height:1.7}
+.note{background:#14161d;border:1px solid #272b36;border-radius:11px;padding:12px 14px;color:#d4d7e2;font-size:14.5px}</style>
+</head><body><div class="wrap">
+<nav class="bc"><a href="../../">Codewise</a> › <a href="../">All codes</a> › P0175</nav>
+<main><h1><span class="code">P0175</span> — System Too Rich — Bank 2</h1><div class="verdict" style="border-color:#48c97a55;background:#48c97a12"><span class="badge" style="background:#48c97a">SAFE</span><span class="v"><b style="color:#48c97a">Is it safe to drive?</b> Safe to drive short-term but running rich fouls spark plugs, shortens catalytic converter life, and dilutes engine oil with fuel — fix within a week.</span></div><h2>What P0175 means</h2><p>Long-term fuel trim on Bank 2 has gone negative beyond the threshold (typically more negative than -10%), meaning the ECU is pulling fuel but the engine is still running rich. This is the Bank 2 counterpart to P0172.</p><h2>Most likely causes (in order)</h2><ol><li>Leaking fuel injector(s) on Bank 2 dripping fuel when closed</li><li>Faulty Bank 2 upstream O2 sensor stuck in rich position</li><li>High fuel pressure — failing fuel pressure regulator</li><li>Mass airflow sensor reading low (causes all banks to run rich — check for P0101/P0102)</li><li>Stuck-open EGR valve or coolant temperature sensor fault causing excess fueling</li></ol><h2>Symptoms you might notice</h2><ul><li>Fuel smell from exhaust</li><li>Poor fuel economy</li><li>Rough idle</li><li>Spark plugs fouling on Bank 2 side</li><li>Oil may smell like fuel if running very rich</li></ul><h2>What to check first</h2><p>Check Bank 2 long-term fuel trim live; if it's more negative than -10%, the bank is definitely rich. Compare Bank 1 and Bank 2 trims — if both are negative, the cause is global (MAF sensor, high fuel pressure, coolant temp sensor). If only Bank 2 is negative, suspect a leaking injector or a Bank 2-specific O2 or coolant sensor fault. Listen for a ticking injector that stays open at idle.</p><h2>Repair cost &amp; difficulty</h2><div class="cost"><div class="cell"><div class="l">Parts</div><div class="n">$15–80 sensor / $25–200 injector / varies by root cause</div></div><div class="cell"><div class="l">Labor</div><div class="n" style="font-size:13px">0.5–2.0 hr</div></div><div class="cell"><div class="l">Difficulty</div><div class="n" style="font-size:13px">Moderate</div></div></div><h2>Related codes</h2><div class="rel"><a href="../p0172/">P0172</a><a href="../p0174/">P0174</a><a href="../p0157/">P0157</a></div><div class="cta"><a href="../../#P0175">Decode any code in the live tool →</a></div></main>
+<footer>A code is a <b>direction, not a verdict</b> — read the freeze frame, test before you replace, fix the cause not the light. Costs are typical ranges that vary by vehicle, region &amp; shop. Part of <a href="../../">Codewise</a> by <b>Zero</b> — free, offline, nothing uploaded.</footer>
+</div>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does P0175 mean?","acceptedAnswer":{"@type":"Answer","text":"Long-term fuel trim on Bank 2 has gone negative beyond the threshold (typically more negative than -10%), meaning the ECU is pulling fuel but the engine is still running rich. This is the Bank 2 counterpart to P0172."}},{"@type":"Question","name":"Is it safe to drive with P0175?","acceptedAnswer":{"@type":"Answer","text":"Safe to drive short-term but running rich fouls spark plugs, shortens catalytic converter life, and dilutes engine oil with fuel — fix within a week."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Codewise","item":"https://thefinalmilkman.github.io/zero/codewise/"},{"@type":"ListItem","position":2,"name":"All codes","item":"https://thefinalmilkman.github.io/zero/codewise/codes/"},{"@type":"ListItem","position":3,"name":"P0175","item":"https://thefinalmilkman.github.io/zero/codewise/codes/p0175/"}]}</script>
+</body></html>
