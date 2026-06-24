@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Is AI access being restricted by who you are? — a Calibrated brief</title>
+<meta name="description" content="A calibrated, sourced brief: is AI access being restricted based on nationality and identity? Every claim rated FACT, TREND, or EXTRAPOLATION — receipts included.">
+<link rel="canonical" href="https://thefinalmilkman.github.io/zero/calibrated/">
+<meta property="og:title" content="Is AI access being restricted by who you are? — a Calibrated brief">
+<meta property="og:description" content="Every claim rated FACT, TREND, or EXTRAPOLATION, with the sources one tap away. A calibrated, honest brief from Zero.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://thefinalmilkman.github.io/zero/calibrated/">
+<!-- CALIBRATED - a Zero brief. The honest-reader pattern (Sift / Fine Print) aimed at the news. Built from
+     scratch, zero-dependency, nothing uploaded. Every claim is rated and sourced; the calibration IS the point.
+     No fake certainty: FACT = documented/in force; TREND = real direction, not universal; EXTRAPOLATION =
+     plausible, not yet fact. Not legal advice. -->
+<style>
+  :root{
+    --bg:#0b0c10; --bg2:#11131a; --ink:#e9eaf0; --dim:#9aa0ad; --line:#262a36; --gold:#e8c06a;
+    --fact:#4ec06b; --trend:#e0a83a; --extrap:#5aa6ff; --dead:#7f8794; --false:#f0645a; --true:#4ec06b; --context:#8b93a3;
+    --card:#13151d;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  canvas#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+  .wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:0 20px}
+  header.masthead{padding:54px 0 8px;text-align:center}
+  .kicker{letter-spacing:.34em;font-size:12px;color:var(--gold);text-transform:uppercase;font-weight:700}
+  .kicker .by{color:var(--dim);letter-spacing:.14em}
+  h1{font-size:clamp(26px,5vw,42px);line-height:1.15;margin:14px 0 6px;font-weight:800;letter-spacing:-.5px}
+  .issue{color:var(--dim);font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+  .bluf{background:linear-gradient(180deg,#14161f,#101219);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:12px;padding:18px 20px;margin:26px 0 10px;font-size:18px}
+  .bluf b{color:#fff}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;margin:18px 0 6px;font-size:12.5px;color:var(--dim)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .d-fact{background:var(--fact)} .d-trend{background:var(--trend)} .d-extrap{background:var(--extrap)}
+  .d-dead{background:var(--dead)} .d-false{background:var(--false)} .d-true{background:var(--true)} .d-context{background:var(--context)}
+  section{margin:40px 0}
+  h2{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0 0 4px}
+  .sub{color:var(--dim);font-size:14px;margin:0 0 18px}
+  /* timeline */
+  .tl-track{position:relative;display:flex;gap:0;overflow-x:auto;padding:8px 4px 18px;scrollbar-width:thin}
+  .tl-track::-webkit-scrollbar{height:6px}.tl-track::-webkit-scrollbar-thumb{background:#2a2f3c;border-radius:3px}
+  .node{flex:1 0 120px;min-width:120px;background:none;border:0;color:inherit;cursor:pointer;text-align:center;padding:10px 8px 0;position:relative;font:inherit}
+  .node:before{content:"";position:absolute;top:24px;left:0;right:0;height:2px;background:var(--line)}
+  .node:first-child:before{left:50%}.node:last-child:before{right:50%}
+  .node .pin{position:relative;width:16px;height:16px;border-radius:50%;margin:16px auto 10px;border:2px solid var(--bg);box-shadow:0 0 0 2px currentColor;transition:transform .15s}
+  .node .yr{font-size:12px;color:var(--dim);font-weight:600}
+  .node .lbl{font-size:12.5px;color:var(--ink);margin-top:4px;opacity:.85}
+  .node[aria-selected="true"] .pin{transform:scale(1.5)}
+  .node[aria-selected="true"] .lbl{opacity:1;color:#fff;font-weight:600}
+  .node:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:8px}
+  /* detail card */
+  .detail{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-top:6px}
+  .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid;margin-bottom:12px}
+  .b-fact{color:var(--fact);border-color:var(--fact);background:rgba(78,192,107,.08)}
+  .b-trend{color:var(--trend);border-color:var(--trend);background:rgba(224,168,58,.08)}
+  .b-extrap{color:var(--extrap);border-color:var(--extrap);background:rgba(90,166,255,.08)}
+  .b-dead{color:var(--dead);border-color:var(--dead);background:rgba(127,135,148,.08)}
+  .b-false{color:var(--false);border-color:var(--false);background:rgba(240,100,90,.08)}
+  .b-true{color:var(--true);border-color:var(--true);background:rgba(78,192,107,.08)}
+  .b-context{color:var(--context);border-color:var(--context);background:rgba(139,147,163,.06)}
+  .detail h3{margin:0 0 10px;font-size:21px;line-height:1.25}
+  .detail .row{margin:10px 0}
+  .detail .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:2px}
+  .detail a.src{color:var(--extrap);text-decoration:none;border-bottom:1px solid rgba(90,166,255,.4);font-size:14px}
+  .detail a.src:hover{border-color:var(--extrap)}
+  /* verdict grid */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .vcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .vcard .claim{font-weight:600;margin:8px 0 6px}
+  .vcard .note{color:var(--dim);font-size:14px}
+  /* escape hatch */
+  .hatch{background:linear-gradient(180deg,#10131b,#0d1017);border:1px solid var(--line);border-radius:14px;padding:26px}
+  .hatch h2{color:var(--gold)}
+  .hatch p{margin:10px 0}
+  .hatch .key{color:#fff;font-weight:600}
+  .pill{display:inline-block;background:#161a23;border:1px solid var(--line);border-radius:999px;padding:4px 12px;margin:4px 6px 0 0;font-size:13px;color:var(--ink)}
+  /* sources + footer */
+  .sources{font-size:13px;color:var(--dim)}
+  .sources a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line)}
+  .sources a:hover{color:var(--ink)}
+  footer{border-top:1px solid var(--line);margin-top:48px;padding:26px 0 60px;color:var(--dim);font-size:13px;text-align:center}
+  footer .z{color:var(--gold);font-weight:700;letter-spacing:.2em}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}.node{min-width:104px;flex-basis:104px}}
+  @media(prefers-reduced-motion:reduce){canvas#bg{opacity:.5}}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="kicker">Calibrated <span class="by">&nbsp;/ a Zero brief</span></div>
+    <h1>Is AI access being restricted by who you are?</h1>
+    <div class="issue">Brief 01 &middot; What's actually true: rated &amp; sourced</div>
+  </header>
+
+  <div class="bluf" id="bluf"></div>
+
+  <noscript>
+    <div class="bluf">Yes — but narrower and sharper than the fear. One real, unprecedented case did gate frontier AI by nationality (June 2026: two frontier models suspended for every foreign national worldwide). A tiered country-rationing rule was proposed in Jan 2025 and rescinded in May 2025. And "you'll need ID to use AI" is a real direction, not a present law.</div>
+    <ul>
+      <li><b>FACT</b> — "AI access is restricted based on nationality." True and in force, but narrow: two models, one company, and it caught you as "any non-US person," not as a Mexican.</li>
+      <li><b>PROPOSED, THEN KILLED</b> — "A tiered system rations AI by country." Issued Jan 2025, never took effect, rescinded May 2025.</li>
+      <li><b>TREND</b> — "You'll need ID/KYC to access AI compute." Proposed, not final, scoped to companies renting GPU clusters — not chatbot users.</li>
+      <li><b>FALSE</b> — "Mexico is locked out of mainstream AI." Not true; Mexico is fully supported by Claude, ChatGPT, and Gemini today.</li>
+      <li><b>EXTRAPOLATION</b> — "Soon you'll need government ID to use any AI." No law requires it today; a forecast, with age-verification as the real vector to watch.</li>
+      <li><b>TRUE</b> — "Local / open-weight AI escapes all of this." Open weights are carved out of the controls; a model on your own disk is outside export law by construction. Own the weights, run them local, and there is no gate to be denied at.</li>
+    </ul>
+  </noscript>
+
+  <div class="legend" aria-label="rating key">
+    <span><i class="dot d-fact"></i> FACT — documented / in force</span>
+    <span><i class="dot d-trend"></i> TREND — real direction, not universal</span>
+    <span><i class="dot d-extrap"></i> EXTRAPOLATION — plausible, not yet fact</span>
+    <span><i class="dot d-dead"></i> DEAD / FALSE — proposed-and-killed or untrue</span>
+  </div>
+
+  <section aria-label="timeline">
+    <h2>How we got here</h2>
+    <p class="sub">Tap any point. Each one carries its real status and a source — scrub the whole pattern.</p>
+    <div class="tl-track" id="track" role="tablist"></div>
+    <div class="detail" id="detail" role="tabpanel" aria-live="polite"></div>
+  </section>
+
+  <section aria-label="verdict">
+    <h2>The verdict, claim by claim</h2>
+    <p class="sub">The fears, steel-manned, then rated honestly.</p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section>
+    <div class="hatch">
+      <h2>The one chokepoint — and the way out</h2>
+      <p>Every restriction above works at the <span class="key">same single point: your dependence on a US-controlled provider, chip, or a model you don't own.</span> The export rules govern <em>transfer, provision, and shipment</em> — so a model already on your own disk is outside all of it, by construction.</p>
+      <p><span class="key">Own the weights, run them local, and there is no gate to be denied at.</span> Frontier-class open-weight models are explicitly carved out of the controls — downloadable by anyone, anywhere, no geo-check, no ID:</p>
+      <div>
+        <span class="pill">Qwen 3 (Apache-2.0)</span><span class="pill">DeepSeek (MIT)</span><span class="pill">GLM-5 (MIT)</span>
+        <span class="pill">Mistral (Apache-2.0)</span><span class="pill">Llama 4</span><span class="pill">Gemma 3</span>
+      </div>
+      <p style="margin-top:14px;color:var(--dim);font-size:14px">That's not a workaround you have to trust — it's the structural design of the rules. The more the gated internet asks for ID, the more a sovereign, owned, offline stack is worth.</p>
+    </div>
+  </section>
+
+  <section class="sources" aria-label="sources">
+    <h2>Receipts</h2>
+    <p class="sub">Primary and primary-adjacent. Read them yourself — that's the point.</p>
+    <div id="sources"></div>
+  </section>
+
+  <footer>
+    <div class="z">ZERO</div>
+    <p>Every claim rated <b style="color:var(--fact)">FACT</b> (documented / in force), <b style="color:var(--trend)">TREND</b> (real direction, not universal), or <b style="color:var(--extrap)">EXTRAPOLATION</b> (plausible, not yet fact).<br>
+    A calibrated brief, not legal advice. Nothing uploaded. Verify everything — the receipts are above.</p>
+    <p style="margin-top:16px"><a href="./comic/" style="color:var(--gold);border-bottom:1px solid rgba(232,192,106,.4)">Read this as a scroll-comic →</a> &nbsp;&middot;&nbsp; <a href="../" style="color:var(--dim)">← all of Zero</a></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var BLUF = 'Yes — but narrower and sharper than the fear. <b>One real, unprecedented case did gate frontier AI by nationality</b> (you may have felt it). A tiered country-rationing system was <b>proposed and killed</b>. And "show ID to use AI" is a <b>real direction, not a present law</b>. The honest map, and the way out:';
+
+  // the timeline spine - every node carries its true rating + a source
+  var NODES = [
+    { yr:'Jan 2021', short:'EO 13984', rating:'TREND', title:'EO 13984 — the seed of "KYC for cloud"',
+      what:'An executive order telling US cloud providers to verify the identity of foreign customers. The first appearance of the idea that raw compute access could require ID.',
+      who:'Foreign customers renting US cloud infrastructure — never end users of a chatbot.',
+      status:'Groundwork. Directed agencies to write rules; not itself an access rule.',
+      srcName:'BIS (Commerce)', srcUrl:'https://www.bis.gov/press-release/commerce-proposes-rule-advance-u.s.-national-security-interests-implement-biden-harris-administrations-ai' },
+    { yr:'Jan 2024', short:'Cloud KYC', rating:'TREND', title:'"Know Your Customer" for cloud — proposed',
+      what:'Commerce proposed requiring US cloud (IaaS) providers to run a Customer Identification Program and report when a foreign person uses them to train a large AI model.',
+      who:'People renting data-center-scale GPU clusters to TRAIN models — not people using a chatbot. This is the closest thing to "ID for AI compute," and it is narrow.',
+      status:'Proposed Jan 2024, comment period closed Apr 2024, never finalized, not enforced as of mid-2026.',
+      srcName:'Sidley — KYC for cloud', srcUrl:'https://www.sidley.com/en/insights/newsupdates/2024/02/new-know-your-customer-and-reporting-rules-proposed-for-cloud-providers' },
+    { yr:'Jan 2025', short:'Diffusion Rule', rating:'DEAD', title:'The "AI Diffusion Rule" — countries ranked into tiers',
+      what:'An interim rule sorting the world into 3 tiers with capped access to advanced AI chips and, for the first time, closed model weights. Most countries (Mexico included) sat in the metered middle tier.',
+      who:'Whole nations — access to chips and closed weights rationed by country.',
+      status:'Issued as an interim final rule, but it never took effect.',
+      srcName:'Federal Register — the rule', srcUrl:'https://www.federalregister.gov/documents/2025/01/15/2025-00636/framework-for-artificial-intelligence-diffusion' },
+    { yr:'May 2025', short:'Rescinded', rating:'FACT', title:'The Diffusion Rule is rescinded',
+      what:'Commerce killed the tiered system two days before its compliance date and told officials not to enforce it, calling it innovation-stifling. The country-rationing apparatus died on paper.',
+      who:'Reversed the tiers — no country-tier metering is in force today.',
+      status:'In force: the tiered rule is gone. A replacement was promised but, as of mid-2026, none published.',
+      srcName:'BIS — rescission', srcUrl:'https://www.bis.gov/press-release/department-commerce-rescinds-biden-era-artificial-intelligence-diffusion-rule-strengthens-chip-related' },
+    { yr:'Jun 2026', short:'Fable / Mythos', rating:'FACT', title:'Fable 5 & Mythos 5 — barred to all foreign nationals',
+      what:'Commerce ordered Anthropic to suspend access to two frontier models for EVERY foreign national worldwide — allies treated identically to adversaries. Anthropic, unable to cleanly separate US from non-US users, took both models fully offline for everyone.',
+      who:'Every non-US person on Earth — citizenship-blunt. It caught a Mexican, a Canadian, and a German the same way: as "not American," not by targeting any one country.',
+      status:'In force. The most aggressive, most concrete instance of nationality gating frontier AI that exists — unprecedented in treating allies like adversaries.',
+      srcName:'Al Jazeera — the directive', srcUrl:'https://www.aljazeera.com/news/2026/6/19/us-export-ban-on-anthropics-ai-models-further-strains-alliances' }
+  ];
+
+  var VERDICTS = [
+    { rating:'FACT',  claim:'"AI access is restricted based on nationality."', note:'True, documented, in force — but narrow: two models, one company, and it hit you as "any non-US person," not as a Mexican. The legal basis (the decades-old "deemed export" doctrine) is real.' },
+    { rating:'DEAD',  claim:'"There\'s a tiered system rationing AI by country."', note:'Was proposed (Jan 2025), never took effect, rescinded May 2025. The apparatus existed on paper for ~4 months and died.' },
+    { rating:'TREND', claim:'"You\'ll need ID / KYC to access AI compute."', note:'Proposed, not final, not enforced — and scoped to companies renting GPU clusters to TRAIN models, not to chatbot users. A real direction; not today\'s reality.' },
+    { rating:'FALSE', claim:'"Mexico is locked out of mainstream AI."', note:'Not true. Mexico is fully supported by Claude, ChatGPT, and Gemini today. What cut access was the foreign-national frontier-model order, not a Mexico ban.' },
+    { rating:'EXTRAP',claim:'"Soon you\'ll need government ID to use any AI."', note:'No law requires it today. One provider (OpenAI) is voluntarily adding optional ID checks; the real pressure is the age-verification wave bleeding toward AI. A forecast — not a fact.' },
+    { rating:'TRUE',  claim:'"Local / open-weight AI escapes all of this."', note:'True and structural. Open weights are carved out of the controls; a model on your own disk is outside export, transfer, and provision law by construction.' }
+  ];
+
+  var SOURCES = [
+    ['Federal Register — AI Diffusion Framework','https://www.federalregister.gov/documents/2025/01/15/2025-00636/framework-for-artificial-intelligence-diffusion'],
+    ['BIS — Diffusion Rule rescinded','https://www.bis.gov/press-release/department-commerce-rescinds-biden-era-artificial-intelligence-diffusion-rule-strengthens-chip-related'],
+    ['BIS — Cloud KYC / IaaS proposed rule','https://www.bis.gov/press-release/commerce-proposes-rule-advance-u.s.-national-security-interests-implement-biden-harris-administrations-ai'],
+    ['Sidley — KYC & reporting rules for cloud providers','https://www.sidley.com/en/insights/newsupdates/2024/02/new-know-your-customer-and-reporting-rules-proposed-for-cloud-providers'],
+    ['Al Jazeera — US export ban on Anthropic models','https://www.aljazeera.com/news/2026/6/19/us-export-ban-on-anthropics-ai-models-further-strains-alliances'],
+    ['Just Security — the law of the Anthropic export controls','https://www.justsecurity.org/142745/law-anthropic-export-controls/'],
+    ['Anthropic — supported countries (Mexico included)','https://www.anthropic.com/supported-countries'],
+    ['UCSB — Foreign Nationals & the "deemed export" rule','https://www.research.ucsb.edu/export-control/foreign-nationals-and-deemed-exports'],
+    ['Hugging Face — best open-weight models to run locally','https://huggingface.co/blog/daya-shankar/open-source-llm-models-to-run-locally']
+  ];
+
+  var R = { FACT:['b-fact','FACT'], TREND:['b-trend','TREND'], EXTRAP:['b-extrap','EXTRAPOLATION'],
+            DEAD:['b-dead','PROPOSED, THEN KILLED'], FALSE:['b-false','FALSE'], TRUE:['b-true','TRUE'], CONTEXT:['b-context','CONTEXT'] };
+  var PINCOLOR = { FACT:'var(--fact)', TREND:'var(--trend)', EXTRAP:'var(--extrap)', DEAD:'var(--dead)', FALSE:'var(--false)', TRUE:'var(--true)', CONTEXT:'var(--context)' };
+
+  function el(tag, attrs, html){ var e=document.createElement(tag); if(attrs) for(var k in attrs) e.setAttribute(k,attrs[k]); if(html!=null) e.innerHTML=html; return e; }
+
+  document.getElementById('bluf').innerHTML = BLUF;
+
+  // build timeline
+  var track = document.getElementById('track');
+  NODES.forEach(function(n,i){
+    var b = el('button', {class:'node', role:'tab', 'aria-selected':'false', 'data-i':i});
+    b.style.color = PINCOLOR[n.rating];
+    b.innerHTML = '<div class="yr">'+n.yr+'</div><div class="pin"></div><div class="lbl">'+n.short+'</div>';
+    b.addEventListener('click', function(){ select(i); });
+    track.appendChild(b);
+  });
+
+  function select(i){
+    var n = NODES[i];
+    [].forEach.call(track.children, function(c,j){ c.setAttribute('aria-selected', j===i?'true':'false'); });
+    var rr = R[n.rating];
+    document.getElementById('detail').innerHTML =
+      '<span class="badge '+rr[0]+'">'+rr[1]+'</span>'+
+      '<h3>'+n.title+'</h3>'+
+      '<div class="row"><span class="k">What it is</span>'+n.what+'</div>'+
+      '<div class="row"><span class="k">Who it actually hit</span>'+n.who+'</div>'+
+      '<div class="row"><span class="k">Status</span>'+n.status+'</div>'+
+      '<div class="row"><a class="src" href="'+n.srcUrl+'" target="_blank" rel="noopener">Source: '+n.srcName+' &nearr;</a></div>';
+  }
+  select(NODES.length-1); // open on the present — the case you lived — and scrub back
+
+  // verdict grid
+  var grid = document.getElementById('grid');
+  VERDICTS.forEach(function(v){
+    var rr = R[v.rating];
+    grid.appendChild(el('div',{class:'vcard'},
+      '<span class="badge '+rr[0]+'">'+rr[1]+'</span>'+
+      '<div class="claim">'+v.claim+'</div><div class="note">'+v.note+'</div>'));
+  });
+
+  // sources
+  var sb = document.getElementById('sources');
+  SOURCES.forEach(function(s){ var p=el('div',null,'&bull; <a href="'+s[1]+'" target="_blank" rel="noopener">'+s[0]+'</a>'); p.style.margin='6px 0'; sb.appendChild(p); });
+
+  // --- calm living background (performant, reduced-motion + hidden-tab aware) ---
+  var c = document.getElementById('bg'), x = c.getContext('2d'), W, H, pts=[], raf=0, dpr=Math.min(2,window.devicePixelRatio||1);
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function size(){ W=c.width=innerWidth*dpr; H=c.height=innerHeight*dpr; c.style.width=innerWidth+'px'; c.style.height=innerHeight+'px';
+    var n = Math.min(70, Math.floor(innerWidth/16)); pts=[];
+    for(var i=0;i<n;i++) pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.12*dpr,vy:(Math.random()-.5)*.12*dpr,r:(Math.random()*1.6+.6)*dpr});
+  }
+  function draw(){
+    x.clearRect(0,0,W,H);
+    for(var i=0;i<pts.length;i++){ var p=pts[i];
+      if(!reduce){ p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1; }
+      for(var j=i+1;j<pts.length;j++){ var q=pts[j], dx=p.x-q.x, dy=p.y-q.y, d=dx*dx+dy*dy, max=(120*dpr)*(120*dpr);
+        if(d<max){ var a=(1-d/max)*.14; x.strokeStyle='rgba(232,192,106,'+a+')'; x.lineWidth=dpr*.5; x.beginPath(); x.moveTo(p.x,p.y); x.lineTo(q.x,q.y); x.stroke(); } }
+      x.fillStyle='rgba(180,190,210,.45)'; x.beginPath(); x.arc(p.x,p.y,p.r,0,6.2832); x.fill();
+    }
+    raf = requestAnimationFrame(draw);
+  }
+  function start(){ if(!raf){ if(reduce){ draw(); cancelAnimationFrame(raf); raf=0; } else raf=requestAnimationFrame(draw); } }
+  function stop(){ if(raf){ cancelAnimationFrame(raf); raf=0; } }
+  size(); start();
+  addEventListener('resize', function(){ size(); if(reduce){ draw(); } });
+  document.addEventListener('visibilitychange', function(){ document.hidden ? stop() : start(); });
+
+  window.__ready = true;
+})();
+</script>
+</body>
+</html>

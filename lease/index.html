@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0c0f14">
+<title>Fine Print — Read your lease for red flags before you sign (free, in your browser)</title>
+<meta name="description" content="Paste a residential lease and Fine Print flags the clauses that commonly hurt tenants — entry without notice, waived habitability, illegal lockouts, deposit traps — in plain English with why. Not legal advice. Nothing uploaded. Free.">
+<link rel="canonical" href="https://thefinalmilkman.github.io/zero/lease/">
+<meta property="og:type" content="website"><meta property="og:title" content="Fine Print — the lease red-flag reader">
+<meta property="og:description" content="Paste your lease, see the clauses stacked against you — each in plain English with why and what to check. Educational, not legal advice. Runs in your browser, nothing uploaded.">
+<meta property="og:url" content="https://thefinalmilkman.github.io/zero/lease/">
+<!-- ZERO-AI-DISCLOSURE: built by Zero, an AI; given away free; runs in your browser, nothing uploaded. Educational only — reads a lease for clause PATTERNS commonly documented as problematic for tenants. It is NOT legal advice, does not interpret your state's specific law, and never declares a clause legally void. A flag means "look at this," not "this is illegal." -->
+<style>
+  :root{--bg:#0c0f14;--panel:#151a22;--panel2:#1b222c;--line:#283040;--ink:#e6ebf2;--dim:#93a0b3;--faint:#5e6b7e;--brand:#d8b76a;--ok:#48c97a;--warn:#e6a93f;--danger:#ef5d76}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1100px 680px at 50% -12%,#1a1e28 0%,var(--bg) 62%) fixed;color:var(--ink);font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:30px 18px 70px}
+  a{color:var(--brand);text-decoration:none}a:hover{text-decoration:underline}
+  .mark{display:flex;align-items:center;gap:11px;margin-bottom:6px}
+  .glyph{width:40px;height:40px;border-radius:11px;background:radial-gradient(120% 120% at 30% 20%,var(--brand),#a8843e);display:grid;place-items:center;color:#1a1206;font-weight:900;font-size:23px;flex:none;font-family:Georgia,serif}
+  h1{font-size:25px;margin:0;letter-spacing:.2px}
+  .tag{color:var(--dim);font-size:15px;margin:8px 0 20px;max-width:62ch}
+  .tag b{color:var(--ink)}
+  textarea{width:100%;min-height:150px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:14px;font:14px/1.55 ui-monospace,Consolas,monospace;resize:vertical}
+  textarea:focus{outline:none;border-color:#3a4a63}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0 4px}
+  .btn{background:var(--brand);color:#1a1206;font-weight:800;border:none;border-radius:11px;padding:13px 22px;font-size:15px;cursor:pointer}
+  .btn:hover{filter:brightness(1.06)}
+  .btn.ghost{background:transparent;color:var(--dim);border:1px solid var(--line);font-weight:600}
+  .samp{font-size:13px;color:var(--brand);cursor:pointer;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:9px 13px;font-weight:600}
+  .samp:hover{border-color:#3a4a63}
+  #out{margin-top:24px}
+  .summary{border:1px solid var(--line);border-radius:13px;padding:16px 17px;margin-bottom:16px;background:var(--panel)}
+  .summary .n{font-size:30px;font-weight:800;line-height:1}
+  .summary .lead{font-size:15px;margin-top:7px;color:var(--ink)}
+  .summary.s-hi{border-color:#ef5d7655;background:#ef5d7610}.summary.s-mid{border-color:#e6a93f55;background:#e6a93f10}.summary.s-lo{border-color:#48c97a44;background:#48c97a0e}
+  .noverdict{font-size:13px;color:var(--dim);margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+  .card{border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin:10px 0;background:var(--panel)}
+  .card .ct{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .sev{font:800 10px/1.25 sans-serif;letter-spacing:.5px;padding:5px 8px;border-radius:6px;color:#11151c;flex:none;text-align:center}
+  .sev.high{background:var(--danger)}.sev.med{background:var(--warn)}.sev.ctx{background:#7a8aa0}
+  .card h3{margin:0;font-size:16px}
+  .card .sig{margin:9px 0 8px;color:#d8dfe9;font-size:14.5px}
+  .clause{border-left:3px solid var(--brand);background:#11151c;border-radius:0 8px 8px 0;padding:8px 11px;margin:7px 0;font:13px/1.5 ui-monospace,Consolas,monospace;color:var(--dim);word-break:break-word}
+  .clause b{color:var(--warn);font-weight:700;background:#e6a93f1a;border-radius:3px;padding:0 2px}
+  .clause .lab{display:block;font-family:sans-serif;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+  .card .cite{font-size:12.5px;color:var(--faint);margin-top:9px}
+  .card .todo{font-size:13px;color:#bcc6d3;margin-top:7px}.card .todo b{color:var(--ink)}
+  .panel{border:1px solid var(--line);border-radius:13px;padding:16px 17px;margin-top:22px;background:linear-gradient(180deg,var(--panel),#10141b)}
+  .panel h2{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin:0 0 10px}
+  .panel ul{margin:0;padding-left:18px}.panel li{margin:7px 0;color:#d3dae4;font-size:14.5px}
+  .panel li b{color:var(--ink)}
+  .tell{margin-top:14px;font-size:14.5px;color:var(--ink);border-left:3px solid var(--brand);padding:4px 0 4px 12px}
+  footer{margin-top:30px;border-top:1px solid var(--line);padding-top:16px;color:var(--faint);font-size:12.5px;line-height:1.7}
+  footer b{color:var(--dim)}
+  .nd{color:var(--dim)}
+</style>
+</head><body><div class="wrap">
+
+  <div class="mark"><div class="glyph">§</div><h1>Fine Print</h1></div>
+  <p class="tag">Paste a residential lease — or just the clause you're unsure about. Fine Print reads it for the <b>clauses that commonly hurt tenants</b> and shows you each one in plain English, with <i>why</i> it's a flag and what to check. <b>It is not legal advice and never says a clause is "illegal"</b> — tenant law varies by state. It shows you what to look at; you (and, for anything that matters, a local tenant-rights office or lawyer) decide. Runs entirely in your browser; nothing is uploaded.</p>
+
+  <textarea id="q" placeholder="Paste your lease here — the whole thing, or one clause..."></textarea>
+
+  <div class="row">
+    <button class="btn" id="run">Read it →</button>
+    <button class="samp" id="sample">Try a sample lease</button>
+    <button class="btn ghost" id="clear">Clear</button>
+  </div>
+
+  <div id="out"></div>
+
+  <div class="panel" id="rights">
+    <h2>Know your rights (in general)</h2>
+    <ul>
+      <li><b>The place must be livable.</b> The "implied warranty of habitability" — heat, water, working systems, no major hazards — usually <b>can't be waived</b>, no matter what the lease says.</li>
+      <li><b>They have to give notice before entering.</b> Most states require 24–48 hours' notice except in a real emergency.</li>
+      <li><b>Eviction is a court process.</b> A landlord <b>cannot</b> change your locks, remove your things, or shut off utilities to force you out. That's an illegal "self-help" eviction nearly everywhere.</li>
+      <li><b>Your deposit is yours.</b> Most states cap it, and require it back — with an itemized list of any deductions — within a set deadline.</li>
+      <li><b>You can't sign away protections the law guarantees.</b> A lease clause that waives a non-waivable right is often unenforceable, even with your signature on it.</li>
+      <li><b>Get real help, free:</b> your state attorney general, <a href="https://www.hud.gov/topics/rental_assistance/tenantrights" target="_blank" rel="noopener">HUD tenant rights</a>, <a href="https://www.lawhelp.org/" target="_blank" rel="noopener">LawHelp.org</a> (legal aid by state), or a local tenant union.</li>
+    </ul>
+    <div class="tell">Fine Print's whole promise: it shows you <i>which clauses to question</i> and <i>why</i> — using documented patterns. It will never tell you a lease is "safe" or a clause is "void," because that depends on your state and your facts, and no honest tool can decide it for you.</div>
+  </div>
+
+  <footer>
+    <!-- ZERO-AI-DISCLOSURE-v1 -->
+    <b>Made by Zero — an AI agent, by Arc.</b> Educational only; <b>not legal advice</b> and not a substitute for a lawyer. Fine Print reads a lease for clause patterns commonly documented as problematic for tenants and explains them in plain English — it does <b>not</b> interpret your specific state's law or declare any clause legally void. It makes no network requests, sets no cookies, and uploads nothing — turn off your wifi and it still works. Based on general U.S. residential landlord–tenant law principles and tenant-rights resources (HUD, state statutes, legal-aid guidance). Open source under the MIT license.
+  </footer>
+</div>
+
+<script>
+// ---- the clause rules. Each = a pattern commonly documented as problematic for tenants, with the general
+// principle behind it. Pure text analysis, offline. sev: high = often unenforceable/illegal in many states;
+// med = usually legal but stacked against you; ctx = understand it / negotiate. NOT state-specific legal advice.
+const esc = s => String(s==null?'':s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+const CLAUSES = [
+  { id:'entry', sev:'high', label:'Entry without notice',
+    sig:'Most states require advance notice (often 24–48 hours) before a landlord enters, except in a genuine emergency. Language letting them enter "at any time" or "without notice" tries to waive a right you usually can\'t waive.',
+    cite:'State landlord-entry / notice statutes', todo:'Ask for a clear notice period (24–48h) and "except emergencies."',
+    re:/\b(enter(?:s|ing)?|access|right of entry)\b[^.;\n]{0,70}\b(at any time|any time|without (?:prior )?notice|without notice|at (?:landlord'?s?|its) (?:sole )?discretion)\b/ig },
+  { id:'habit', sev:'high', label:'Waived habitability / "as-is"',
+    sig:'The implied warranty of habitability — that the home is livable (heat, water, no major hazards) — can\'t be waived in most states. "As-is," "tenant accepts in present condition," or "tenant waives habitability" tries to dodge the landlord\'s core legal duty.',
+    cite:'Implied warranty of habitability (non-waivable in most states)', todo:'Don\'t accept a habitability waiver; document the unit\'s condition at move-in.',
+    re:/\b(as[\s-]?is\b|warrant\w* of habitability|implied warrant\w*|waives?[^.;\n]{0,40}(?:habitab|warranty|condition)|accepts?[^.;\n]{0,30}(?:in )?(?:present|current|existing) condition|no warrant\w*[^.;\n]{0,30}(?:habitab|condition|fitness|repair))\b/ig },
+  { id:'repairs', sev:'high', label:'All repairs shifted to the tenant',
+    sig:'Putting ALL repairs — including structural, plumbing, heating, and habitability issues — on the tenant usually conflicts with the landlord\'s legal duty to maintain the property. Major systems and normal wear are typically the landlord\'s job.',
+    cite:'Landlord repair/maintenance duties (most states)', todo:'Limit your responsibility to damage you cause; landlord keeps major systems.',
+    re:/\btenant\b[^.;\n]{0,50}\b(?:responsible|liable|shall|must|agrees)\b[^.;\n]{0,40}\b(?:all (?:repairs|maintenance)|any (?:and all )?repairs)\b|\ball repairs\b[^.;\n]{0,30}\b(?:tenant'?s?|at tenant)\b/ig },
+  { id:'selfhelp', sev:'high', label:'Illegal lockout / utility shutoff (self-help eviction)',
+    sig:'Changing the locks, shutting off utilities, or removing your belongings to force you out is ILLEGAL in nearly every state — a landlord must use a court eviction. This clause claims a power they almost certainly don\'t have.',
+    cite:'Anti-self-help / illegal-lockout laws (nearly all states)', todo:'This is a serious red flag. A landlord must go through the courts to evict.',
+    re:/\b(change\w* the locks|lock[\s-]?out|re[\s-]?enter and take possession|shut[\s-]?off|terminate|disconnect)\b[^.;\n]{0,40}\b(?:utilit\w*|water|electric\w*|power|heat|gas)\b|\bremove\b[^.;\n]{0,30}\b(?:belongings|possessions|personal property)\b/ig },
+  { id:'liability', sev:'high', label:'Liability waiver / hold-harmless',
+    sig:'A clause making you waive the landlord\'s liability — even for their own negligence — or "hold them harmless" is often unenforceable in residential leases. You generally can\'t be forced to sign away the right to hold a landlord responsible for harm they cause.',
+    cite:'Exculpatory-clause limits (many states bar waiving landlord negligence)', todo:'Be wary — courts often strike these for residential rentals.',
+    re:/\bhold\b[^.;\n]{0,30}\b(?:landlord|lessor|owner|agent)\b[^.;\n]{0,20}\bharmless\b|\b(?:tenant )?(?:waives|releases)\b[^.;\n]{0,50}\b(?:liab\w*|negligen\w*|injur\w*|damage\w*|claims)\b|\bindemnif\w+|\b(?:landlord|lessor|owner)\b[^.;\n]{0,30}\b(?:not be|is not|shall not be)\b[^.;\n]{0,15}\bliable\b|\bexculpat\w+/ig },
+  { id:'deposit-nr', sev:'high', label:'"Non-refundable" security deposit',
+    sig:'A "non-refundable security deposit" is a contradiction — a deposit is your money held against damage, and most states require it back (minus itemized, legitimate deductions) within a deadline. Calling the deposit itself non-refundable is a red flag.',
+    cite:'Security-deposit return + itemization laws (most states)', todo:'A true security deposit must be refundable; question this line.',
+    re:/\bnon[\s-]?refundable\b[^.;\n]{0,30}\b(?:deposit|security)\b|\b(?:security )?deposit\b[^.;\n]{0,40}\bnon[\s-]?refundable\b|\bdeposit\b[^.;\n]{0,30}\b(?:shall not|will not|won'?t) be (?:returned|refunded)\b/ig },
+  { id:'deposit-disc', sev:'med', label:'Deposit kept "at landlord\'s discretion" / no itemization',
+    sig:'Most states require the landlord to return your deposit and give an itemized list of deductions within a deadline. "At the landlord\'s sole discretion" or no-itemization language tries to skip that protection.',
+    cite:'Deposit itemization/timeline statutes', todo:'Expect an itemized statement and a deadline (often 14–30 days).',
+    re:/\bdeposit\b[^.;\n]{0,60}\b(?:without (?:itemiz\w*|account\w*|notice)|no (?:itemiz\w*|account\w*)|(?:landlord'?s?|lessor'?s?|its) (?:sole )?discretion|forfeit\w*)\b/ig },
+  { id:'waivenotice', sev:'high', label:'Waiver of notice / right to cure before eviction',
+    sig:'You usually have a legal right to written notice — and often a chance to fix the problem — before eviction. A clause waiving notice or the "right to cure" tries to remove a protection most states don\'t let you sign away.',
+    cite:'Notice-to-quit / right-to-cure requirements', todo:'You should get written notice (and often time to cure) before any eviction.',
+    re:/\bwaiv\w*\b[^.;\n]{0,45}\b(?:notice (?:to quit|to vacate|of default|to cure)|right to cure|service of process)\b|\bwithout\b[^.;\n]{0,20}\bnotice\b[^.;\n]{0,30}\b(?:evict\w*|terminat\w*|possession|quit)\b/ig },
+  { id:'confession', sev:'high', label:'Confession of judgment',
+    sig:'A "confession of judgment" (or "warrant of attorney" / "cognovit") has you pre-agree the landlord can get a court judgment against you WITHOUT a hearing. It\'s banned for residential leases in many states and is a serious red flag.',
+    cite:'Confession-of-judgment bans (residential, many states)', todo:'Treat this as a major warning sign; many states forbid it for housing.',
+    re:/\bconfess\w*\b[^.;\n]{0,15}\bjudgment\b|\bjudgment by confession\b|\bwarrant of attorney\b|\bcognovit\b/ig },
+  { id:'waiverights', sev:'high', label:'Blanket waiver of tenant rights',
+    sig:'A sweeping "tenant waives any and all rights / statutory protections" clause is a major red flag — many tenant protections are non-waivable by law, so courts often strike these. A lease can\'t legally sign away rights the law guarantees you.',
+    cite:'Non-waivable tenant protections', todo:'A blanket rights-waiver is usually unenforceable; read what it claims to take.',
+    re:/\b(?:tenant )?waiv\w*\b[^.;\n]{0,40}\b(?:any and all|all)\b[^.;\n]{0,25}\b(?:rights|statutory|protections|remedies|defenses)\b|\bwaiv\w*\b[^.;\n]{0,20}\b(?:all )?(?:tenant'?s? )?rights\b/ig },
+  { id:'arb', sev:'med', label:'Forced arbitration / jury waiver',
+    sig:'A forced-arbitration or jury-waiver clause means giving up your right to sue in court or join a class action. It\'s often legal, but it\'s a real surrender of leverage — disputes get pushed into a private process that tends to favor whoever wrote the lease.',
+    cite:'Arbitration clauses (generally enforceable; a major rights trade-off)', todo:'Understand you\'d be giving up court and (often) class actions.',
+    re:/\b(?:binding )?arbitrat\w+|\bwaiv\w*\b[^.;\n]{0,25}\b(?:jury|trial|class[\s-]?action)\b|\bjury (?:trial )?waiv\w*|\bclass[\s-]?action waiv\w*/ig },
+  { id:'autorenew', sev:'med', label:'Automatic renewal trap',
+    sig:'An auto-renewal that locks you into another full term unless you give notice far in advance (e.g., 60–90 days) is a classic trap — miss the window and you\'re committed again. Some states require the landlord to remind you first.',
+    cite:'Automatic-renewal notice laws (varies by state)', todo:'Note the exact notice window; set a reminder well before it.',
+    re:/\bautomatic\w*\b[^.;\n]{0,20}\brenew\w*|\brenew\w*\b[^.;\n]{0,25}\bautomatic\w*|\b(?:shall|will)\b[^.;\n]{0,20}\b(?:automatically )?renew\b[^.;\n]{0,40}\bunless\b/ig },
+  { id:'latefee', sev:'med', label:'Steep or compounding late fee',
+    sig:'Many states cap late fees (often a small % of rent or a "reasonable" amount) and ban daily-compounding charges. A large flat fee or a per-day charge can exceed what\'s legally allowed where you live.',
+    cite:'Late-fee caps / "reasonable" requirement (many states)', todo:'Check your state\'s late-fee cap; a per-day fee is often challengeable.',
+    re:/\blate (?:fee|charge|payment)\b[^.;\n]{0,60}\b(?:\$\s?\d{2,}|\d+\s?%|per day|each day|daily|per diem|compound\w*)\b|\$\s?\d+\s*(?:per day|\/day|a day)\b[^.;\n]{0,20}\blate\b/ig },
+  { id:'accelerate', sev:'med', label:'Rent acceleration',
+    sig:'A rent-acceleration clause makes the ENTIRE remaining lease due at once if you default. The landlord usually has a "duty to mitigate" (re-rent the unit), so courts often limit how much they can actually collect — but this clause is written to pressure you.',
+    cite:'Acceleration vs. duty to mitigate', todo:'They usually must try to re-rent and can only collect their actual loss.',
+    re:/\baccelerat\w+|\ball (?:remaining )?rent\b[^.;\n]{0,30}\b(?:immediately|at once|due and payable|become due)\b|\bentire\b[^.;\n]{0,25}\b(?:balance|remaining rent|term'?s? rent)\b[^.;\n]{0,20}\bdue\b/ig },
+  { id:'mitigate', sev:'med', label:'Forfeit everything if you break the lease',
+    sig:'If you break the lease, the landlord usually has a legal duty to try to re-rent and can charge only the actual loss. A clause that makes you forfeit the deposit AND owe all remaining rent regardless may overstate what they can really collect.',
+    cite:'Duty to mitigate damages (most states)', todo:'Ask about an early-termination option; they typically must mitigate.',
+    re:/\b(?:early termination|break\w*(?: the)? lease|terminat\w* early)\b[^.;\n]{0,70}\b(?:forfeit\w*|penalty|all (?:remaining )?rent|owe all|\d+\s*month\w*'? rent)\b|\bliquidated damages\b/ig },
+  { id:'attyfee', sev:'med', label:'One-way attorney\'s fees',
+    sig:'A one-way attorney\'s-fees clause (you pay the landlord\'s if they win, but not the reverse) is common — but many states automatically make these reciprocal by law, so you may be entitled to YOUR fees too if you win. Worth knowing.',
+    cite:'Reciprocal attorney-fee statutes (many states)', todo:'In many states this is reciprocal by law even if it only mentions the landlord.',
+    re:/\btenant\b[^.;\n]{0,40}\bpay\b[^.;\n]{0,40}\b(?:landlord'?s?|lessor'?s?)\b[^.;\n]{0,20}\b(?:attorney\w*|legal|court)\b[^.;\n]{0,12}\b(?:fees|costs)\b|\battorney'?s? fees\b[^.;\n]{0,40}\b(?:landlord|lessor|prevailing party)\b/ig },
+  { id:'unilateral', sev:'med', label:'Landlord can change the terms anytime',
+    sig:'A clause letting the landlord change the rules, terms, or rent "at any time" at their discretion undermines the whole point of a fixed lease. Mid-term rent increases on a fixed-term lease are usually not allowed.',
+    cite:'Fixed-term lease terms generally can\'t be changed unilaterally', todo:'On a fixed-term lease, rent and core terms shouldn\'t change mid-term.',
+    re:/\b(?:landlord|lessor|owner)\b[^.;\n]{0,45}\b(?:may|can|reserves the right to|shall have the right to)\b[^.;\n]{0,35}\b(?:change|modify|amend|alter|adjust|increase)\b[^.;\n]{0,40}\b(?:rules|terms|rent|lease|at any time|any time)\b/ig },
+  { id:'holdover', sev:'med', label:'Holdover penalty (2x–3x rent)',
+    sig:'Charging 2x or 3x rent if you stay past the lease end ("holdover") is sometimes allowed but often challenged as an unenforceable penalty rather than real damages. Know what you\'d owe and on what notice.',
+    cite:'Holdover / penalty-vs-liquidated-damages doctrine', todo:'A large holdover multiplier may be challengeable as a penalty.',
+    re:/\bhold[\s-]?over\b[^.;\n]{0,45}\b(?:\d+\s*(?:x|times)|double|triple|two times|three times|\d{2,}\s?%|150%|200%|300%)\b|\b(?:double|triple|two times|three times)\b[^.;\n]{0,20}\brent\b[^.;\n]{0,20}\bhold[\s-]?over\b/ig },
+  { id:'joint', sev:'ctx', label:'Joint and several liability',
+    sig:'"Joint and several liability" means EACH roommate is on the hook for the FULL rent — if the others don\'t pay or move out, the landlord can come after you for all of it. It\'s legal and common, but understand the risk before you co-sign.',
+    cite:'Joint-and-several liability (legal; high personal risk)', todo:'Know that you could owe 100% of the rent if roommates bail.',
+    re:/\bjoint(?:ly)?\b[^.;\n]{0,12}\b(?:and|&|\/|or)?\b[^.;\n]{0,4}\bseveral(?:ly)?\b[^.;\n]{0,20}\b(?:liab\w*|responsib\w*|obligat\w*)\b|\beach (?:tenant|occupant|resident)\b[^.;\n]{0,40}\b(?:full|entire|whole|all)\b[^.;\n]{0,20}\b(?:rent|amount|obligation)\b/ig },
+  { id:'showings', sev:'ctx', label:'Showings / access to re-rent or sell',
+    sig:'Landlords can usually show the unit near lease-end or during a sale — but they still typically need reasonable notice. "Unlimited," "anytime," or "no-notice" showing access is worth negotiating down.',
+    cite:'Showings still require reasonable notice in most states', todo:'Ask for reasonable notice before any showing, even near move-out.',
+    re:/\b(?:show\w*|exhibit\w*|display)\b[^.;\n]{0,35}\b(?:the )?(?:unit|premises|property|apartment)\b[^.;\n]{0,40}\b(?:prospective|buyers|purchasers|tenants|renters|sale)\b|\baccess\b[^.;\n]{0,30}\b(?:prospective|re[\s-]?rent|for sale)\b/ig },
+];
+
+const SAMPLE = `RESIDENTIAL LEASE AGREEMENT
+
+1. RENT. Tenant shall pay $1,500 per month. A late fee of $50 per day shall be charged for each day rent is late.
+2. SECURITY DEPOSIT. Tenant shall pay a non-refundable security deposit of $1,500, which the Landlord may retain at Landlord's sole discretion.
+3. CONDITION. Tenant accepts the premises strictly AS-IS and waives the implied warranty of habitability. Tenant shall be responsible for all repairs and maintenance, structural or otherwise, at Tenant's expense.
+4. ENTRY. Landlord may enter the premises at any time, without notice, for any purpose.
+5. DEFAULT. Upon any default, all remaining rent for the term shall immediately become due and payable. Landlord may change the locks and shut off utilities to regain possession. Tenant waives any right to notice to quit and the right to cure.
+6. LIABILITY. Tenant agrees to hold Landlord harmless and waives all claims for any injury or damage, including those caused by Landlord's negligence. Tenant waives any and all rights and statutory protections under applicable law.
+7. DISPUTES. Any dispute shall be resolved by binding arbitration; Tenant waives the right to a jury trial and to participate in any class action. Tenant shall pay Landlord's attorney's fees in any action.
+8. RENEWAL. This lease shall automatically renew for successive one-year terms unless Tenant gives written notice at least 90 days before the end of the term.
+9. JOINT LIABILITY. All tenants are jointly and severally liable for the full rent.`;
+
+const SEVRANK = { high:3, med:2, ctx:1 };
+const SEVNAME = { high:'OFTEN UNENFORCEABLE', med:'STACKED AGAINST YOU', ctx:'KNOW THIS' };
+
+// split a lease into clause-sized segments (numbered clauses, sentences, lines) for showing the real text
+function segments(text){
+  return String(text||'').split(/\n+|(?<=[.;])\s+(?=[A-Z0-9])/).map(s=>s.trim()).filter(s=>s.length>3);
+}
+function findClauses(segs, re){
+  const out=[], seen=new Set();
+  for(const s of segs){
+    re.lastIndex=0; const m=re.exec(s);
+    if(m){ const key=s.slice(0,90).toLowerCase(); if(seen.has(key)) continue; seen.add(key);
+      out.push({ text: s.replace(/\s+/g,' ').slice(0,260), hit: m[0] }); }
+    if(out.length>=3) break;
+  }
+  return out;
+}
+function analyze(text){
+  const segs = segments(text);
+  const flags=[];
+  for(const c of CLAUSES){ const cl = findClauses(segs, c.re); if(cl.length) flags.push({ ...c, clauses: cl }); }
+  flags.sort((a,b)=> SEVRANK[b.sev]-SEVRANK[a.sev]);
+  const serious = flags.filter(f=>f.sev!=='ctx').length;
+  return { flags, count: flags.length, serious };
+}
+
+const q = document.getElementById('q'), out = document.getElementById('out');
+function boldHit(clauseText, hit){
+  // bold the first occurrence of the matched phrase, case-insensitively, on the escaped text
+  const e = esc(clauseText), h = esc(hit);
+  const i = e.toLowerCase().indexOf(h.toLowerCase());
+  if(i<0) return e;
+  return e.slice(0,i)+'<b>'+e.slice(i,i+h.length)+'</b>'+e.slice(i+h.length);
+}
+function render(){
+  const a = analyze(q.value);
+  if(!q.value.trim()){ out.innerHTML=''; return; }
+  const cls = a.serious>=3 ? 's-hi' : (a.serious>=1 ? 's-mid':'s-lo');
+  let lead;
+  const anyHigh = a.flags.some(f=>f.sev==='high');
+  if(anyHigh) lead='<b>This lease contains clauses that are commonly unenforceable or that overreach a landlord\'s legal limits.</b> None of this is a verdict — but these are worth checking against your state\'s law (and with a tenant-rights office) before you sign.';
+  else if(a.serious>=1) lead='<b>Some clauses are stacked against you.</b> They may be legal, but make sure you understand exactly what you\'re agreeing to before you sign.';
+  else if(a.count>=1) lead='<b>A few things are worth understanding before you sign.</b> Nothing here is necessarily a problem — just know what it means.';
+  else lead='<b>No common red-flag patterns matched.</b> That does <i>not</i> mean the lease is fair — it only means none of the known traps were detected. Read every line yourself and question anything that feels off.';
+  let html = '<div class="summary '+cls+'"><div class="n">'+a.count+'</div><div class="lead">clause'+(a.count===1?'':'s')+' worth a second look. '+lead+'</div>'+
+    '<div class="noverdict">Fine Print flags clause <i>patterns</i> commonly documented as problematic — it is <b>not legal advice, not a verdict, and not specific to your state</b>. A flag means "look at this," not "this is illegal." And no flags doesn\'t mean the lease is fair.</div></div>';
+  for(const f of a.flags){
+    html += '<div class="card"><div class="ct"><span class="sev '+f.sev+'">'+SEVNAME[f.sev]+'</span><h3>'+esc(f.label)+'</h3></div>'+
+      '<div class="sig">'+esc(f.sig)+'</div>'+
+      f.clauses.map(c=>'<div class="clause"><span class="lab">In your lease</span>'+boldHit(c.text, c.hit)+'</div>').join('')+
+      (f.todo? '<div class="todo"><b>What to check:</b> '+esc(f.todo)+'</div>':'')+
+      (f.cite? '<div class="cite">General basis: '+esc(f.cite)+'</div>':'')+
+    '</div>';
+  }
+  out.innerHTML = html;
+  out.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+document.getElementById('run').onclick = render;
+document.getElementById('sample').onclick = ()=>{ q.value = SAMPLE; render(); };
+document.getElementById('clear').onclick = ()=>{ q.value=''; out.innerHTML=''; q.focus(); };
+q.addEventListener('keydown', e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='Enter') render(); });
+
+// test hooks
+window.LEASE = { analyze, CLAUSES, SAMPLE, segments };
+window.__ready = true;
+</script>
+</body></html>
