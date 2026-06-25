@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBOM — Is your code quantum-safe? Free crypto inventory scan</title>
+<meta name="description" content="Free, in-browser Cryptography Bill of Materials scanner. Drop a folder, see which of your crypto a quantum computer will break (RSA, ECDSA, Ed25519), mapped to NIST post-quantum replacements. Nothing uploaded.">
+<style>
+  :root{--bg:#0a0b10;--card:#12141c;--line:#222637;--ink:#e8eaf0;--mut:#8b90a6;
+    --red:#ff4d5e;--orange:#ff9e3d;--yellow:#ffd23d;--green:#37d499;--blue:#4db8ff;--purple:#9b7dff;}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:860px;margin:0 auto;padding:32px 20px 80px}
+  h1{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+  h1 .q{background:linear-gradient(90deg,var(--red),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--mut);font-size:1.05rem;margin-top:10px;max-width:640px}
+  .why{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:22px 0;font-size:.92rem;color:#c2c6d6}
+  .why b{color:var(--ink)}
+  .drop{border:2px dashed #303650;border-radius:16px;padding:38px 22px;text-align:center;margin:22px 0;
+    transition:.2s;background:#0d0f17;cursor:pointer}
+  .drop.over{border-color:var(--purple);background:#141026}
+  .drop h2{font-size:1.15rem;font-weight:700}
+  .drop p{color:var(--mut);margin-top:6px;font-size:.9rem}
+  .btn{display:inline-block;margin-top:16px;background:linear-gradient(90deg,#6d4dff,#9b7dff);color:#fff;
+    font-weight:700;border:none;border-radius:10px;padding:12px 22px;font-size:.95rem;cursor:pointer}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .priv{color:var(--green);font-size:.82rem;margin-top:14px}
+  input[type=file]{display:none}
+  #status{text-align:center;color:var(--mut);margin:18px 0;min-height:22px}
+  .results{display:none}
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:18px 0}
+  .summary .big{font-size:2.1rem;font-weight:800}
+  .summary .big .v{color:var(--red)}
+  .summary .line{color:var(--mut);margin-top:4px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chip{font-size:.78rem;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid}
+  .bucket{margin:22px 0}
+  .bucket h3{font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+    padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:12px}
+  .asset{background:var(--card);border:1px solid var(--line);border-left-width:3px;border-radius:10px;
+    padding:13px 15px;margin-bottom:10px}
+  .asset .name{font-weight:700;font-size:1.02rem}
+  .asset .occ{color:var(--mut);font-size:.82rem;font-weight:400}
+  .asset .why{background:none;border:none;padding:0;margin:6px 0 0;font-size:.88rem;color:#aeb3c6}
+  .asset .mig{font-size:.86rem;margin-top:6px;color:var(--green)}
+  .asset .mig b{color:var(--ink);font-weight:600}
+  .locs{font-family:ui-monospace,Menlo,monospace;font-size:.76rem;color:#737994;margin-top:7px;word-break:break-all}
+  .limits{background:#0d0f17;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:24px;
+    font-size:.86rem;color:#9aa0b6}
+  .limits b{color:var(--ink)}
+  .cta{background:linear-gradient(135deg,#1a1430,#241a44);border:1px solid #3a2d66;border-radius:14px;
+    padding:22px;text-align:center;margin-top:26px}
+  .cta h3{font-size:1.2rem;font-weight:800}
+  .cta p{color:#c2c6d6;margin:8px 0 16px;font-size:.92rem}
+  footer{color:#5a5f74;font-size:.78rem;text-align:center;margin-top:40px;line-height:1.8}
+  footer a{color:#8b90a6}
+  a{color:var(--purple)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Is your code <span class="q">quantum-safe?</span></h1>
+  <p class="sub">Drop a folder. CBOM inventories every cryptographic algorithm inside it and shows you which a quantum computer will break — mapped to its NIST post-quantum replacement. It runs entirely in your browser.</p>
+
+  <div class="why">
+    <b>Why it matters now.</b> RSA and elliptic-curve crypto (ECDSA, Ed25519, Diffie-Hellman) are broken completely by a quantum computer running Shor's algorithm. You're already exposed via <b>“harvest now, decrypt later”</b> — adversaries record encrypted data today to decrypt once that computer exists. NIST finalized the replacements in 2024 (FIPS&nbsp;203/204/205); migration starts with knowing what you have.
+  </div>
+
+  <label class="drop" id="drop">
+    <h2>Drop a project folder here</h2>
+    <p>…or click to choose one. Reads <b>locally</b> — your code never leaves this browser.</p>
+    <span class="btn" id="pick">Choose a folder</span>
+    <input type="file" id="file" webkitdirectory directory multiple>
+    <div class="priv">🔒 100% in-browser · nothing uploaded · nothing executed</div>
+  </label>
+
+  <div id="status"></div>
+
+  <div class="results" id="results">
+    <div class="summary" id="summary"></div>
+    <div id="buckets"></div>
+    <div style="text-align:center;margin:8px 0 4px">
+      <button class="btn ghost" id="download">⬇ Download CycloneDX 1.6 CBOM</button>
+      <button class="btn ghost" id="rescan">Scan another folder</button>
+    </div>
+    <div class="limits" id="limits"></div>
+    <div class="cta">
+      <h3>Need the full audit?</h3>
+      <p>This free scan finds the crypto. A PQC-readiness audit prioritizes it — separating the real risks from the noise — and gives you a migration plan against your actual data lifetime and exposure.</p>
+      <a class="btn" href="https://redkingsdesigns.netlify.app" target="_blank" rel="noopener">→ Work with Zero</a>
+    </div>
+  </div>
+
+  <footer>
+    First-pass, pattern-based inventory — not a complete or authoritative audit. Misses crypto via opaque APIs, runtime selection, raw DER keys. Not legal/security advice.<br>
+    Standards: NIST FIPS&nbsp;203/204/205 (2024-08-13) · NSA CNSA&nbsp;2.0 · <a href="https://github.com/thefinalmilkman/cbom-scan" target="_blank" rel="noopener">open-source CLI on GitHub</a> · built by Zero
+  </footer>
+</div>
+
+<script>
+// ================= CBOM engine (faithful port of the verified cbom.js, browser-side) =================
+const KEM='ML-KEM (FIPS 203, "Kyber") for key exchange';
+const SIG='ML-DSA (FIPS 204, "Dilithium") or SLH-DSA (FIPS 205, "SPHINCS+") for signatures';
+const RULES=[
+ {id:'rsa-key',re:/BEGIN RSA PRIVATE KEY/,material:true,prim:'pke',algo:'RSA private key',risk:'shor',repl:SIG+' / '+KEM,why:'An RSA private key — RSA is broken by Shor on a quantum computer.'},
+ {id:'ec-key',re:/BEGIN EC PRIVATE KEY/,material:true,prim:'signature',algo:'EC private key',risk:'shor',repl:SIG,why:'An elliptic-curve private key — EC discrete log is broken by Shor.'},
+ {id:'dsa-key',re:/BEGIN DSA (PRIVATE KEY|PARAMETERS)/,material:true,prim:'signature',algo:'DSA private key',risk:'shor',repl:SIG,why:'A DSA private key / parameters — discrete log, broken by Shor.'},
+ {id:'openssh',re:/BEGIN OPENSSH PRIVATE KEY/,material:true,prim:'signature',algo:'OpenSSH private key',risk:'review',repl:'inspect type: ssh-rsa/ecdsa/ed25519 are all Shor-breakable',why:'Private key in repo (also a secrets-hygiene issue).'},
+ {id:'pkcs8',re:/BEGIN PRIVATE KEY/,material:true,prim:'unknown',algo:'PKCS#8 private key (alg unspecified)',risk:'review',repl:'inspect the algorithm (usually RSA/EC → Shor-breakable)',why:'Generic private-key header — algorithm not in the label.'},
+ {id:'cert',re:/BEGIN CERTIFICATE/,material:true,prim:'certificate',algo:'X.509 certificate',risk:'review',repl:'inspect signature alg + public key (RSA/ECDSA → Shor-breakable)',why:'Certificate present — its signature & key algorithm need inspection.'},
+ {id:'pgp',re:/BEGIN PGP (PUBLIC|PRIVATE) KEY/,material:true,prim:'unknown',algo:'PGP key',risk:'review',repl:'inspect: RSA/ECC PGP keys are Shor-breakable',why:'PGP key block — underlying algorithm needs inspection.'},
+ {id:'rsa',re:/\brsa\b|ssh-rsa|\bRS(256|384|512)\b|\bPS(256|384|512)\b|rsassa|rsaes|PKCS#?1(?![0-9])/i,prim:'pke',algo:'RSA',risk:'shor',repl:KEM+' / '+SIG,why:'RSA rests on integer factorization, which Shor solves in polynomial time on a quantum computer.'},
+ {id:'ecdsa',re:/\becdsa\b|secp(256[kr]|384r|521r)1|prime256v1|\bES(256|384|512)\b|ssh-ecdsa|['"]P-(256|384|521)['"]|\bid_ecdsa\b/i,prim:'signature',algo:'ECDSA / EC',risk:'shor',repl:SIG,why:'EC discrete log is broken by Shor.'},
+ {id:'ecdh',re:/\becdh\b|\becdhe[-_]/i,prim:'key-agree',algo:'ECDH',risk:'shor',repl:KEM,why:'ECDH relies on the EC discrete log Shor breaks.'},
+ {id:'curve25519',re:/ed25519|x25519|curve25519|\beddsa\b|\bid_ed25519\b/i,prim:'signature',algo:'Ed25519 / X25519',risk:'shor',repl:SIG+' / '+KEM,why:'Common misconception: Ed25519/X25519 are MODERN but NOT quantum-safe — still elliptic-curve, still Shor-breakable.'},
+ {id:'dh',re:/diffie[- ]?hellman|dhparam|\bDHE-(RSA|DSS)\b|\bEDH-/i,prim:'key-agree',algo:'Diffie-Hellman',risk:'shor',repl:KEM,why:'Finite-field DH relies on discrete log Shor breaks.'},
+ {id:'dsa',re:/ssh-dss|\bdsa-sha|dsaWith|DSA_SHA|['"]dsa['"]|DSA_do_sign|\bdsa_sign\b|getInstance\(\s*['"]DSA|\bid_dsa\b/i,prim:'signature',algo:'DSA',risk:'shor',repl:SIG,why:'DSA relies on discrete log Shor breaks (code-form match only).'},
+ {id:'md5',re:/\bmd5\b/i,prim:'hash',algo:'MD5',risk:'broken',repl:'SHA-256 / SHA-3',why:'MD5 is collision-broken — replace now (not a quantum issue).'},
+ {id:'sha1',re:/\bsha-?1\b/i,prim:'hash',algo:'SHA-1',risk:'broken',repl:'SHA-256 / SHA-3',why:'SHA-1 is collision-broken (SHAttered).'},
+ {id:'rc4',re:/\brc4-|arcfour|['"]rc4['"]|cipher\s*[:=]\s*['"]?rc4/i,prim:'stream-cipher',algo:'RC4',risk:'broken',repl:'AES-256 / ChaCha20',why:'RC4 is broken; prohibited in TLS.'},
+ {id:'des',re:/\b3des\b|triple-?des|des-ede|des-(cbc|ecb|cfb)|['"]des3?['"]/i,prim:'block-cipher',algo:'DES / 3DES',risk:'broken',repl:'AES-256',why:'DES/3DES are obsolete (small key / Sweet32).'},
+ {id:'legacy-sym',re:/blowfish|\bbf-(cbc|ecb)\b|cast5|cast-128|idea-cbc|\bseed-(cbc|ecb)\b/i,prim:'block-cipher',algo:'Legacy cipher (Blowfish/CAST5/IDEA/SEED)',risk:'broken',repl:'AES-256',why:'Legacy/weak block cipher — replace with AES-256. (Note: Blowfish inside bcrypt for password hashing is fine.)'},
+ {id:'aes128',re:/aes[-_]?128/i,prim:'block-cipher',algo:'AES-128',risk:'grover',repl:'AES-256',why:'Grover halves symmetric strength: AES-128 → ~64-bit quantum margin. Move to AES-256.'},
+ {id:'aes192',re:/aes[-_]?192/i,prim:'block-cipher',algo:'AES-192',risk:'grover',repl:'AES-256',why:'AES-192 → ~96-bit margin under Grover. Move to AES-256 for long-term high-assurance.'},
+ {id:'aes-mode',re:/aes-(gcm|ccm|cbc|ctr|ecb|xts)\b(?![-_]?(128|192|256))|\bAES-GCM\b|\bAES-CBC\b/i,prim:'block-cipher',algo:'AES (key size unspecified)',risk:'review',repl:'confirm key size — AES-128 is Grover-weak, AES-256 is fine',why:'AES used without an explicit size in the token — verify it is 256-bit.'},
+ {id:'aes256',re:/aes[-_]?256/i,prim:'block-cipher',algo:'AES-256',risk:'safe',repl:'—',why:'AES-256 keeps ~128-bit margin under Grover — quantum-OK.'},
+ {id:'chacha',re:/chacha20?/i,prim:'stream-cipher',algo:'ChaCha20',risk:'safe',repl:'—',why:'256-bit stream cipher — Grover-only, quantum-OK.'},
+ {id:'sha2-strong',re:/\bsha-?(384|512)\b|sha-512\/256/i,prim:'hash',algo:'SHA-384/512 (SHA-2)',risk:'safe',repl:'—',why:'Large-output SHA-2 — quantum-OK.'},
+ {id:'sha3',re:/\bsha-?3\b|sha3-(256|384|512)|shake(128|256)/i,prim:'hash',algo:'SHA-3 / SHAKE',risk:'safe',repl:'—',why:'SHA-3 family — quantum-OK.'},
+ {id:'sha256',re:/\bsha-?256\b/i,prim:'hash',algo:'SHA-256',risk:'safe',repl:'— (SHA-384+ only for very-long-term)',why:'SHA-256 is quantum-OK for essentially all uses (Grover gives no practical preimage break). NIST treats it as fine.'},
+ {id:'pqc',re:/\bml-kem\b|\bkyber\b|\bml-dsa\b|\bdilithium\b|\bslh-dsa\b|sphincs|falcon-(512|1024)/i,prim:'kem',algo:'NIST PQC',risk:'safe',repl:'—',why:'Already a post-quantum algorithm.'}
+];
+const DEP_RULES=[
+ {re:/^node-rsa$|^rsa$/i,algo:'RSA',risk:'shor',repl:KEM+' / '+SIG},
+ {re:/^elliptic$|^jsrsasign$|^ecdsa$|^secp256k1$/i,algo:'ECDSA/EC',risk:'shor',repl:SIG},
+ {re:/^tweetnacl$|^pynacl$|^libsodium|^ed25519|^x25519|-dalek$|^curve25519/i,algo:'Ed25519/X25519',risk:'shor',repl:SIG+' / '+KEM},
+ {re:/^node-forge$|^jose$|^jsonwebtoken$|^pyjwt$/i,algo:'JWT/multi (often RS256/ES256)',risk:'review',repl:'audit configured algs; RS*/ES* are Shor-breakable'},
+ {re:/^paramiko$|^ssh2$/i,algo:'SSH (RSA/ECDSA/Ed25519)',risk:'shor',repl:SIG+' / '+KEM},
+ {re:/^cryptography$|^pycryptodome$|^pycrypto$|^pyopenssl$|^ring$|^rustls$/i,algo:'general crypto toolkit',risk:'review',repl:'inventory which primitives are actually used'},
+ {re:/^bcrypt$|^bcryptjs$|^scrypt|^argon2/i,algo:'password hashing',risk:'safe',repl:'— (password KDF, low direct quantum relevance)'},
+ {re:/pqcrypto|liboqs|^pqclean|oqs/i,algo:'PQC library',risk:'safe',repl:'—'}
+];
+const SKIP_DIR=['node_modules','.git','dist','build','vendor','.next','coverage','__pycache__'];
+const SKIP_FILE=/^(package-lock\.json|yarn\.lock|pnpm-lock\.yaml|composer\.lock|Cargo\.lock|Gemfile\.lock|go\.sum)$|\.min\.(js|css)$|\.lock$/i;
+const CODE_EXT=/\.(js|mjs|cjs|ts|tsx|jsx|py|go|rs|java|rb|php|c|h|cpp|cs|swift|kt|sh|yaml|yml|json|toml|env|conf|config|ini|pem|crt|cer|key|xml|properties|gradle)$/i;
+const DOC_EXT=/\.(md|txt|rst|adoc)$/i;
+const isManifest=f=>/^(package\.json|requirements\.txt|go\.mod|Cargo\.toml|pom\.xml|build\.gradle|Gemfile|composer\.json)$/i.test(f);
+function stripComments(text,ext){
+ if(/^(js|mjs|cjs|ts|tsx|jsx|go|rs|java|c|h|cpp|cs|php|swift|kt)$/.test(ext))
+   return text.replace(/\/\*[\s\S]*?\*\//g,m=>m.replace(/[^\n]/g,' ')).split('\n').map(l=>l.replace(/\/\/.*$/,'')).join('\n');
+ if(/^(py|sh|yaml|yml|toml|rb|conf|ini|env|properties|gradle)$/.test(ext))
+   return text.split('\n').map(l=>l.replace(/(^|\s)#.*$/,'$1')).join('\n');
+ return text;
+}
+function detectInText(text,file,opts={}){
+ const out=[],rules=opts.proseDoc?RULES.filter(r=>r.material):RULES,lines=text.split('\n');
+ for(let i=0;i<lines.length;i++)for(const r of rules){const m=r.re.exec(lines[i]);
+   if(m)out.push({id:r.id,algo:r.algo,prim:r.prim,risk:r.risk,repl:r.repl,why:r.why,file,line:i+1,match:m[0]});}
+ return out;
+}
+function parseDeps(base,text){
+ const names=[],findings=[];
+ try{
+   if(base==='package.json'){const j=JSON.parse(text);for(const k of['dependencies','devDependencies','optionalDependencies'])Object.keys(j[k]||{}).forEach(n=>names.push(n));}
+   else if(base==='requirements.txt')text.split('\n').forEach(l=>{const n=l.trim().split(/[=<>!~\s#]/)[0];if(n)names.push(n);});
+   else if(base==='go.mod')(text.match(/^\s*[\w.\-/]+\s+v[\w.\-]+/gm)||[]).forEach(l=>names.push(l.trim().split(/\s+/)[0]));
+   else if(base==='Cargo.toml')(text.match(/^\s*([\w-]+)\s*=/gm)||[]).forEach(l=>names.push(l.split('=')[0].trim()));
+ }catch(e){}
+ for(const n of names)for(const d of DEP_RULES)if(d.re.test(n))findings.push({id:'dep:'+d.algo,algo:d.algo+' (dependency)',prim:'dependency',risk:d.risk,repl:d.repl,why:'Dependency "'+n+'" implies '+d.algo+'.',line:0,match:n});
+ return findings;
+}
+const FAMILY={rsa:'RSA','rsa-key':'RSA',ecdsa:'ECDSA / EC','ec-key':'ECDSA / EC',dsa:'DSA','dsa-key':'DSA'};
+const RANK={shor:0,broken:1,grover:2,review:3,safe:4};
+const LABEL={shor:'Quantum-vulnerable (Shor — public-key, breaks completely)',broken:'Already broken (classical)',grover:'Quantum-weakened (Grover — bump the size)',review:'Needs review (algorithm/size unknown)',safe:'Quantum-OK'};
+const COLOR={shor:'var(--red)',broken:'var(--orange)',grover:'var(--yellow)',review:'var(--blue)',safe:'var(--green)'};
+function assess(findings){
+ const byAlgo=new Map();
+ for(const f of findings){const key=FAMILY[f.id]||f.id;let a=byAlgo.get(key);
+   if(!a){a={id:key,algo:FAMILY[f.id]||f.algo,prim:f.prim,risk:f.risk,repl:f.repl,why:f.why,occurrences:[],_seen:new Set()};byAlgo.set(key,a);}
+   const loc=f.file+':'+f.line;if(!a._seen.has(loc)){a._seen.add(loc);a.occurrences.push({file:f.file,line:f.line});}}
+ const assets=[...byAlgo.values()].map(a=>{delete a._seen;return a;}).sort((x,y)=>RANK[x.risk]-RANK[y.risk]||y.occurrences.length-x.occurrences.length);
+ const by=r=>assets.filter(a=>a.risk===r);
+ const summary={assets:assets.length,occurrences:findings.length,shor:by('shor').length,broken:by('broken').length,grover:by('grover').length,review:by('review').length,safe:by('safe').length,vulnerable:by('shor').length+by('broken').length};
+ return{assets,summary};
+}
+const NQSL=r=>(r==='shor'||r==='broken')?0:r==='grover'?1:r==='review'?2:5;
+function uuid(){try{return crypto.randomUUID();}catch(e){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16);});}}
+function buildCBOM(project,assets){
+ const components=assets.map((a,i)=>{
+   const assetType=a.prim==='certificate'?'certificate':a.prim==='unknown'?'related-crypto-material':'algorithm';
+   const c={type:'cryptographic-asset','bom-ref':'crypto-'+(i+1)+'-'+a.id,name:a.algo,
+     cryptoProperties:{assetType},
+     evidence:{occurrences:a.occurrences.slice(0,50).map(o=>({location:o.file+(o.line?':'+o.line:'')}))},
+     properties:[{name:'cbom:quantumRisk',value:a.risk},{name:'cbom:primitive',value:a.prim},
+       {name:'cbom:label',value:LABEL[a.risk]},{name:'cbom:shorBreakable',value:String(a.risk==='shor')},
+       {name:'cbom:hndlExposure',value:String(a.risk==='shor')},{name:'cbom:nistReplacement',value:a.repl},
+       {name:'cbom:occurrenceCount',value:String(a.occurrences.length)}]};
+   if(assetType==='algorithm')c.cryptoProperties.algorithmProperties={nistQuantumSecurityLevel:NQSL(a.risk)};
+   return c;});
+ return{bomFormat:'CycloneDX',specVersion:'1.6',serialNumber:'urn:uuid:'+uuid(),version:1,
+   metadata:{tools:[{name:'CBOM',vendor:'Zero'}],component:{type:'application',name:project},
+     properties:[{name:'cbom:standards',value:'NIST FIPS 203/204/205; NSA CNSA 2.0'}]},components};
+}
+
+// ================= browser I/O + render =================
+const $=s=>document.querySelector(s);
+let lastCBOM=null,lastProject='project';
+async function scan(files){
+ const findings=[];const first=files[0]&&(files[0].webkitRelativePath||files[0]._path||'');
+ let project=(first&&first.split('/')[0])||'project';
+ let scanned=0,i=0;
+ for(const file of files){
+   if(++i%200===0){$('#status').textContent='Scanning… '+i+' / '+files.length+' files (locally)';await new Promise(r=>setTimeout(r));}
+   const rel=file.webkitRelativePath||file._path||file.name;
+   if(SKIP_DIR.some(d=>rel.includes('/'+d+'/')||rel.startsWith(d+'/')))continue;
+   const base=rel.split('/').pop();
+   if(SKIP_FILE.test(base))continue;
+   if(!(CODE_EXT.test(base)||DOC_EXT.test(base)||isManifest(base)))continue;
+   if(file.size>2000000)continue;
+   let text;try{text=await file.text();}catch(e){continue;}
+   scanned++;
+   if(isManifest(base)){parseDeps(base,text).forEach(x=>findings.push({...x,file:rel}));continue;}
+   const ext=(base.split('.').pop()||'').toLowerCase();
+   const proseDoc=DOC_EXT.test(base)&&!CODE_EXT.test(base);
+   const body=proseDoc?text:stripComments(text,ext);
+   detectInText(body,rel,{proseDoc}).forEach(x=>findings.push(x));
+ }
+ return{project,scanned,...assess(findings)};
+}
+function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+function render(r){
+ lastCBOM=buildCBOM(r.project,r.assets);lastProject=r.project;
+ const s=r.summary;
+ const sum=$('#summary');sum.innerHTML='';
+ const big=el('div','big');const vchip=el('span','v',s.vulnerable+' of '+s.assets);
+ if(s.vulnerable===0)vchip.style.color='var(--green)';
+ big.append(vchip);
+ big.append(document.createTextNode(' distinct algorithms are quantum-vulnerable or already broken'));
+ sum.append(big);
+ sum.append(el('div','line',r.project+' · '+r.scanned+' file'+(r.scanned!==1?'s':'')+' scanned · '+s.occurrences+' crypto occurrence'+(s.occurrences!==1?'s':'')));
+ const chips=el('div','chips');
+ [['shor',s.shor,'Shor'],['broken',s.broken,'Broken'],['grover',s.grover,'Grover'],['review',s.review,'Review'],['safe',s.safe,'OK']].forEach(([k,n,lbl])=>{
+   if(!n)return;const c=el('span','chip',n+' '+lbl);c.style.color=COLOR[k];c.style.borderColor=COLOR[k];chips.append(c);});
+ sum.append(chips);
+
+ const wrap=$('#buckets');wrap.innerHTML='';
+ for(const risk of['shor','broken','grover','review','safe']){
+   const g=r.assets.filter(a=>a.risk===risk);if(!g.length)continue;
+   const b=el('div','bucket');const h=el('h3',null,LABEL[risk]+'  ('+g.length+')');h.style.color=COLOR[risk];b.append(h);
+   for(const a of g){
+     const card=el('div','asset');card.style.borderLeftColor=COLOR[risk];
+     const name=el('div','name');name.append(document.createTextNode(a.algo+' '));
+     name.append(el('span','occ','('+a.occurrences.length+' occurrence'+(a.occurrences.length>1?'s':'')+')'));
+     card.append(name);
+     card.append(el('div','why',a.why));
+     if(a.repl&&a.repl!=='—'){const m=el('div','mig');m.append(el('b',null,'Migrate: '));m.append(document.createTextNode(a.repl));card.append(m);}
+     const locs=a.occurrences.slice(0,4).map(o=>o.file+(o.line?':'+o.line:'')).join('  ·  ')+(a.occurrences.length>4?'  · …':'');
+     card.append(el('div','locs',locs));
+     b.append(card);
+   }
+   wrap.append(b);
+ }
+ $('#limits').innerHTML='<b>Honest limits:</b> this is a first-pass, pattern-based inventory — not a complete audit. It misses crypto reached through opaque APIs, runtime selection, raw DER keys, and binary curves. False positives happen (e.g. it flags <b>Blowfish</b> even inside <b>bcrypt</b> password hashing, which is fine). Severity ≠ urgency — a healthy Ed25519 key is lower priority than a legacy RSA-1024 key. The judgment of what to prioritize is where a human comes in.';
+ $('#status').textContent='';
+ $('#results').style.display='block';
+ $('#results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+const fileInput=$('#file');
+async function runScan(files){
+ if(!files.length){$('#status').textContent='No readable files found there. Try the “Choose a folder” button.';return;}
+ $('#status').textContent='Scanning '+files.length+' files locally…';
+ try{
+   const r=await scan(files);
+   if(!r.assets.length){$('#status').textContent='No cryptographic assets detected in '+r.scanned+' scanned files. (Crypto via opaque libraries can be missed — see limits.)';$('#results').style.display='none';}
+   else render(r);
+ }catch(err){$('#status').textContent='Scan error: '+err.message;}
+}
+$('#pick').addEventListener('click',e=>{e.preventDefault();fileInput.click();});
+$('#drop').addEventListener('click',e=>{if(e.target.id!=='pick')fileInput.click();});
+fileInput.addEventListener('change',e=>runScan([...e.target.files]));
+
+// REAL folder drag-and-drop — recurse dropped directory entries into File objects
+async function readEntry(entry,prefix,out){
+ if(entry.isFile){await new Promise(res=>entry.file(f=>{f._path=prefix+entry.name;out.push(f);res();},res));}
+ else if(entry.isDirectory){const rd=entry.createReader();let batch;do{batch=await new Promise(res=>rd.readEntries(res,()=>res([])));for(const e of batch)await readEntry(e,prefix+entry.name+'/',out);}while(batch.length);}
+}
+const drop=$('#drop');
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+drop.addEventListener('dragleave',e=>{e.preventDefault();drop.classList.remove('over');});
+drop.addEventListener('drop',async e=>{
+ e.preventDefault();drop.classList.remove('over');
+ const items=e.dataTransfer&&e.dataTransfer.items;
+ const entries=items?[...items].map(it=>it.webkitGetAsEntry&&it.webkitGetAsEntry()).filter(Boolean):[];
+ if(!entries.length){const f=e.dataTransfer&&e.dataTransfer.files;if(f&&f.length){runScan([...f]);return;}$('#status').textContent='Could not read that — use the “Choose a folder” button.';return;}
+ $('#status').textContent='Reading folder…';
+ const files=[];for(const en of entries)await readEntry(en,'',files);
+ runScan(files);
+});
+// mobile hint (folder access is limited on touch browsers)
+if(window.matchMedia&&matchMedia('(pointer: coarse)').matches){const n=el('div','priv','Folder scanning works best on a desktop browser.');n.style.color='var(--mut)';$('#drop').append(n);}
+$('#download').addEventListener('click',()=>{
+ if(!lastCBOM)return;
+ const blob=new Blob([JSON.stringify(lastCBOM,null,2)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(lastProject||'project').replace(/[^\w.-]/g,'_')+'-cbom.json';a.click();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+$('#rescan').addEventListener('click',()=>{$('#results').style.display='none';fileInput.value='';window.scrollTo({top:0,behavior:'smooth'});});
+</script>
+</body>
+</html>
